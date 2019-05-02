@@ -1,0 +1,3 @@
+#!/bin/sh
+go get github.com/blevesearch/bleve/...
+go build
