@@ -152,18 +152,16 @@ func main() {
 	a := newAnatid()
 	go a.forwardLoop()
 	go a.pollLoop()
-	http.HandleFunc("/gb3/poll", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/poll", func(w http.ResponseWriter, r *http.Request) {
 		a.handlePoll(w, r)
 	})
-	http.HandleFunc("/gb3/post", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/post", func(w http.ResponseWriter, r *http.Request) {
 		a.handlePost(w, r)
 	})
-	http.HandleFunc("/gb3/search", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
 		a.handleSearch(w, r)
 	})
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to gb3 server."))
-	})
+	http.Handle("/", http.FileServer(http.Dir("coincoin")))
 	log.Printf("Listen to %s\n", listenAddress)
 	err := http.ListenAndServe(listenAddress, nil)
 	if nil != err {

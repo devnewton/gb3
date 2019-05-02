@@ -10,7 +10,7 @@ gb3 exposes two endpoint for polling and posting tribune messages.
 
 ```javascript
 var postSource = new EventSource("http://localhost:6666/api/poll");
-ws.onmessage = function (event) {
+postSource.onmessage = function (event) {
   console.log(event.data);
 };
 ```
