@@ -8,7 +8,7 @@ class Gb3Posts extends HTMLElement {
         let postElements = this.getElementsByTagName('gb3-post');
         for (let e of postElements) {
             if (e.tribune === post.tribune && post.id > e.postId) {
-                this.insertPostAfterElement(p, e);
+                this.insertPostAfterElement(post, e);
                 return;
             }
         }
