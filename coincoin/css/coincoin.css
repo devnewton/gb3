@@ -1,0 +1,117 @@
+gb3-posts {
+    display: flex;
+    flex-direction: column;
+}
+
+gb3-post:nth-of-type(odd) {
+	background-color: #FBFBFB;
+}
+
+gb3-post>time {
+	padding-right: 5px;
+	padding-left: 5px;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+	white-space: nowrap;
+	display: inline-block;
+	vertical-align: text-top;
+    margin: auto;
+    cursor:pointer;
+}
+
+p time {
+    color: #5F7FBF;
+    cursor: pointer;
+}
+
+gb3-post>cite {
+	padding-right: 5px;
+	padding-left: 5px;
+	color: #833;
+	display: inline-block;
+	word-break: break-all;
+	vertical-align: text-top;
+        margin: auto;
+        cursor: pointer;
+}
+
+p {
+	padding-right: 5px;
+	padding-left: 5px;
+	color: black;
+	word-break: break-all;
+	display: inline-block;
+	vertical-align: text-top;
+        margin: auto;
+}
+
+p a {
+	font-weight: bold;
+	color: #1690f3;
+}
+
+p a:hover {
+	text-decoration: underline;
+}
+
+p a:visited {
+	color: #0b78d0;
+}
+
+p cite {
+	border: 1px solid #F00;
+        cursor: pointer;
+}
+
+p cite:after {
+	content: '<';
+}
+
+.highlighted {
+    background-color: #FFD202 !important;
+}
+
+figure {
+        display: inline;
+	position: relative;
+	font-weight: bold;
+	color: #0A1;
+        margin: unset;
+}
+
+figure img {
+	display: none;
+}
+
+figure:hover img {
+	display: inline;
+	position: absolute;
+	top: 100%;
+}
+
+mark {
+    background-color: black;
+    color: black;
+}
+
+mark:hover {
+    background-color: inherit;
+}
+
+gb3-revealed-spoiler {
+    background-color: inherit;
+    color: red;
+}
+
+gb3-bigorno {
+	border: 1px solid #F00;
+}
+
+.posts-enter-active, .posts-leave-active {
+  transition: all 1s;
+}
+.posts-enter, .posts-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
