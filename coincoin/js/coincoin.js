@@ -9,25 +9,18 @@ class Gb3Coincoin extends HTMLElement {
         this.setupTribuneSelect();
         this.setupMessageInput();
         this.setupPostsElement();
-        this.startPoll();
+        this.setupBackend2html();
     }
 
     setupTribuneSelect() {
         this.tribuneSelect = document.createElement("select");
         let viewAllTribuneOption = document.createElement("option");
-        viewAllTribuneOption.value = "*";
+        viewAllTribuneOption.value = "";
         viewAllTribuneOption.text = "All";
         this.tribuneSelect.add(viewAllTribuneOption);
+        document.styleSheets[0].insertRule("")
         this.tribuneSelect.onchange = () => {
-            let tribune = this.tribuneSelect.value;
-            if (tribune === "*") {
-                this.querySelectorAll(`gb3-post`).forEach((e) => e.style.display = "initial");
-                this.querySelectorAll(`gb3-tribune`).forEach((e) => e.style.display = "initial");
-            } else {
-                this.querySelectorAll(`gb3-post[id$="${tribune}"]`).forEach((e) => e.style.display = "initial");
-                this.querySelectorAll(`gb3-post:not([id$="${tribune}"])`).forEach((e) => e.style.display = "none");
-                this.querySelectorAll(`gb3-tribune`).forEach((e) => e.style.display = "none");
-            }
+            this.postsElement.dataset.tribune = this.tribuneSelect.value;
         }
         this.appendChild(this.tribuneSelect);
     }
@@ -44,10 +37,22 @@ class Gb3Coincoin extends HTMLElement {
         this.appendChild(this.postsElement);
     }
 
+    setupBackend2html() {
+        fetch("/peg/backend2html.pegjs")
+            .then((response) => {
+                return response.text();
+            })
+            .then((text) => {
+                this.backend2html = peg.generate(text);
+                this.startPoll();
+            });
+    }
+
     startPoll() {
         let postSource = new EventSource("/api/poll");
         postSource.onmessage = (event) => {
             let post = JSON.parse(event.data);
+            post.message = this.backend2html.parse(post.message);
             this.postsElement.insertPost(post);
             this.addTribune(post.tribune);
         };

@@ -3,6 +3,13 @@ gb3-posts {
     flex-direction: column;
 }
 
+gb3-posts :not([data-tribune=""]) gb3-tribune {
+	display: none;
+}
+
+/*TODO this.querySelectorAll(`gb3-post[id$="${tribune}"]`).forEach((e) => e.style.display = "initial");
+this.querySelectorAll(`gb3-post:not([id$="${tribune}"])`).forEach((e) => e.style.display = "none");*/
+
 gb3-post:nth-of-type(odd) {
 	background-color: #FBFBFB;
 }
@@ -76,7 +83,7 @@ gb3-message cite:after {
     background-color: #FFD202 !important;
 }
 
-figure {
+gb3-totoz {
         display: inline;
 	position: relative;
 	font-weight: bold;
@@ -84,22 +91,22 @@ figure {
         margin: unset;
 }
 
-figure img {
+gb3-totoz img {
 	display: none;
 }
 
-figure:hover img {
+gb3-totoz:hover img {
 	display: inline;
 	position: absolute;
 	top: 100%;
 }
 
-mark {
+gb3-spoiler {
     background-color: black;
     color: black;
 }
 
-mark:hover {
+gb3-spoiler:hover {
     background-color: inherit;
 }
 

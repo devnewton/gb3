@@ -51,7 +51,7 @@ class Gb3Post extends HTMLElement {
         this.appendChild(citeElement);
 
         let pElement = document.createElement('gb3-message');
-        pElement.innerText = post.message;
+        pElement.innerHTML = post.message;
         this.appendChild(pElement);
     }
 
