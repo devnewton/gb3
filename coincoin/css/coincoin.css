@@ -7,7 +7,7 @@ gb3-post:nth-of-type(odd) {
 	background-color: #FBFBFB;
 }
 
-gb3-post>time {
+gb3-post>gb3-norloge {
 	padding-right: 5px;
 	padding-left: 5px;
 	text-align: center;
@@ -20,12 +20,16 @@ gb3-post>time {
     cursor:pointer;
 }
 
-p time {
+gb3-tribune {
+	color: #007700
+}
+
+gb3-message gb3-norloge {
     color: #5F7FBF;
     cursor: pointer;
 }
 
-gb3-post>cite {
+gb3-post>gb3-moule {
 	padding-right: 5px;
 	padding-left: 5px;
 	color: #833;
@@ -36,7 +40,7 @@ gb3-post>cite {
         cursor: pointer;
 }
 
-p {
+gb3-message {
 	padding-right: 5px;
 	padding-left: 5px;
 	color: black;
@@ -46,25 +50,25 @@ p {
         margin: auto;
 }
 
-p a {
+gb3-message a {
 	font-weight: bold;
 	color: #1690f3;
 }
 
-p a:hover {
+gb3-message a:hover {
 	text-decoration: underline;
 }
 
-p a:visited {
+gb3-message a:visited {
 	color: #0b78d0;
 }
 
-p cite {
+gb3-message cite {
 	border: 1px solid #F00;
         cursor: pointer;
 }
 
-p cite:after {
+gb3-message cite:after {
 	content: '<';
 }
 

@@ -18,6 +18,17 @@ class Gb3Coincoin extends HTMLElement {
         viewAllTribuneOption.value = "*";
         viewAllTribuneOption.text = "All";
         this.tribuneSelect.add(viewAllTribuneOption);
+        this.tribuneSelect.onchange = () => {
+            let tribune = this.tribuneSelect.value;
+            if (tribune === "*") {
+                this.querySelectorAll(`gb3-post`).forEach((e) => e.style.display = "initial");
+                this.querySelectorAll(`gb3-tribune`).forEach((e) => e.style.display = "initial");
+            } else {
+                this.querySelectorAll(`gb3-post[id$="${tribune}"]`).forEach((e) => e.style.display = "initial");
+                this.querySelectorAll(`gb3-post:not([id$="${tribune}"])`).forEach((e) => e.style.display = "none");
+                this.querySelectorAll(`gb3-tribune`).forEach((e) => e.style.display = "none");
+            }
+        }
         this.appendChild(this.tribuneSelect);
     }
 
@@ -25,7 +36,7 @@ class Gb3Coincoin extends HTMLElement {
         this.messageInput = document.createElement("input");
         this.messageInput.type = "text";
         this.messageInput.spellcheck = true;
-        this.appendChild(this.messageInput); 
+        this.appendChild(this.messageInput);
     }
 
     setupPostsElement() {
@@ -43,7 +54,7 @@ class Gb3Coincoin extends HTMLElement {
     }
 
     addTribune(tribune) {
-        if(!this.tribunes.has(tribune)) {
+        if (!this.tribunes.has(tribune)) {
             this.tribunes.add(tribune);
             var option = document.createElement("option");
             option.text = option.value = tribune;
