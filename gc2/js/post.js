@@ -19,13 +19,6 @@ class Gc2Message extends HTMLElement {
 }
 customElements.define('gc2-message', Gc2Message);
 
-class Gc2Tribune extends HTMLElement {
-    constructor() {
-        super();
-    }
-}
-customElements.define('gc2-tribune', Gc2Tribune);
-
 class Gc2Post extends HTMLElement {
 
     constructor() {
@@ -40,10 +33,6 @@ class Gc2Post extends HTMLElement {
         let timeElement = document.createElement('gc2-norloge');
         timeElement.innerText = this.formatTime(post.time);
         this.appendChild(timeElement);
-
-        let tribuneElement = document.createElement('gc2-tribune');
-        tribuneElement.innerText = post.tribune;
-        this.appendChild(tribuneElement);
 
         let citeElement = document.createElement('gc2-moule');
         citeElement.innerText = post.login || post.info || 'coward';

@@ -1,40 +1,45 @@
+class Gc2Controls extends HTMLElement {
+    constructor() {
+        super();
+    }
+}
+customElements.define('gc2-controls', Gc2Controls);
+
 class Gc2Main extends HTMLElement {
 
     constructor() {
         super();
-        this.tribunes = new Set();
+        this.tribunes = new Map();
     }
 
     connectedCallback() {
+        this.setupControls();
         this.setupTribuneSelect();
         this.setupMessageInput();
-        this.setupPostsElement();
         this.setupBackend2html();
+    }
+
+    setupControls() {
+        this.controls = document.createElement("gc2-controls");
+        this.appendChild(this.controls);
     }
 
     setupTribuneSelect() {
         this.tribuneSelect = document.createElement("select");
-        let viewAllTribuneOption = document.createElement("option");
-        viewAllTribuneOption.value = "";
-        viewAllTribuneOption.text = "All";
-        this.tribuneSelect.add(viewAllTribuneOption);
-        document.styleSheets[0].insertRule("")
         this.tribuneSelect.onchange = () => {
-            this.postsElement.dataset.tribune = this.tribuneSelect.value;
+            let selectedTribune = this.tribuneSelect.value;
+            this.tribunes.forEach((tribuneElement, tribune) => {
+                tribuneElement.style.display = tribune === selectedTribune ? "" : "none";
+            });
         }
-        this.appendChild(this.tribuneSelect);
+        this.controls.appendChild(this.tribuneSelect);
     }
 
     setupMessageInput() {
         this.messageInput = document.createElement("input");
         this.messageInput.type = "text";
         this.messageInput.spellcheck = true;
-        this.appendChild(this.messageInput);
-    }
-
-    setupPostsElement() {
-        this.postsElement = document.createElement('gc2-posts');
-        this.appendChild(this.postsElement);
+        this.controls.appendChild(this.messageInput);
     }
 
     setupBackend2html() {
@@ -53,18 +58,23 @@ class Gc2Main extends HTMLElement {
         postSource.onmessage = (event) => {
             let post = JSON.parse(event.data);
             post.message = this.backend2html.parse(post.message);
-            this.postsElement.insertPost(post);
-            this.addTribune(post.tribune);
+            this.getTribuneElement(post.tribune).insertPost(post);
         };
     }
 
-    addTribune(tribune) {
-        if (!this.tribunes.has(tribune)) {
-            this.tribunes.add(tribune);
+    getTribuneElement(tribune) {
+        let tribuneElement = this.tribunes.get(tribune);
+        if (!tribuneElement) {
             var option = document.createElement("option");
             option.text = option.value = tribune;
             this.tribuneSelect.add(option);
+
+            tribuneElement = document.createElement('gc2-tribune');
+            this.tribunes.set(tribune, tribuneElement);
+            tribuneElement.style.display = tribune === this.tribuneSelect.value ? "" : "none";
+            this.appendChild(tribuneElement);
         }
+        return tribuneElement;
     }
 
 }

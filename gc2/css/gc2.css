@@ -1,14 +1,15 @@
-gc2-posts {
+gc2-controls {
+	display: flex;
+}
+
+gc2-controls input {
+	flex-grow: 1
+}
+
+gc2-tribune {
     display: flex;
     flex-direction: column;
 }
-
-gc2-posts :not([data-tribune=""]) gc2-tribune {
-	display: none;
-}
-
-/*TODO this.querySelectorAll(`gc2-post[id$="${tribune}"]`).forEach((e) => e.style.display = "initial");
-this.querySelectorAll(`gc2-post:not([id$="${tribune}"])`).forEach((e) => e.style.display = "none");*/
 
 gc2-post:nth-of-type(odd) {
 	background-color: #FBFBFB;

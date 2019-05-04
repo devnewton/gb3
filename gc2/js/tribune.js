@@ -1,4 +1,4 @@
-class Gc2Posts extends HTMLElement {
+class Gc2Tribune extends HTMLElement {
 
     constructor() {
         super();
@@ -18,10 +18,6 @@ class Gc2Posts extends HTMLElement {
                 return 1;
             } else if (a.time > b.time) {
                 return -1;
-            } else if (a.tribune < b.tribune) {
-                return 1;
-            } else if (a.tribune > b.tribune) {
-                return -1;
             } else if (a.id < b.id) {
                 return 1;
             } else if(a.id > b.id) {
@@ -39,4 +35,4 @@ class Gc2Posts extends HTMLElement {
     }
 
 }
-customElements.define('gc2-posts', Gc2Posts);
+customElements.define('gc2-tribune', Gc2Tribune);
