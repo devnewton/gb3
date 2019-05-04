@@ -54,7 +54,7 @@ apos
  { return "&apos;"; }
  
 url
- = protocol:$((("http" "s"?) / "ftp") "://") url:$([^< \t\r\n])+
+ = "<a href=\""? protocol:$((("http" "s"?) / "ftp") "://") url:$([^< \t\r\n\"])+ ("\">" [^<]+ "</a>")?
  { return [].concat('<a href="', protocol, encodeURI(url), '" target="_blank" rel="noreferrer">url</a>').join("");}
 
 openTag
