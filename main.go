@@ -161,7 +161,7 @@ func main() {
 	http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
 		a.handleSearch(w, r)
 	})
-	http.Handle("/", http.FileServer(http.Dir("coincoin")))
+	http.Handle("/", http.FileServer(http.Dir("gc2")))
 	log.Printf("Listen to %s\n", listenAddress)
 	err := http.ListenAndServe(listenAddress, nil)
 	if nil != err {

@@ -1,18 +1,18 @@
-class Gb3Posts extends HTMLElement {
+class Gc2Posts extends HTMLElement {
 
     constructor() {
         super();
     }
 
     insertPost(post) {
-        let postElement = new Gb3Post();
+        let postElement = new Gc2Post();
         postElement.setup(post);
         this.appendChild(postElement);
         this.sortPosts();
     }
 
     sortPosts() {
-        let postElements = this.getElementsByTagName('gb3-post');
+        let postElements = this.getElementsByTagName('gc2-post');
         Array.prototype.slice.call(postElements).sort((a, b) => {
             if (a.time < b.time) {
                 return 1;
@@ -33,10 +33,10 @@ class Gb3Posts extends HTMLElement {
         });
     }
     insertPostAfterElement(post, element) {
-        let postElement = new Gb3Post();
+        let postElement = new Gc2Post();
         postElement.setup(post);
         this.insertBefore(postElement, element.nextSibling);
     }
 
 }
-customElements.define('gb3-posts', Gb3Posts);
+customElements.define('gc2-posts', Gc2Posts);

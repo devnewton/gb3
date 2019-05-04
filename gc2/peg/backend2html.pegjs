@@ -88,7 +88,7 @@ validFormatTag
 
 spoiler
  = "spoiler"
- { return "gb3-spoiler"; }
+ { return "gc2-spoiler"; }
 
 invalidOpenTag
  = "<" tag:invalidTag ">"
@@ -121,7 +121,7 @@ fullNorloge
  = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
  var time = h + ':' + mi  + ':' + s;
- return '<gb3-norloge title="' + y + "-" + m + "-" + d + "T" + time + '">' + time + '</gb3-norloge>';
+ return '<gc2-norloge title="' + y + "-" + m + "-" + d + "T" + time + '">' + time + '</gc2-norloge>';
  }
  
 norlogeYear
@@ -140,14 +140,14 @@ normalNorloge
  = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
  var time = h + ':' + mi  + ':' + s;
- return '<gb3-norloge title="' + time + '">' + time + '</gb3-norloge>';
+ return '<gc2-norloge title="' + time + '">' + time + '</gc2-norloge>';
  }
  
 shortNorloge
  = h:norlogeHours ":" mi:norlogeMinutes
  {
  var time = h + ':' + mi;
- return '<gb3-norloge title="' + time + '">' + time + '</gb3-norloge>';
+ return '<gc2-norloge title="' + time + '">' + time + '</gc2-norloge>';
  }
 
 norlogeHours
@@ -164,12 +164,12 @@ norlogeSeconds
 
 bigorno
  = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ "<" &(whitespaces / [<[] / !.)
- { return spaces + '<gb3-bigorno>' + bigorno + '</gb3-bigorno>';}
+ { return spaces + '<gc2-bigorno>' + bigorno + '</gc2-bigorno>';}
 
 totoz
   = first:"[:" totoz:[^\]]+ third:"]"
   { var totozId = totoz.join(""); 
-  return '<gb3-totoz>' + backend2html.encode(totozId) + '<img src="https://totoz.eu/img/' + encodeURI(totozId) + '"></gb3-totoz>'; }
+  return '<gc2-totoz>' + backend2html.encode(totozId) + '<img src="https://totoz.eu/img/' + encodeURI(totozId) + '"></gc2-totoz>'; }
   
 whitespaces
  = [ \t\r\n]

@@ -1,4 +1,4 @@
-class Gb3Coincoin extends HTMLElement {
+class Gc2Main extends HTMLElement {
 
     constructor() {
         super();
@@ -33,7 +33,7 @@ class Gb3Coincoin extends HTMLElement {
     }
 
     setupPostsElement() {
-        this.postsElement = document.createElement('gb3-posts');
+        this.postsElement = document.createElement('gc2-posts');
         this.appendChild(this.postsElement);
     }
 
@@ -68,4 +68,4 @@ class Gb3Coincoin extends HTMLElement {
     }
 
 }
-customElements.define('gb3-coincoin', Gb3Coincoin);
+customElements.define('gc2-main', Gc2Main);

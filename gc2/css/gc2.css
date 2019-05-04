@@ -1,20 +1,20 @@
-gb3-posts {
+gc2-posts {
     display: flex;
     flex-direction: column;
 }
 
-gb3-posts :not([data-tribune=""]) gb3-tribune {
+gc2-posts :not([data-tribune=""]) gc2-tribune {
 	display: none;
 }
 
-/*TODO this.querySelectorAll(`gb3-post[id$="${tribune}"]`).forEach((e) => e.style.display = "initial");
-this.querySelectorAll(`gb3-post:not([id$="${tribune}"])`).forEach((e) => e.style.display = "none");*/
+/*TODO this.querySelectorAll(`gc2-post[id$="${tribune}"]`).forEach((e) => e.style.display = "initial");
+this.querySelectorAll(`gc2-post:not([id$="${tribune}"])`).forEach((e) => e.style.display = "none");*/
 
-gb3-post:nth-of-type(odd) {
+gc2-post:nth-of-type(odd) {
 	background-color: #FBFBFB;
 }
 
-gb3-post>gb3-norloge {
+gc2-post>gc2-norloge {
 	padding-right: 5px;
 	padding-left: 5px;
 	text-align: center;
@@ -27,16 +27,16 @@ gb3-post>gb3-norloge {
     cursor:pointer;
 }
 
-gb3-tribune {
+gc2-tribune {
 	color: #007700
 }
 
-gb3-message gb3-norloge {
+gc2-message gc2-norloge {
     color: #5F7FBF;
     cursor: pointer;
 }
 
-gb3-post>gb3-moule {
+gc2-post>gc2-moule {
 	padding-right: 5px;
 	padding-left: 5px;
 	color: #833;
@@ -47,7 +47,7 @@ gb3-post>gb3-moule {
         cursor: pointer;
 }
 
-gb3-message {
+gc2-message {
 	padding-right: 5px;
 	padding-left: 5px;
 	color: black;
@@ -57,25 +57,25 @@ gb3-message {
         margin: auto;
 }
 
-gb3-message a {
+gc2-message a {
 	font-weight: bold;
 	color: #1690f3;
 }
 
-gb3-message a:hover {
+gc2-message a:hover {
 	text-decoration: underline;
 }
 
-gb3-message a:visited {
+gc2-message a:visited {
 	color: #0b78d0;
 }
 
-gb3-message cite {
+gc2-message cite {
 	border: 1px solid #F00;
         cursor: pointer;
 }
 
-gb3-message cite:after {
+gc2-message cite:after {
 	content: '<';
 }
 
@@ -83,7 +83,7 @@ gb3-message cite:after {
     background-color: #FFD202 !important;
 }
 
-gb3-totoz {
+gc2-totoz {
         display: inline;
 	position: relative;
 	font-weight: bold;
@@ -91,31 +91,31 @@ gb3-totoz {
         margin: unset;
 }
 
-gb3-totoz img {
+gc2-totoz img {
 	display: none;
 }
 
-gb3-totoz:hover img {
+gc2-totoz:hover img {
 	display: inline;
 	position: absolute;
 	top: 100%;
 }
 
-gb3-spoiler {
+gc2-spoiler {
     background-color: black;
     color: black;
 }
 
-gb3-spoiler:hover {
+gc2-spoiler:hover {
     background-color: inherit;
 }
 
-gb3-revealed-spoiler {
+gc2-revealed-spoiler {
     background-color: inherit;
     color: red;
 }
 
-gb3-bigorno {
+gc2-bigorno {
 	border: 1px solid #F00;
 }
 

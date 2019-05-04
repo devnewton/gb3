@@ -1,32 +1,32 @@
-class Gb3Norloge extends HTMLElement {
+class Gc2Norloge extends HTMLElement {
     constructor() {
         super();
     }
 }
-customElements.define('gb3-norloge', Gb3Norloge);
+customElements.define('gc2-norloge', Gc2Norloge);
 
-class Gb3Moule extends HTMLElement {
+class Gc2Moule extends HTMLElement {
     constructor() {
         super();
     }
 }
-customElements.define('gb3-moule', Gb3Moule);
+customElements.define('gc2-moule', Gc2Moule);
 
-class Gb3Message extends HTMLElement {
+class Gc2Message extends HTMLElement {
     constructor() {
         super();
     }
 }
-customElements.define('gb3-message', Gb3Message);
+customElements.define('gc2-message', Gc2Message);
 
-class Gb3Tribune extends HTMLElement {
+class Gc2Tribune extends HTMLElement {
     constructor() {
         super();
     }
 }
-customElements.define('gb3-tribune', Gb3Tribune);
+customElements.define('gc2-tribune', Gc2Tribune);
 
-class Gb3Post extends HTMLElement {
+class Gc2Post extends HTMLElement {
 
     constructor() {
         super();
@@ -37,20 +37,20 @@ class Gb3Post extends HTMLElement {
         this.postId = post.id;
         this.tribune = post.tribune;
 
-        let timeElement = document.createElement('gb3-norloge');
+        let timeElement = document.createElement('gc2-norloge');
         timeElement.innerText = this.formatTime(post.time);
         this.appendChild(timeElement);
 
-        let tribuneElement = document.createElement('gb3-tribune');
+        let tribuneElement = document.createElement('gc2-tribune');
         tribuneElement.innerText = post.tribune;
         this.appendChild(tribuneElement);
 
-        let citeElement = document.createElement('gb3-moule');
+        let citeElement = document.createElement('gc2-moule');
         citeElement.innerText = post.login || post.info || 'coward';
         citeElement.title = post.info;
         this.appendChild(citeElement);
 
-        let pElement = document.createElement('gb3-message');
+        let pElement = document.createElement('gc2-message');
         pElement.innerHTML = post.message;
         this.appendChild(pElement);
     }
@@ -60,4 +60,4 @@ class Gb3Post extends HTMLElement {
     }
 
 }
-customElements.define('gb3-post', Gb3Post);
+customElements.define('gc2-post', Gc2Post);
