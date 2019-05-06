@@ -1,6 +1,20 @@
 class Gc2Norloge extends HTMLElement {
     constructor() {
         super();
+
+        this.onmouseenter = (e) => {
+            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"]`);
+            for (let n of norloges) {
+                n.classList.toggle('gc2-highlighted', true);
+            }
+        }
+
+        this.onmouseleave = (e) => {
+            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"]`);
+            for (let n of norloges) {
+                n.classList.toggle('gc2-highlighted', false);
+            }
+        }
     }
 }
 customElements.define('gc2-norloge', Gc2Norloge);
@@ -31,7 +45,11 @@ class Gc2Post extends HTMLElement {
         this.tribune = post.tribune;
 
         let timeElement = document.createElement('gc2-norloge');
-        timeElement.innerText = this.formatTime(post.time);
+        let t = post.time;
+        let timeText = "".concat(t.substr(8, 2), ':', t.substr(10, 2), ':', t.substr(12, 2));
+        let dateText = "".concat(t.substr(0, 4), '-', t.substr(4, 2), '-', t.substr(6, 2));
+        timeElement.innerText = timeText;
+        timeElement.title = dateText.concat("T", timeText);
         this.appendChild(timeElement);
 
         let citeElement = document.createElement('gc2-moule');
@@ -43,10 +61,5 @@ class Gc2Post extends HTMLElement {
         pElement.innerHTML = post.message;
         this.appendChild(pElement);
     }
-
-    formatTime(t) {
-        return "".concat(t.substr(8, 2), ':',t.substr(10, 2), ':', t.substr(12, 2));
-    }
-
 }
 customElements.define('gc2-post', Gc2Post);

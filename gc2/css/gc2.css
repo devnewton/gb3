@@ -7,8 +7,8 @@ gc2-controls input {
 }
 
 gc2-tribune {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 gc2-post:nth-of-type(odd) {
@@ -24,8 +24,8 @@ gc2-post>gc2-norloge {
 	white-space: nowrap;
 	display: inline-block;
 	vertical-align: text-top;
-    margin: auto;
-    cursor:pointer;
+	margin: auto;
+	cursor: pointer;
 }
 
 gc2-tribune {
@@ -33,8 +33,8 @@ gc2-tribune {
 }
 
 gc2-message gc2-norloge {
-    color: #5F7FBF;
-    cursor: pointer;
+	color: #5F7FBF;
+	cursor: pointer;
 }
 
 gc2-post>gc2-moule {
@@ -44,8 +44,8 @@ gc2-post>gc2-moule {
 	display: inline-block;
 	word-break: break-all;
 	vertical-align: text-top;
-        margin: auto;
-        cursor: pointer;
+	margin: auto;
+	cursor: pointer;
 }
 
 gc2-message {
@@ -55,7 +55,7 @@ gc2-message {
 	word-break: break-all;
 	display: inline-block;
 	vertical-align: text-top;
-        margin: auto;
+	margin: auto;
 }
 
 gc2-message a {
@@ -73,23 +73,23 @@ gc2-message a:visited {
 
 gc2-message cite {
 	border: 1px solid #F00;
-        cursor: pointer;
+	cursor: pointer;
 }
 
 gc2-message cite:after {
 	content: '<';
 }
 
-.highlighted {
-    background-color: #FFD202 !important;
+.gc2-highlighted {
+	background-color: #FFD202 !important;
 }
 
 gc2-totoz {
-        display: inline;
+	display: inline;
 	position: relative;
 	font-weight: bold;
 	color: #0A1;
-        margin: unset;
+	margin: unset;
 }
 
 gc2-totoz img {
@@ -103,27 +103,19 @@ gc2-totoz:hover img {
 }
 
 gc2-spoiler {
-    background-color: black;
-    color: black;
+	background-color: black;
+	color: black;
 }
 
 gc2-spoiler:hover {
-    background-color: inherit;
+	background-color: inherit;
 }
 
 gc2-revealed-spoiler {
-    background-color: inherit;
-    color: red;
+	background-color: inherit;
+	color: red;
 }
 
 gc2-bigorno {
 	border: 1px solid #F00;
-}
-
-.posts-enter-active, .posts-leave-active {
-  transition: all 1s;
-}
-.posts-enter, .posts-leave-to {
-  opacity: 0;
-  transform: translateX(100%);
 }
