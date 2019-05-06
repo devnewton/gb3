@@ -48,30 +48,30 @@ func newGb3() *gb3 {
 	}
 }
 
-func (a *gb3) forwardLoop() {
+func (g *gb3) forwardLoop() {
 	for {
 		select {
-		case c := <-a.join:
-			a.coincoins[c] = struct{}{}
-		case c := <-a.leave:
-			delete(a.coincoins, c)
+		case c := <-g.join:
+			g.coincoins[c] = struct{}{}
+		case c := <-g.leave:
+			delete(g.coincoins, c)
 			close(c.Send)
-		case post := <-a.forward:
+		case post := <-g.forward:
 			js, err := json.Marshal(post)
 			if nil != err {
 				log.Println(err)
 				continue
 			}
-			for c := range a.coincoins {
+			for c := range g.coincoins {
 				c.Send <- tribune.CoincoinMessage{Post: post, Data: js}
 			}
 		}
 	}
 }
 
-func (a *gb3) sendStoredPostsTo(c *tribune.Coincoin) {
-	for _, t := range a.tribunes {
-		posts, err := a.store.RetrieveLatests(t.Name)
+func (g *gb3) sendStoredPostsTo(c *tribune.Coincoin) {
+	for _, t := range g.tribunes {
+		posts, err := g.store.RetrieveLatests(t.Name)
 		if nil != err {
 			log.Println(err)
 			continue
@@ -87,7 +87,7 @@ func (a *gb3) sendStoredPostsTo(c *tribune.Coincoin) {
 	}
 }
 
-func (a *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
+func (g *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
@@ -97,28 +97,28 @@ func (a *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 	c := tribune.NewCoincoin(w, flusher)
-	a.join <- c
-	defer func() { a.leave <- c }()
-	go a.sendStoredPostsTo(c)
+	g.join <- c
+	defer func() { g.leave <- c }()
+	go g.sendStoredPostsTo(c)
 	c.WriteLoop()
 }
 
-func (a *gb3) handlePost(w http.ResponseWriter, r *http.Request) {
+func (g *gb3) handlePost(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if nil != err {
 		log.Println(err)
 		return
 	}
-	t := a.tribunes[r.PostFormValue("tribune")]
+	t := g.tribunes[r.PostFormValue("tribune")]
 	if nil != t {
 		t.Post(r)
-		a.poll <- t
+		g.poll <- t
 	}
 }
 
-func (a *gb3) handleSearch(w http.ResponseWriter, r *http.Request) {
+func (g *gb3) handleSearch(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("query")
-	results, err := a.indexer.Search(query)
+	results, err := g.indexer.Search(query)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -131,9 +131,9 @@ func (a *gb3) handleSearch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *gb3) pollTribunes() {
-	for _, t := range a.tribunes {
-		err := a.pollTribune(t)
+func (g *gb3) pollTribunes() {
+	for _, t := range g.tribunes {
+		err := g.pollTribune(t)
 		if nil != err {
 			log.Println(err)
 			continue
@@ -141,7 +141,7 @@ func (a *gb3) pollTribunes() {
 	}
 }
 
-func (a *gb3) pollTribune(t *tribune.Tribune) error {
+func (g *gb3) pollTribune(t *tribune.Tribune) error {
 	if verboseMode {
 		log.Printf("Poll %s\n", t.Name)
 	}
@@ -150,38 +150,38 @@ func (a *gb3) pollTribune(t *tribune.Tribune) error {
 		return err
 	}
 	for _, p := range posts {
-		a.forward <- p
+		g.forward <- p
 	}
-	go a.store.Save(t.Name, posts)
-	go a.indexer.Index(posts)
+	go g.store.Save(t.Name, posts)
+	go g.indexer.Index(posts)
 	return err
 }
 
-func (a *gb3) pollLoop() {
+func (g *gb3) pollLoop() {
 	tick := time.Tick(30 * time.Second)
 	for {
 		select {
-		case t := <-a.poll:
-			a.pollTribune(t)
+		case t := <-g.poll:
+			g.pollTribune(t)
 		case <-tick:
-			a.pollTribunes()
+			g.pollTribunes()
 		}
 	}
 }
 
 func main() {
 	flag.Parse()
-	a := newGb3()
-	go a.forwardLoop()
-	go a.pollLoop()
+	g := newGb3()
+	go g.forwardLoop()
+	go g.pollLoop()
 	http.HandleFunc("/api/poll", func(w http.ResponseWriter, r *http.Request) {
-		a.handlePoll(w, r)
+		g.handlePoll(w, r)
 	})
 	http.HandleFunc("/api/post", func(w http.ResponseWriter, r *http.Request) {
-		a.handlePost(w, r)
+		g.handlePost(w, r)
 	})
 	http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
-		a.handleSearch(w, r)
+		g.handleSearch(w, r)
 	})
 	http.Handle("/", http.FileServer(http.Dir("gc2")))
 	log.Printf("Listen to %s\n", listenAddress)
