@@ -10,7 +10,7 @@ class Gc2Norloge extends HTMLElement {
         }
 
         this.onmouseleave = (e) => {
-            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"]`);
+            let norloges = document.querySelectorAll(`.gc2-highlighted`);
             for (let n of norloges) {
                 n.classList.toggle('gc2-highlighted', false);
             }
