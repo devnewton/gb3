@@ -7,17 +7,27 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
+	"time"
 )
 
 var listenAddress string
 var verboseMode bool
 var storeFile string
+var timeLocation *time.Location
 
 func init() {
 	flag.StringVar(&listenAddress, "listen", ":6667", "TCP address to listen on")
 	flag.BoolVar(&verboseMode, "verbose", false, "Verbose logging")
 	flag.StringVar(&storeFile, "file", "/tmp/gb0.json", "File to store posts")
+	tl, err := time.LoadLocation("Europe/Paris")
+	if nil != err {
+		log.Println(err)
+		timeLocation = time.UTC
+	} else {
+		timeLocation = tl
+	}
 }
 
 type post struct {
@@ -70,7 +80,24 @@ func (g *gb0) handlePost(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	//TODO
+	var p post
+	p.Message = stripControlsCharsFromString(r.FormValue("message")[0:65536])
+	p.Info = stripControlsCharsFromString(r.UserAgent()[0:32])
+	t := time.Now().In(timeLocation)
+	p.Time = t.Format("20060102150405")
+	p.ID = t.UnixNano()
+	newPosts := append(readPosts(), p)
+	sort.Sort(newPosts)
+	newPosts = newPosts[0:200]
+
+	jsonFile, err := os.OpenFile(storeFile, os.O_WRONLY, 0)
+	if nil != err {
+		log.Println(err)
+		return
+	}
+	defer jsonFile.Close()
+	encoder := json.NewEncoder(jsonFile)
+	encoder.Encode(newPosts)
 }
 
 func (g *gb0) handleGetTsv(w http.ResponseWriter, r *http.Request) {
