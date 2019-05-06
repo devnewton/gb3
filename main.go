@@ -26,9 +26,10 @@ type gb3 struct {
 	tribunes  map[string]*tribune.Tribune
 	poll      chan *tribune.Tribune
 	indexer   tribune.Indexer
+	store     tribune.Store
 }
 
-func newAnatid() *gb3 {
+func newGb3() *gb3 {
 	return &gb3{
 		coincoins: make(map[*tribune.Coincoin]struct{}),
 		join:      make(chan *tribune.Coincoin),
@@ -43,6 +44,7 @@ func newAnatid() *gb3 {
 		},
 		poll:    make(chan *tribune.Tribune),
 		indexer: tribune.NewIndexer(),
+		store:   tribune.NewStore(),
 	}
 }
 
@@ -67,6 +69,24 @@ func (a *gb3) forwardLoop() {
 	}
 }
 
+func (a *gb3) sendStoredPostsTo(c *tribune.Coincoin) {
+	for _, t := range a.tribunes {
+		posts, err := a.store.RetrieveLatests(t.Name)
+		if nil != err {
+			log.Println(err)
+			continue
+		}
+		for _, p := range posts {
+			js, err := json.Marshal(p)
+			if nil != err {
+				log.Println(err)
+				continue
+			}
+			c.Send <- tribune.CoincoinMessage{Post: p, Data: js}
+		}
+	}
+}
+
 func (a *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	flusher, ok := w.(http.Flusher)
 	if !ok {
@@ -79,6 +99,7 @@ func (a *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	c := tribune.NewCoincoin(w, flusher)
 	a.join <- c
 	defer func() { a.leave <- c }()
+	go a.sendStoredPostsTo(c)
 	c.WriteLoop()
 }
 
@@ -131,6 +152,7 @@ func (a *gb3) pollTribune(t *tribune.Tribune) error {
 	for _, p := range posts {
 		a.forward <- p
 	}
+	go a.store.Save(t.Name, posts)
 	go a.indexer.Index(posts)
 	return err
 }
@@ -149,7 +171,7 @@ func (a *gb3) pollLoop() {
 
 func main() {
 	flag.Parse()
-	a := newAnatid()
+	a := newGb3()
 	go a.forwardLoop()
 	go a.pollLoop()
 	http.HandleFunc("/api/poll", func(w http.ResponseWriter, r *http.Request) {
