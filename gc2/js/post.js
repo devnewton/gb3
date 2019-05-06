@@ -1,18 +1,62 @@
+class Gc2PostNorloge extends HTMLElement {
+    constructor() {
+        super();
+
+        this.onmouseenter = (e) => {
+            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
+            for (let n of norloges) {
+                n.classList.toggle("gc2-highlighted", true);
+            }
+        }
+
+        this.onmouseleave = (e) => {
+            let norloges = document.querySelectorAll(".gc2-highlighted");
+            for (let n of norloges) {
+                n.classList.toggle("gc2-highlighted", false);
+            }
+        }
+
+        this.onclick = (e) => {
+            let message = document.getElementById("gc2-message");
+            message.value += `${message.value && ' '}${this.title} `;
+            message.focus();
+        }
+    }
+}
+customElements.define('gc2-post-norloge', Gc2PostNorloge);
+
 class Gc2Norloge extends HTMLElement {
     constructor() {
         super();
 
         this.onmouseenter = (e) => {
-            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"]`);
+            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
             for (let n of norloges) {
-                n.classList.toggle('gc2-highlighted', true);
+                n.classList.toggle("gc2-highlighted", true);
             }
         }
 
         this.onmouseleave = (e) => {
-            let norloges = document.querySelectorAll(`.gc2-highlighted`);
+            let norloges = document.querySelectorAll(".gc2-highlighted");
             for (let n of norloges) {
-                n.classList.toggle('gc2-highlighted', false);
+                n.classList.toggle("gc2-highlighted", false);
+            }
+        }
+
+        this.onclick = (e) => {
+            let n = this.findQuotedNorloge();
+            if(n) {
+                n.scrollIntoView();
+            }
+        }
+    }
+
+    findQuotedNorloge() {
+        let norloges = document.querySelectorAll("gc2-norloge");
+        let time = this.title.substr(-8);
+        for (let n of norloges) {
+            if(!this.isSameNode(n) && time === n.title.substr(-8)) {
+                return n
             }
         }
     }
@@ -44,7 +88,7 @@ class Gc2Post extends HTMLElement {
         this.postId = post.id;
         this.tribune = post.tribune;
 
-        let timeElement = document.createElement('gc2-norloge');
+        let timeElement = document.createElement('gc2-post-norloge');
         let t = post.time;
         let timeText = "".concat(t.substr(8, 2), ':', t.substr(10, 2), ':', t.substr(12, 2));
         let dateText = "".concat(t.substr(0, 4), '-', t.substr(4, 2), '-', t.substr(6, 2));

@@ -37,6 +37,7 @@ class Gc2Main extends HTMLElement {
 
     setupMessageInput() {
         this.messageInput = document.createElement("input");
+        this.messageInput.id="gc2-message";
         this.messageInput.type = "text";
         this.messageInput.spellcheck = true;
         this.controls.appendChild(this.messageInput);
