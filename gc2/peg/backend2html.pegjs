@@ -115,13 +115,20 @@ tagAttribute
  {return { name: name, value: value}}
 
 norloge
- = fullNorloge / normalNorloge / shortNorloge
+ = fullNorloge / longNorloge / normalNorloge / shortNorloge
 
 fullNorloge
  = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
  var time = h + ':' + mi  + ':' + s;
  return '<gc2-norloge title="' + y + "-" + m + "-" + d + "T" + time + '">' + time + '</gc2-norloge>';
+ }
+
+ longNorloge
+ = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ {
+ var time = h + ':' + mi  + ':' + s;
+ return '<gc2-norloge title="' + m + "-" + d + "T" + time + '">' + time + '</gc2-norloge>';
  }
  
 norlogeYear
