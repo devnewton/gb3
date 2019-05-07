@@ -1,4 +1,4 @@
-package gb0
+package main
 
 import (
 	"encoding/json"
@@ -16,6 +16,8 @@ var listenAddress string
 var verboseMode bool
 var storeFile string
 var timeLocation *time.Location
+var writePostChan = make(chan post)
+var readPostsChan = make(chan chan posts)
 
 func init() {
 	flag.StringVar(&listenAddress, "listen", ":6667", "TCP address to listen on")
@@ -43,13 +45,6 @@ func (p posts) Len() int           { return len(p) }
 func (p posts) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 func (p posts) Less(i, j int) bool { return p[i].ID < p[j].ID }
 
-type gb0 struct {
-}
-
-func newGb0() *gb0 {
-	return &gb0{}
-}
-
 func readPosts() (p posts) {
 	jsonFile, err := os.Open(storeFile)
 	if nil != err {
@@ -74,15 +69,34 @@ func stripControlsCharsFromString(str string) string {
 	}, str)
 }
 
-func (g *gb0) handlePost(w http.ResponseWriter, r *http.Request) {
+func handlePost(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if nil != err {
 		log.Println(err)
 		return
 	}
-	var p post
-	p.Message = stripControlsCharsFromString(r.FormValue("message")[0:65536])
-	p.Info = stripControlsCharsFromString(r.UserAgent()[0:32])
+	writePostChan <- post{
+		Message: stripControlsCharsFromString(r.FormValue("message")[0:65536]),
+		Info:    stripControlsCharsFromString(r.UserAgent()[0:32]),
+	}
+}
+
+func handleGetTsv(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/tab-separated-values")
+	replyChan := make(chan posts)
+	readPostsChan <- replyChan
+	select {
+	case postsToSend := <-replyChan:
+		for _, p := range postsToSend {
+			fmt.Fprintf(w, "%d\t%s\t%s\t%s\t\n", p.ID, p.Time, p.Info, p.Message)
+		}
+	case <-time.After(30 * time.Second):
+		log.Println("Read posts timeout")
+	}
+
+}
+
+func writePost(p post) {
 	t := time.Now().In(timeLocation)
 	p.Time = t.Format("20060102150405")
 	p.ID = t.UnixNano()
@@ -100,22 +114,22 @@ func (g *gb0) handlePost(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(newPosts)
 }
 
-func (g *gb0) handleGetTsv(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/tab-separated-values")
-	for _, p := range readPosts() {
-		fmt.Fprintf(w, "%d\t%s\t%s\t%s\t\n", p.ID, p.Time, p.Info, p.Message)
+func writeLoop() {
+	for {
+		select {
+		case p := <-writePostChan:
+			writePost(p)
+		case r := <-readPostsChan:
+			r <- readPosts()
+		}
+
 	}
 }
 
 func main() {
 	flag.Parse()
-	g := newGb0()
-	http.HandleFunc("/tsv", func(w http.ResponseWriter, r *http.Request) {
-		g.handleGetTsv(w, r)
-	})
-	http.HandleFunc("/api/post", func(w http.ResponseWriter, r *http.Request) {
-		g.handlePost(w, r)
-	})
+	http.HandleFunc("/tsv", handleGetTsv)
+	http.HandleFunc("/api/post", handlePost)
 	log.Printf("Listen to %s\n", listenAddress)
 	err := http.ListenAndServe(listenAddress, nil)
 	if nil != err {
