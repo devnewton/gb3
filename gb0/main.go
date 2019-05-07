@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 var listenAddress string
@@ -18,11 +19,13 @@ var storeFile string
 var timeLocation *time.Location
 var writePostChan = make(chan post)
 var readPostsChan = make(chan chan posts)
+var postsLimit int
 
 func init() {
 	flag.StringVar(&listenAddress, "listen", ":6667", "TCP address to listen on")
 	flag.BoolVar(&verboseMode, "verbose", false, "Verbose logging")
 	flag.StringVar(&storeFile, "file", "/tmp/gb0.json", "File to store posts")
+	flag.IntVar(&postsLimit, "limit", 200, "Max number of posts to store")
 	tl, err := time.LoadLocation("Europe/Paris")
 	if nil != err {
 		log.Println(err)
@@ -72,12 +75,22 @@ func stripControlsCharsFromString(str string) string {
 func handlePost(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if nil != err {
-		log.Println(err)
+		http.Error(w, fmt.Sprintf("Invalid request : %s", err), http.StatusBadRequest)
+		return
+	}
+	message := r.FormValue("message")
+	if !utf8.ValidString(message) {
+		http.Error(w, "Invalid utf8 in message", http.StatusBadRequest)
+		return
+	}
+	info := r.UserAgent()
+	if !utf8.ValidString(info) {
+		http.Error(w, "Invalid utf8 in user agent", http.StatusBadRequest)
 		return
 	}
 	writePostChan <- post{
-		Message: stripControlsCharsFromString(r.FormValue("message")[0:65536]),
-		Info:    stripControlsCharsFromString(r.UserAgent()[0:32]),
+		Message: stripControlsCharsFromString(fmt.Sprintf("%.65536s", message)),
+		Info:    stripControlsCharsFromString(fmt.Sprintf("%.32s", info)),
 	}
 }
 
@@ -96,15 +109,22 @@ func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
 func writePost(p post) {
 	t := time.Now().In(timeLocation)
 	p.Time = t.Format("20060102150405")
 	p.ID = t.UnixNano()
 	newPosts := append(readPosts(), p)
 	sort.Sort(newPosts)
-	newPosts = newPosts[0:200]
+	newPosts = newPosts[0:min(postsLimit, len(newPosts))]
 
-	jsonFile, err := os.OpenFile(storeFile, os.O_WRONLY, 0)
+	jsonFile, err := os.OpenFile(storeFile, os.O_WRONLY|os.O_CREATE, 0660)
 	if nil != err {
 		log.Println(err)
 		return
@@ -129,8 +149,9 @@ func writeLoop() {
 func main() {
 	flag.Parse()
 	http.HandleFunc("/tsv", handleGetTsv)
-	http.HandleFunc("/api/post", handlePost)
+	http.HandleFunc("/post", handlePost)
 	log.Printf("Listen to %s\n", listenAddress)
+	go writeLoop()
 	err := http.ListenAndServe(listenAddress, nil)
 	if nil != err {
 		log.Fatal(err)
