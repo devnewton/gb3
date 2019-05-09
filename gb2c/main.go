@@ -19,22 +19,25 @@ func init() {
 }
 
 type gb3 struct {
-	coincoins map[*tribune.Coincoin]struct{}
-	join      chan *tribune.Coincoin
-	leave     chan *tribune.Coincoin
-	forward   chan tribune.Post
-	tribunes  map[string]*tribune.Tribune
-	poll      chan *tribune.Tribune
-	indexer   tribune.Indexer
-	store     tribune.Store
+	join     chan *tribune.Coincoin
+	leave    chan *tribune.Coincoin
+	forward  chan forwardMessage
+	tribunes map[string]*tribune.Tribune
+	poll     chan *tribune.Tribune
+	indexer  tribune.Indexer
+	store    tribune.Store
+}
+
+type forwardMessage struct {
+	tribune.Post
+	*tribune.Coincoin
 }
 
 func newGb3() *gb3 {
 	return &gb3{
-		coincoins: make(map[*tribune.Coincoin]struct{}),
-		join:      make(chan *tribune.Coincoin),
-		leave:     make(chan *tribune.Coincoin),
-		forward:   make(chan tribune.Post),
+		join:    make(chan *tribune.Coincoin),
+		leave:   make(chan *tribune.Coincoin),
+		forward: make(chan forwardMessage),
 		tribunes: map[string]*tribune.Tribune{
 			"euromussels": &tribune.Tribune{Name: "euromussels", BackendURL: "https://faab.euromussels.eu/data/backend.tsv", PostURL: "https://faab.euromussels.eu/add.php", PostField: "message"},
 			"sveetch":     &tribune.Tribune{Name: "sveetch", BackendURL: "http://sveetch.net/tribune/remote/tsv/", PostURL: "http://sveetch.net/tribune/post/tsv/?last_id=1", PostField: "content"},
@@ -49,21 +52,25 @@ func newGb3() *gb3 {
 }
 
 func (g *gb3) forwardLoop() {
+	coincoins := make(map[*tribune.Coincoin]struct{})
 	for {
 		select {
 		case c := <-g.join:
-			g.coincoins[c] = struct{}{}
+			coincoins[c] = struct{}{}
 		case c := <-g.leave:
-			delete(g.coincoins, c)
-			close(c.Send)
-		case post := <-g.forward:
-			js, err := json.Marshal(post)
+			delete(coincoins, c)
+		case msg := <-g.forward:
+			js, err := json.Marshal(msg.Post)
 			if nil != err {
 				log.Println(err)
 				continue
 			}
-			for c := range g.coincoins {
-				c.Send <- tribune.CoincoinMessage{Post: post, Data: js}
+			if nil == msg.Coincoin {
+				for c := range coincoins {
+					c.Send <- tribune.CoincoinMessage{Post: msg.Post, Data: js}
+				}
+			} else {
+				msg.Coincoin.Send <- tribune.CoincoinMessage{Post: msg.Post, Data: js}
 			}
 		}
 	}
@@ -77,12 +84,7 @@ func (g *gb3) sendStoredPostsTo(c *tribune.Coincoin) {
 			continue
 		}
 		for _, p := range posts {
-			js, err := json.Marshal(p)
-			if nil != err {
-				log.Println(err)
-				continue
-			}
-			c.Send <- tribune.CoincoinMessage{Post: p, Data: js}
+			g.forward <- forwardMessage{Post: p, Coincoin: c}
 		}
 	}
 }
@@ -150,7 +152,7 @@ func (g *gb3) pollTribune(t *tribune.Tribune) error {
 		return err
 	}
 	for _, p := range posts {
-		g.forward <- p
+		g.forward <- forwardMessage{Post: p}
 	}
 	go g.store.Save(t.Name, posts)
 	go g.indexer.Index(posts)
