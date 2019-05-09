@@ -17,6 +17,7 @@ class Gc2Main extends HTMLElement {
         this.setupTribuneSelect();
         this.setupMessageInput();
         this.setupBackend2html();
+        this.setupGesture();
     }
 
     setupControls() {
@@ -27,17 +28,15 @@ class Gc2Main extends HTMLElement {
     setupTribuneSelect() {
         this.tribuneSelect = document.createElement("select");
         this.tribuneSelect.onchange = () => {
+            this.setActiveTribune(this.tribuneSelect.value);
             let selectedTribune = this.tribuneSelect.value;
-            this.tribunes.forEach((tribuneElement, tribune) => {
-                tribuneElement.style.display = tribune === selectedTribune ? "" : "none";
-            });
         }
         this.controls.appendChild(this.tribuneSelect);
     }
 
     setupMessageInput() {
         this.messageInput = document.createElement("input");
-        this.messageInput.id="gc2-message";
+        this.messageInput.id = "gc2-message";
         this.messageInput.type = "text";
         this.messageInput.spellcheck = true;
         this.controls.appendChild(this.messageInput);
@@ -71,11 +70,42 @@ class Gc2Main extends HTMLElement {
             this.tribuneSelect.add(option);
 
             tribuneElement = document.createElement('gc2-tribune');
-            this.tribunes.set(tribune, tribuneElement);
-            tribuneElement.style.display = tribune === this.tribuneSelect.value ? "" : "none";
+            tribuneElement.style.display = "none";
             this.appendChild(tribuneElement);
+
+            this.tribunes.set(tribune, tribuneElement);
+            this.setActiveTribune(this.tribunes.size === 1 ? tribune : this.tribuneSelect.value);
         }
         return tribuneElement;
+    }
+
+    setActiveTribune(selectedTribune) {
+        this.messageInput.placeholder = selectedTribune;
+        this.tribunes.forEach((tribuneElement, tribune) => {
+            tribuneElement.style.display = tribune === selectedTribune ? "" : "none";
+        });
+    }
+
+    setupGesture() {
+        let hammertime = new Hammer(document.getElementsByTagName("gc2-main")[0]);
+        hammertime.on('swipeleft', (e) => {
+            if (this.tribuneSelect.selectedIndex === 0) {
+                this.tribuneSelect.selectedIndex = this.tribuneSelect.options.length - 1;
+            } else {
+                this.tribuneSelect.selectedIndex = this.tribuneSelect.selectedIndex - 1;
+            }
+            this.setActiveTribune(this.tribuneSelect.value);
+        }
+        );
+        hammertime.on('swiperight', (e) => {
+            if (this.tribuneSelect.selectedIndex >= (this.tribuneSelect.options.length - 1)) {
+                this.tribuneSelect.selectedIndex = 0;
+            } else {
+                this.tribuneSelect.selectedIndex = this.tribuneSelect.selectedIndex + 1;
+            }
+            this.setActiveTribune(this.tribuneSelect.value);
+        });
+
     }
 
 }

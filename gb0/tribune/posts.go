@@ -88,7 +88,7 @@ func (f *FileStore) WritePost(p Post) {
 	if len(newPosts) >= postsLimit {
 		newPosts = newPosts[len(newPosts)-postsLimit:]
 	}
-	jsonFile, err := os.OpenFile(storeFile, os.O_WRONLY|os.O_CREATE, 0660)
+	jsonFile, err := os.OpenFile(storeFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
 	if nil != err {
 		log.Println(err)
 		return
