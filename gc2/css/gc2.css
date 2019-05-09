@@ -119,3 +119,9 @@ gc2-revealed-spoiler {
 gc2-bigorno {
 	border: 1px solid #F00;
 }
+
+@media only screen and (max-device-width: 480px) {
+    gc2-controls select {
+		display: none;
+	}
+}

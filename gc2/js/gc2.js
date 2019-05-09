@@ -87,7 +87,9 @@ class Gc2Main extends HTMLElement {
     }
 
     setupGesture() {
-        let hammertime = new Hammer(document.getElementsByTagName("gc2-main")[0]);
+        let hammertime = new Hammer(document.getElementsByTagName("gc2-main")[0], {
+            inputClass: Hammer.TouchInput
+        });
         hammertime.on('swipeleft', (e) => {
             if (this.tribuneSelect.selectedIndex === 0) {
                 this.tribuneSelect.selectedIndex = this.tribuneSelect.options.length - 1;
