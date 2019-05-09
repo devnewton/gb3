@@ -66,11 +66,22 @@ func (g *gb3) forwardLoop() {
 				continue
 			}
 			if nil == msg.Coincoin {
+				aliveCoincoins := make(map[*tribune.Coincoin]struct{})
 				for c := range coincoins {
-					c.Send <- tribune.CoincoinMessage{Post: msg.Post, Data: js}
+					if err := c.Write(msg.Post, js); nil == err {
+						aliveCoincoins[c] = struct{}{}
+					} else {
+						if verboseMode {
+							log.Printf("Error writing to coincoin : %s\n", err)
+						}
+					}
 				}
+				coincoins = aliveCoincoins
 			} else {
-				msg.Coincoin.Send <- tribune.CoincoinMessage{Post: msg.Post, Data: js}
+				if err := msg.Coincoin.Write(msg.Post, js); nil != err {
+					delete(coincoins, msg.Coincoin)
+					log.Printf("Error writing to coincoin : %s\n", err)
+				}
 			}
 		}
 	}
@@ -101,8 +112,12 @@ func (g *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	c := tribune.NewCoincoin(w, flusher)
 	g.join <- c
 	defer func() { g.leave <- c }()
-	go g.sendStoredPostsTo(c)
-	c.WriteLoop()
+	g.sendStoredPostsTo(c)
+	closeEvt := w.(http.CloseNotifier).CloseNotify()
+	select {
+	case <-closeEvt:
+	case <-time.After(60 * time.Minute):
+	}
 }
 
 func (g *gb3) handlePost(w http.ResponseWriter, r *http.Request) {
