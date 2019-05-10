@@ -58,8 +58,10 @@ apos
  { return "&apos;"; }
  
 url
- = "<a href=\""? protocol:$((("http" "s"?) / "ftp") "://") url:$([^< \t\r\n\"])+ ("\">" [^<]+ "</a>")?
- { return [].concat('<a href="', protocol, encodeURI(url), '" target="_blank" rel="noreferrer">url</a>').join("");}
+ = "<a href=\""? urlStr:$((("http" "s"?) / "ftp") "://" ([^< \t\r\n\"])+) ("\">" [^<]+ "</a>")?
+ { 
+   let url = new URL(urlStr)
+   return `<a href="${encodeURI(url)}" target="_blank" rel="noreferrer">${url.hostname}</a>`;}
 
 openTag
  = "<" tag:validFormatTag ">"
