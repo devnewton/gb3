@@ -117,7 +117,12 @@ gc2-revealed-spoiler {
 }
 
 gc2-bigorno {
-	border: 1px solid #F00;
+	color: #D00;
+	font-weight: bold;
+}
+
+gc2-bigorno::after {
+	content: "📣"
 }
 
 .gc2-loading {

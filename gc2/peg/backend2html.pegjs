@@ -27,9 +27,13 @@ postItem
  / norloge
  / openTag
  / closeTag
+ / xmlEntities
  / xmlSpecialChar
  / .
- 
+
+ xmlEntities
+  = $("&" ("lt" / "gt" ) ";")
+
 xmlSpecialChar
  = (lt / gt / amp / quot / apos)
  
@@ -170,7 +174,7 @@ norlogeSeconds
  { return first + last; }
 
 bigorno
- = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ "<" &(whitespaces / [<[] / !.)
+ = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ ("<" / "&lt;") &(whitespaces / [<;:[,] / !.)
  { return spaces + '<gc2-bigorno>' + bigorno + '</gc2-bigorno>';}
 
 totoz
