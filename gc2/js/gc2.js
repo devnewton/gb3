@@ -1,10 +1,3 @@
-class Gc2Controls extends HTMLElement {
-    constructor() {
-        super();
-    }
-}
-customElements.define('gc2-controls', Gc2Controls);
-
 class Gc2Main extends HTMLElement {
 
     constructor() {
@@ -14,15 +7,36 @@ class Gc2Main extends HTMLElement {
 
     connectedCallback() {
         this.setupControls();
-        this.setupTribuneSelect();
-        this.setupMessageInput();
         this.setupBackend2html();
         this.setupGesture();
     }
 
     setupControls() {
-        this.controls = document.createElement("gc2-controls");
+        this.controls = document.createElement("form");
+        this.controls.classList.add("gc2-controls");
         this.appendChild(this.controls);
+        this.setupTribuneSelect();
+        this.setupMessageInput();
+
+        this.controls.onsubmit = (e) => {
+            if (this.messageInput.value && this.tribuneSelect.value) {
+                let data = new URLSearchParams();
+                data.set('message', this.messageInput.value);
+                data.set('tribune', this.tribuneSelect.value);
+                this.messageInput.value = "";
+                this.messageInput.classList.toggle("gc2-loading", true);
+                fetch("/api/post", {
+                    body: data,
+                    method: "POST"
+                }).then((data) => {
+                    this.messageInput.classList.toggle("gc2-loading", false);
+                }).catch((error) => {
+                    this.messageInput.classList.toggle("gc2-loading", false);
+                    console.log(`Cannot post message '${formData.get('message')}'. Error: `, error);
+                });
+            }
+            e.preventDefault()
+        };
     }
 
     setupTribuneSelect() {

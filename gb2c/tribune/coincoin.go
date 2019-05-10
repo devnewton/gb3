@@ -22,6 +22,7 @@ func (c *Coincoin) Write(post Post, data []byte) (err error) {
 	if post.ID > c.LastPostIDByTribune[post.Tribune] {
 		c.LastPostIDByTribune[post.Tribune] = post.ID
 		_, err = fmt.Fprintf(c.w, "data: %s\n\n", data)
+		c.flusher.Flush()
 	}
 	return err
 }
