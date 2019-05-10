@@ -4,7 +4,7 @@ backend2html.tagStack = [];
 
 backend2html.encode = function encode(e) {
     return e.replace(/[.]/g, function(e) {
-        return "&#"+e.charCodeAt(0)+";";
+        return `&#${e.charCodeAt(0)};`;
     });
 };
 
@@ -15,7 +15,7 @@ post
  {
  	var result = items.join("");
     while(backend2html.tagStack.length > 0) {
-    	result += "</" + backend2html.tagStack.pop() + ">";
+    	result += `</${backend2html.tagStack.pop()}>`;
     }
     return result;
  }
@@ -67,7 +67,7 @@ openTag
  = "<" tag:validFormatTag ">"
  {
  	backend2html.tagStack.push(tag);
- 	return "<" + tag + ">";
+ 	return `<${tag}>`;
  }
 
 closeTag
@@ -80,10 +80,10 @@ closeTag
       	break;
       }
       if( poppedTag == tag) {
-      	result += "</" + tag + ">";
+      	result += `</${tag}>`;
         break;
       } else {
-      	result += "</" + poppedTag + ">";
+      	result += `</${poppedTag}>`;
       }
     }
     return result;
@@ -98,11 +98,11 @@ spoiler
 
 invalidOpenTag
  = "<" tag:invalidTag ">"
- { return "&lt" + tag + "&gt"; }
+ { return `&lt;${tag}&gt;`; }
 
 invalidCloseTag
  = "</" tag:invalidTag ">"
- { return  "&lt/" + tag + "&gt"; }
+ { return  `&lt;/${tag}&gt;`; }
  
 invalidTag
  = [A-Za-z] (xmlSpecialChar / [^>])*
@@ -126,15 +126,15 @@ norloge
 fullNorloge
  = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
- var time = h + ':' + mi  + ':' + s;
- return '<gc2-norloge title="' + y + "-" + m + "-" + d + "T" + time + '">' + time + '</gc2-norloge>';
+ let time = `${h}:${mi}:${s}`;
+ return `<gc2-norloge title="${y}-${m}-${d}T${time}">${time}</gc2-norloge>`;
  }
 
  longNorloge
  = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
- var time = h + ':' + mi  + ':' + s;
- return '<gc2-norloge title="' + m + "-" + d + "T" + time + '">' + time + '</gc2-norloge>';
+ let time = `${h}:${mi}:${s}`;
+ return `<gc2-norloge title="${m}-${d}T${time}">${time}</gc2-norloge>`;
  }
  
 norlogeYear
@@ -152,15 +152,15 @@ norlogeDay
 normalNorloge
  = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
- var time = h + ':' + mi  + ':' + s;
- return '<gc2-norloge title="' + time + '">' + time + '</gc2-norloge>';
+ let time = `${h}:${mi}:${s}`;
+ return `<gc2-norloge title="${time}">${time}</gc2-norloge>`;
  }
  
 shortNorloge
  = h:norlogeHours ":" mi:norlogeMinutes
  {
- var time = h + ':' + mi;
- return '<gc2-norloge title="' + time + '">' + time + '</gc2-norloge>';
+ let time = `${h}:${mi}`;
+ return `<gc2-norloge title="${time}">${time}</gc2-norloge>`;
  }
 
 norlogeHours
@@ -177,12 +177,11 @@ norlogeSeconds
 
 bigorno
  = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ ("<" / "&lt;") &(whitespaces / [<;:[,] / !.)
- { return spaces + '<gc2-bigorno>' + bigorno + '</gc2-bigorno>';}
+ { return `${spaces}<gc2-bigorno>${bigorno}</gc2-bigorno>`;}
 
 totoz
-  = first:"[:" totoz:[^\]]+ third:"]"
-  { var totozId = totoz.join(""); 
-  return '<gc2-totoz>' + backend2html.encode(totozId) + '<img src="https://totoz.eu/img/' + encodeURI(totozId) + '"></gc2-totoz>'; }
+  = first:"[:" totoz:$[^\]]+ third:"]"
+  { return `<gc2-totoz>${backend2html.encode(totoz)}<img src="https://totoz.eu/img/${encodeURI(totoz)}"></gc2-totoz>`; }
   
 whitespaces
  = [ \t\r\n]
