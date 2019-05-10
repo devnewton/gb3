@@ -17,6 +17,7 @@ class Gc2Main extends HTMLElement {
         this.appendChild(this.controls);
         this.setupTribuneSelect();
         this.setupMessageInput();
+        this.setupMenuButton();
 
         this.controls.onsubmit = (e) => {
             if (this.messageInput.value && this.tribuneSelect.value) {
@@ -37,6 +38,12 @@ class Gc2Main extends HTMLElement {
             }
             e.preventDefault()
         };
+    }
+
+    setupMenuButton() {
+        let menuButton = document.createElement("button");
+        menuButton.innerText = "⋯";
+        this.controls.appendChild(menuButton);
     }
 
     setupTribuneSelect() {

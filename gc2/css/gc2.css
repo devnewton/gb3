@@ -5,7 +5,8 @@ body {
 gc2-main {
 	max-width: 60rem;
 	margin: auto;
-	display: block;
+	display: flex;
+	flex-direction: column;
 }
 
 .gc2-controls {
