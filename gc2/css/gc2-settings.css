@@ -1,0 +1,11 @@
+body {
+	background-color: #eeeeee
+}
+
+main {
+	max-width: 60rem;
+	margin: auto;
+	display: flex;
+    flex-direction: column;
+    background-color: #ffffff
+}
