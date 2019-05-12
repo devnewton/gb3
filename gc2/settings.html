@@ -10,18 +10,22 @@
 </head>
 
 <body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/settings.html">Settings</a>
+    </nav>
     <main>
-        <h2>Nickname</h2>
-        <input name="nickname" type="text" checked>
-        <h2>Authentification</h2>
-        <button>Connect with linuxfr</button>
-        <h2>Posts order</h2>
-        <label>
-            <input name="direction" type="radio" checked> Chronological
-        </label>
-        <label>
-            <input name="direction" type="radio"> Reverse chronological
-        </label>
+        <h2>Identity</h2>
+        <label>Nickname:</label>
+        <input id="nickname" type="text">
+        <label>Connect with:</label>
+        <button>linuxfr</button>
+        <h2>Presentation</h2>
+        <label>Post order:</label>
+        <select id="postOrder">
+            <option value="reverse-chronological">Reverse chronological</option>
+            <option value="chronological">Chronological</option>
+        </select>
     </main>
     <script src="js/gc2-settings.js" defer></script>
 </body>

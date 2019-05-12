@@ -26,9 +26,14 @@ class Gc2Main extends HTMLElement {
                 data.set('tribune', this.tribuneSelect.value);
                 this.messageInput.value = "";
                 this.messageInput.classList.toggle("gc2-loading", true);
+                let headers = new Headers();
+                if(localStorage.nickname) {
+                    headers.set('User-agent', localStorage.nickname);
+                }
                 fetch("/api/post", {
                     body: data,
-                    method: "POST"
+                    method: "POST",
+                    headers: headers
                 }).then((data) => {
                     this.messageInput.classList.toggle("gc2-loading", false);
                 }).catch((error) => {
