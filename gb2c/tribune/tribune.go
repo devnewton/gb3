@@ -1,7 +1,6 @@
 package tribune
 
 import (
-	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -38,15 +37,6 @@ func (tribune *Tribune) Post(inRequest *http.Request) {
 	data := url.Values{
 		tribune.PostField: []string{inRequest.PostFormValue("message")},
 	}
-	if tribune.AuthentificationType == OAuth2Authentification {
-		var token DlfpToken
-		err := json.Unmarshal([]byte(inRequest.PostFormValue("auth")), &token)
-		if nil == err {
-			data.Set("bearer_token", token.AccessToken)
-		} else {
-			log.Println(err)
-		}
-	}
 	outRequest, err := http.NewRequest("POST", tribune.PostURL, strings.NewReader(data.Encode()))
 	if nil != err {
 		log.Println(err)
@@ -54,6 +44,9 @@ func (tribune *Tribune) Post(inRequest *http.Request) {
 	}
 	outRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	outRequest.Header.Set("User-Agent", inRequest.Header.Get("User-Agent"))
+	if tribune.AuthentificationType == OAuth2Authentification {
+		outRequest.Header.Set("Authorization", inRequest.Header.Get("Authorization"))
+	}
 	_, err = http.DefaultClient.Do(outRequest)
 	if nil != err {
 		log.Println(err)

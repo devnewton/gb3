@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"./linuxfr"
 	"./tribune"
 )
 
@@ -191,6 +192,7 @@ func main() {
 	g := newGb3()
 	go g.forwardLoop()
 	go g.pollLoop()
+	linuxfr.RegisterLinuxfrAPI()
 	http.HandleFunc("/api/poll", func(w http.ResponseWriter, r *http.Request) {
 		g.handlePoll(w, r)
 	})
