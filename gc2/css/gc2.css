@@ -6,7 +6,14 @@ gc2-main {
 	max-width: 60rem;
 	margin: auto;
 	display: flex;
+}
+
+.gb3-postorder-reverse-chronological {
 	flex-direction: column;
+}
+
+.gb3-postorder-chronological {
+	flex-direction: column-reverse;
 }
 
 .gc2-controls {
@@ -19,7 +26,15 @@ gc2-main {
 
 gc2-tribune {
 	display: flex;
+	color: #007700;
+}
+
+.gb3-postorder-reverse-chronological gc2-tribune {
 	flex-direction: column;
+}
+
+.gb3-postorder-chronological gc2-tribune {
+	flex-direction: column-reverse;
 }
 
 gc2-post:nth-of-type(even) {
@@ -41,10 +56,6 @@ gc2-post-norloge {
 	vertical-align: text-top;
 	margin: auto;
 	cursor: pointer;
-}
-
-gc2-tribune {
-	color: #007700
 }
 
 gc2-message gc2-norloge {

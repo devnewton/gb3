@@ -6,9 +6,14 @@ class Gc2Main extends HTMLElement {
     }
 
     connectedCallback() {
+        this.setupOrder();
         this.setupControls();
         this.setupBackend2html();
         this.setupGesture();
+    }
+
+    setupOrder() {
+        this.classList.toggle(`gb3-postorder-${localStorage.postOrder || "reverse-chronological"}`, true);
     }
 
     setupControls() {
@@ -27,7 +32,7 @@ class Gc2Main extends HTMLElement {
                 this.messageInput.value = "";
                 this.messageInput.classList.toggle("gc2-loading", true);
                 let headers = new Headers();
-                if(localStorage.nickname) {
+                if (localStorage.nickname) {
                     headers.set('User-agent', localStorage.nickname);
                 }
                 fetch("/api/post", {
