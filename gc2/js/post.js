@@ -90,10 +90,10 @@ class Gc2Post extends HTMLElement {
 
         let timeElement = document.createElement('gc2-post-norloge');
         let t = post.time;
-        let timeText = "".concat(t.substr(8, 2), ':', t.substr(10, 2), ':', t.substr(12, 2));
-        let dateText = "".concat(t.substr(0, 4), '-', t.substr(4, 2), '-', t.substr(6, 2));
+        let dateText = `${t.substr(0, 4)}-${t.substr(4, 2)}-${t.substr(6, 2)}`;
+        let timeText = `${t.substr(8, 2)}:${t.substr(10, 2)}:${t.substr(12, 2)}`;
         timeElement.innerText = timeText;
-        timeElement.title = dateText.concat("T", timeText);
+        timeElement.title = `${dateText} ${timeText}`;
         this.appendChild(timeElement);
 
         let citeElement = document.createElement('gc2-moule');

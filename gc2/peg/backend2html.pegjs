@@ -127,14 +127,14 @@ fullNorloge
  = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
  let time = `${h}:${mi}:${s}`;
- return `<gc2-norloge title="${y}-${m}-${d}T${time}">${time}</gc2-norloge>`;
+ return `<gc2-norloge title="${y}-${m}-${d} ${time}">${time}</gc2-norloge>`;
  }
 
  longNorloge
  = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
  let time = `${h}:${mi}:${s}`;
- return `<gc2-norloge title="${m}-${d}T${time}">${time}</gc2-norloge>`;
+ return `<gc2-norloge title="${m}-${d} ${time}">${time}</gc2-norloge>`;
  }
  
 norlogeYear
