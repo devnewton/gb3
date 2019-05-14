@@ -10,6 +10,7 @@ class Gc2Main extends HTMLElement {
         this.setupControls();
         this.setupBackend2html();
         this.setupGesture();
+        this.setupBouchotSuffixor();
     }
 
     setupOrder() {
@@ -60,7 +61,6 @@ class Gc2Main extends HTMLElement {
         this.tribuneSelect = document.createElement("select");
         this.tribuneSelect.onchange = () => {
             this.setActiveTribune(this.tribuneSelect.value);
-            let selectedTribune = this.tribuneSelect.value;
         }
         this.controls.appendChild(this.tribuneSelect);
     }
@@ -111,6 +111,8 @@ class Gc2Main extends HTMLElement {
     }
 
     setActiveTribune(selectedTribune) {
+        this.addBouchotSuffixInMessageInput(this.activeTribune);
+        this.activeTribune = selectedTribune;
         this.messageInput.placeholder = selectedTribune;
         this.tribunes.forEach((tribuneElement, tribune) => {
             tribuneElement.style.display = tribune === selectedTribune ? "" : "none";
@@ -139,6 +141,22 @@ class Gc2Main extends HTMLElement {
             this.setActiveTribune(this.tribuneSelect.value);
         });
 
+    }
+
+    setupBouchotSuffixor() {
+        fetch("/peg/bouchotsuffixor.pegjs")
+            .then((response) => {
+                return response.text();
+            })
+            .then((text) => {
+                this.bouchotSuffixor = peg.generate(text);
+            });
+    }
+
+    addBouchotSuffixInMessageInput(tribune) {
+        if(tribune && this.bouchotSuffixor) {
+            this.messageInput.text = this.bouchotSuffixor.parse(this.messageInput.text, {bouchot: tribune});
+        }
     }
 
 }
