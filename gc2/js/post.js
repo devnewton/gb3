@@ -18,8 +18,42 @@ class Gc2PostNorloge extends HTMLElement {
 
         this.onclick = (e) => {
             let message = document.getElementById("gc2-message");
-            message.value += `${message.value && ' '}${this.title} `;
+            message.value += `${message.value && ' '}${this.formatNorloge()} `;
             message.focus();
+        }
+    }
+
+    formatNorloge() {
+        let style = localStorage.norlogeStyle || "longlong";
+        switch (style) {
+            case "auto":
+                let now = new Date();
+                let dateLocal = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000);
+                let dateLocalStr = dateLocal.toISOString().slice(0, 10);
+                if(this.title.substr(0, 10) === dateLocalStr) {
+                    style = "normal";
+                } else {
+                    style = "longlong"
+                }                
+                break;
+            case "rand":
+                let styles = ["longlong", "iso", "long", "normal", "short", "id"];
+                style = styles[Math.round(Math.random() * styles.length)];
+        }
+        switch (style) {
+            case "iso":
+                return `${this.title.substr(0, 10)}T${this.title.substr(11, 8)}`;
+            case "long":
+                return `${this.title.substr(5, 2)}/${this.title.substr(8, 2)}#${this.title.substr(11, 8)}`;
+            case "normal":
+                return this.title.substr(11, 8);
+            case "short":
+                return this.title.substr(11, 5);
+            case "id":
+                return `#${this.parentElement.id.split("@", 1)[0]}`;
+            case "longlong":
+            default:
+                return this.title;
         }
     }
 }
@@ -45,7 +79,7 @@ class Gc2Norloge extends HTMLElement {
 
         this.onclick = (e) => {
             let n = this.findQuotedNorloge();
-            if(n) {
+            if (n) {
                 n.scrollIntoView();
             }
         }
@@ -55,7 +89,7 @@ class Gc2Norloge extends HTMLElement {
         let norloges = document.querySelectorAll("gc2-norloge");
         let time = this.title.substr(-8);
         for (let n of norloges) {
-            if(!this.isSameNode(n) && time === n.title.substr(-8)) {
+            if (!this.isSameNode(n) && time === n.title.substr(-8)) {
                 return n
             }
         }

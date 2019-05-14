@@ -9,3 +9,9 @@ postOrder.value = localStorage.postOrder || "reverse-chronological";
 postOrder.onchange = (e) => {
     localStorage.postOrder = e.target.value;
 };
+
+let norlogeStyle = document.getElementById("norlogeStyle");
+norlogeStyle.value = localStorage.norlogeStyle || "longlong";
+norlogeStyle.onchange = (e) => {
+    localStorage.norlogeStyle = e.target.value;
+};
