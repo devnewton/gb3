@@ -28,7 +28,9 @@ func (m memStore) Save(tribune string, posts Posts) error {
 	}
 	newPosts = append(newPosts, posts...)
 	sort.Sort(posts)
-	newPosts = newPosts[0:LastestLength]
+	if len(newPosts) > LastestLength {
+		newPosts = newPosts[len(newPosts)-LastestLength : len(newPosts)]
+	}
 	m.postsMap.Store(tribune, newPosts)
 	return nil
 }
