@@ -101,6 +101,7 @@ class Gc2Main extends HTMLElement {
             this.tribuneSelect.add(option);
 
             tribuneElement = document.createElement('gc2-tribune');
+            tribuneElement.setAttribute("name", tribune);
             tribuneElement.style.display = "none";
             this.appendChild(tribuneElement);
 

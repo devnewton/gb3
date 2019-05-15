@@ -3,9 +3,15 @@ class Gc2PostNorloge extends HTMLElement {
         super();
 
         this.onmouseenter = (e) => {
-            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
-            for (let n of norloges) {
-                n.classList.toggle("gc2-highlighted", true);
+            let bouchot = this.closest('gc2-tribune').getAttribute('name');
+            let tribunes = document.getElementsByTagName("gc2-tribune");
+            for (let t of tribunes) {
+                if (bouchot === t.getAttribute("name")) {
+                    let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
+                    for (let n of norloges) {
+                        n.classList.toggle("gc2-highlighted", true);
+                    }
+                }
             }
         }
 
@@ -30,11 +36,11 @@ class Gc2PostNorloge extends HTMLElement {
                 let now = new Date();
                 let dateLocal = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000);
                 let dateLocalStr = dateLocal.toISOString().slice(0, 10);
-                if(this.title.substr(0, 10) === dateLocalStr) {
+                if (this.title.substr(0, 10) === dateLocalStr) {
                     style = "normal";
                 } else {
                     style = "longlong"
-                }                
+                }
                 break;
             case "rand":
                 let styles = ["longlong", "iso", "long", "normal", "short", "id"];
@@ -64,9 +70,15 @@ class Gc2Norloge extends HTMLElement {
         super();
 
         this.onmouseenter = (e) => {
-            let norloges = document.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
-            for (let n of norloges) {
-                n.classList.toggle("gc2-highlighted", true);
+            let bouchot = this.bouchot || this.closest('gc2-tribune').getAttribute('name');
+            let tribunes = document.getElementsByTagName("gc2-tribune");
+            for (let t of tribunes) {
+                if (bouchot === t.getAttribute("name")) {
+                    let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
+                    for (let n of norloges) {
+                        n.classList.toggle("gc2-highlighted", true);
+                    }
+                }
             }
         }
 

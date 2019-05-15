@@ -120,21 +120,27 @@ tagAttribute
  = name:$[a-z]+ value:("=\"" value:$[^"]* "\"" {return value;} )?
  {return { name: name, value: value}}
 
+bouchot
+ = $("@" [a-z]+)
+
+
 norloge
  = fullNorloge / longNorloge / normalNorloge / shortNorloge
 
 fullNorloge
- = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
  {
  let time = `${h}:${mi}:${s}`;
- return `<gc2-norloge title="${y}-${m}-${d} ${time}">${time}</gc2-norloge>`;
+ let bouchot = b && ` bouchot="${b.substr(1)}"` || "";
+ return `<gc2-norloge title="${y}-${m}-${d} ${time}"${bouchot}>${time}${b || ""}</gc2-norloge>`;
  }
 
  longNorloge
- = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
  {
  let time = `${h}:${mi}:${s}`;
- return `<gc2-norloge title="${m}-${d} ${time}">${time}</gc2-norloge>`;
+ let bouchot = b && ` bouchot="${b.substr(1)}"` || "";
+ return `<gc2-norloge title="${m}-${d} ${time}"${bouchot}>${time}${b || ""}</gc2-norloge>`;
  }
  
 norlogeYear
@@ -150,17 +156,19 @@ norlogeDay
  { return first + last; }
 
 normalNorloge
- = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
  {
  let time = `${h}:${mi}:${s}`;
- return `<gc2-norloge title="${time}">${time}</gc2-norloge>`;
+ let bouchot = b && ` bouchot="${b.substr(1)}"` || "";
+ return `<gc2-norloge title="${time}"${bouchot}>${time}${b || ""}</gc2-norloge>`;
  }
  
 shortNorloge
- = h:norlogeHours ":" mi:norlogeMinutes
+ = h:norlogeHours ":" mi:norlogeMinutes b:bouchot?
  {
  let time = `${h}:${mi}`;
- return `<gc2-norloge title="${time}">${time}</gc2-norloge>`;
+ let bouchot = b && ` bouchot="${b.substr(1)}"` || "";
+ return `<gc2-norloge title="${time}"${bouchot}>${time}${b || ""}</gc2-norloge>`;
  }
 
 norlogeHours
