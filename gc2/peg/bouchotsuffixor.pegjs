@@ -7,11 +7,17 @@ post
 postItem
  = url
  / totoz
- / norloge
+ / unbouchotedNorloge
  / .
 
 url
  = $((("http" "s"?) / "ftp") "://" ([^< \t\r\n\"])+)
+
+unbouchotedNorloge
+ = n:norloge &(whitespaces / !.)
+ {
+   return `${n}@${options.bouchot}`
+ }
 
 norloge
  = fullNorloge / longNorloge / normalNorloge / shortNorloge
@@ -19,13 +25,13 @@ norloge
 fullNorloge
  = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay sep:[T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
- return `${y}-${m}-${d}${sep}${h}:${mi}:${s}@${options.bouchot}`;
+ return `${y}-${m}-${d}${sep}${h}:${mi}:${s}`;
  }
 
  longNorloge
  = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
- return `${m}/${d}#${h}:${mi}:${s}@${options.bouchot}`;
+ return `${m}/${d}#${h}:${mi}:${s}`;
  }
  
 norlogeYear
@@ -43,13 +49,13 @@ norlogeDay
 normalNorloge
  = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
  {
-   return `${h}:${mi}:${s}@${options.bouchot}`;
+   return `${h}:${mi}:${s}`;
  }
  
 shortNorloge
  = h:norlogeHours ":" mi:norlogeMinutes
  {
-   return `${h}:${mi}@${options.bouchot}`;
+   return `${h}:${mi}`;
 
  }
 
@@ -68,3 +74,6 @@ norlogeSeconds
 
 totoz
   = $("[:" $[^\]]+ "]")
+
+whitespaces
+ = [ \t\r\n]

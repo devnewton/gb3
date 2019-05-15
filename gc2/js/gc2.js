@@ -155,7 +155,7 @@ class Gc2Main extends HTMLElement {
 
     addBouchotSuffixInMessageInput(tribune) {
         if(tribune && this.bouchotSuffixor) {
-            this.messageInput.text = this.bouchotSuffixor.parse(this.messageInput.text, {bouchot: tribune});
+            this.messageInput.value = this.bouchotSuffixor.parse(this.messageInput.value, {bouchot: tribune});
         }
     }
 
