@@ -2,7 +2,7 @@ function highlightNorloges(bouchot, norlogeText) {
     let tribunes = document.getElementsByTagName("gc2-tribune");
     for (let t of tribunes) {
         let tribuneName = t.getAttribute("name");
-        let norloges = t.querySelectorAll(`gc2-norloge[title$="${norlogeText.substr(-8)}"],gc2-post-norloge[title$="${norlogeText.substr(-8)}"]`);
+        let norloges = t.querySelectorAll(`gc2-norloge[title$="${norlogeText.substr(-8)}"],gc2-post-norloge[title*=" ${norlogeText.substr(-8)}"]`);
         for (let n of norloges) {
             if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
                 n.classList.toggle("gc2-highlighted", true);
@@ -99,7 +99,7 @@ class Gc2Norloge extends HTMLElement {
 
     findQuotedNorloge() {
         let bouchot = this.findBouchot();
-        return document.querySelector(`gc2-tribune[name="${bouchot}"] gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
+        return document.querySelector(`gc2-tribune[name="${bouchot}"] gc2-post-norloge[title*=" ${this.title.substr(-8)}"]`);
     }
 }
 customElements.define('gc2-norloge', Gc2Norloge);
