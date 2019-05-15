@@ -6,9 +6,10 @@ class Gc2PostNorloge extends HTMLElement {
             let bouchot = this.closest('gc2-tribune').getAttribute('name');
             let tribunes = document.getElementsByTagName("gc2-tribune");
             for (let t of tribunes) {
-                if (bouchot === t.getAttribute("name")) {
-                    let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
-                    for (let n of norloges) {
+                let tribuneName = t.getAttribute("name");
+                let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
+                for (let n of norloges) {
+                    if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
                         n.classList.toggle("gc2-highlighted", true);
                     }
                 }
@@ -70,12 +71,13 @@ class Gc2Norloge extends HTMLElement {
         super();
 
         this.onmouseenter = (e) => {
-            let bouchot = this.bouchot || this.closest('gc2-tribune').getAttribute('name');
+            let bouchot = this.findBouchot();
             let tribunes = document.getElementsByTagName("gc2-tribune");
             for (let t of tribunes) {
-                if (bouchot === t.getAttribute("name")) {
-                    let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
-                    for (let n of norloges) {
+                let tribuneName = t.getAttribute("name");
+                let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
+                for (let n of norloges) {
+                    if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
                         n.classList.toggle("gc2-highlighted", true);
                     }
                 }
@@ -97,14 +99,13 @@ class Gc2Norloge extends HTMLElement {
         }
     }
 
+    findBouchot() {
+        return this.getAttribute("bouchot") || this.closest('gc2-tribune').getAttribute('name');
+    }
+
     findQuotedNorloge() {
-        let norloges = document.querySelectorAll("gc2-norloge");
-        let time = this.title.substr(-8);
-        for (let n of norloges) {
-            if (!this.isSameNode(n) && time === n.title.substr(-8)) {
-                return n
-            }
-        }
+        let bouchot = this.findBouchot();
+        return document.querySelector(`gc2-tribune[name="${bouchot}"] gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
     }
 }
 customElements.define('gc2-norloge', Gc2Norloge);
