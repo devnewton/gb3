@@ -121,6 +121,7 @@ class Gc2Main extends HTMLElement {
     }
 
     setupGesture() {
+        delete Hammer.defaults.cssProps.userSelect;
         let hammertime = new Hammer(document.getElementsByTagName("gc2-main")[0], {
             inputClass: Hammer.TouchInput
         });
