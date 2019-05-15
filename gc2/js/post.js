@@ -1,26 +1,33 @@
+function highlightNorloges(bouchot, norlogeText) {
+    let tribunes = document.getElementsByTagName("gc2-tribune");
+    for (let t of tribunes) {
+        let tribuneName = t.getAttribute("name");
+        let norloges = t.querySelectorAll(`gc2-norloge[title$="${norlogeText.substr(-8)}"],gc2-post-norloge[title$="${norlogeText.substr(-8)}"]`);
+        for (let n of norloges) {
+            if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
+                n.classList.toggle("gc2-highlighted", true);
+            }
+        }
+    }
+}
+
+function unhighlightNorloges() {
+    let norloges = document.querySelectorAll(".gc2-highlighted");
+    for (let n of norloges) {
+        n.classList.toggle("gc2-highlighted", false);
+    }
+}
+
 class Gc2PostNorloge extends HTMLElement {
     constructor() {
         super();
 
         this.onmouseenter = (e) => {
-            let bouchot = this.closest('gc2-tribune').getAttribute('name');
-            let tribunes = document.getElementsByTagName("gc2-tribune");
-            for (let t of tribunes) {
-                let tribuneName = t.getAttribute("name");
-                let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
-                for (let n of norloges) {
-                    if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
-                        n.classList.toggle("gc2-highlighted", true);
-                    }
-                }
-            }
+            highlightNorloges(this.closest('gc2-tribune').getAttribute('name'), this.title);
         }
 
         this.onmouseleave = (e) => {
-            let norloges = document.querySelectorAll(".gc2-highlighted");
-            for (let n of norloges) {
-                n.classList.toggle("gc2-highlighted", false);
-            }
+            unhighlightNorloges();
         }
 
         this.onclick = (e) => {
@@ -71,24 +78,11 @@ class Gc2Norloge extends HTMLElement {
         super();
 
         this.onmouseenter = (e) => {
-            let bouchot = this.findBouchot();
-            let tribunes = document.getElementsByTagName("gc2-tribune");
-            for (let t of tribunes) {
-                let tribuneName = t.getAttribute("name");
-                let norloges = t.querySelectorAll(`gc2-norloge[title$="${this.title.substr(-8)}"],gc2-post-norloge[title$="${this.title.substr(-8)}"]`);
-                for (let n of norloges) {
-                    if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
-                        n.classList.toggle("gc2-highlighted", true);
-                    }
-                }
-            }
+            highlightNorloges(this.findBouchot(), this.title);
         }
 
         this.onmouseleave = (e) => {
-            let norloges = document.querySelectorAll(".gc2-highlighted");
-            for (let n of norloges) {
-                n.classList.toggle("gc2-highlighted", false);
-            }
+            unhighlightNorloges();
         }
 
         this.onclick = (e) => {
