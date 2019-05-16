@@ -70,6 +70,14 @@ class Gc2Main extends HTMLElement {
         this.messageInput.id = "gc2-message";
         this.messageInput.type = "text";
         this.messageInput.spellcheck = true;
+        this.messageInput.onkeydown = (e) => {
+            if (event.altKey) {
+                if (this.handleAltShortcut(event.key)) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            }
+        }
         this.controls.appendChild(this.messageInput);
     }
 
@@ -145,6 +153,62 @@ class Gc2Main extends HTMLElement {
 
     }
 
+    handleAltShortcut(keychar) {
+        switch (keychar) {
+            case 'o':
+                this.insertTextInMessage('_o/* <b>BLAM</b>! ');
+                return true;
+            case 'm':
+                this.insertTextInMessage(`====> <b>Moment ${this.getSelectedText()}</b> <====`, 16);
+                return true;
+            case 'f':
+                this.insertTextInMessage('\u03C6');
+                return true;
+            case 'b':
+                this.insertTextInMessage(`<b>${this.getSelectedText()}</b>`, 3);
+                return true;
+            case 'i':
+                this.insertTextInMessage(`<i>${this.getSelectedText()}</i>`, 3);
+                return true;
+            case 'u':
+                this.insertTextInMessage(`<u>${this.getSelectedText()}</u>`, 3);
+                return true;
+            case 's':
+                this.insertTextInMessage(`<s>${this.getSelectedText()}</s>`, 3);
+                return true;
+            case 't':
+                this.insertTextInMessage(`<tt>${this.getSelectedText()}</tt>`, 4);
+                return true;
+            case 'c':
+                this.insertTextInMessage(`<code>${this.getSelectedText()}</code>`, 6);
+                return true;
+            case 'd':
+                this.insertTextInMessage(`<spoiler>${this.getSelectedText()}</spoiler>`, 9);
+                return true;
+            case 'p':
+                this.insertTextInMessage('_o/* <b>paf!</b> ');
+                return true;
+            case 'a':
+                this.insertTextInMessage(`\u266A <i>${this.getSelectedText()}</i> \u266A`, 5);
+                return true;
+        }
+        return false;
+    }
+
+    getSelectedText() {
+        return this.messageInput.value.substring(this.messageInput.selectionStart, this.messageInput.selectionEnd);
+    }
+
+    insertTextInMessage(text, pos) {
+        if (!pos) {
+            pos = text.length;
+        }
+        var selectionEnd = this.messageInput.selectionStart + pos;
+        this.messageInput.value = this.messageInput.value.substring(0, this.messageInput.selectionStart) + text + this.messageInput.value.substr(this.messageInput.selectionEnd);
+        this.messageInput.focus();
+        this.messageInput.setSelectionRange(selectionEnd, selectionEnd);
+    }
+
     setupBouchotSuffixor() {
         fetch("/peg/bouchotsuffixor.pegjs")
             .then((response) => {
@@ -156,8 +220,8 @@ class Gc2Main extends HTMLElement {
     }
 
     addBouchotSuffixInMessageInput(tribune) {
-        if(tribune && this.bouchotSuffixor) {
-            this.messageInput.value = this.bouchotSuffixor.parse(this.messageInput.value, {bouchot: tribune});
+        if (tribune && this.bouchotSuffixor) {
+            this.messageInput.value = this.bouchotSuffixor.parse(this.messageInput.value, { bouchot: tribune });
         }
     }
 
