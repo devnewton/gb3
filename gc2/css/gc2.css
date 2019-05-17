@@ -8,6 +8,13 @@ gc2-main {
 	display: flex;
 }
 
+gc2-menu {
+	max-width: 60rem;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+}
+
 .gb3-postorder-reverse-chronological {
 	flex-direction: column;
 }

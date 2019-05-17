@@ -54,6 +54,10 @@ class Gc2Main extends HTMLElement {
     setupMenuButton() {
         let menuButton = document.createElement("button");
         menuButton.innerText = "⋯";
+        menuButton.onclick = () => {
+            this.style.display = "none";
+            document.querySelector('gc2-menu').style.display = "flex";
+        }
         this.controls.appendChild(menuButton);
     }
 
