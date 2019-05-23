@@ -40,19 +40,11 @@ class Gc2Menu extends HTMLElement {
     showTotoz() {
         this.clear();
 
-        let searchInput = document.createElement('input');
-        searchInput.type = "text";
-        searchInput.placeholder = "dont be so vanilla";
-        this.appendChild(searchInput);
+        let totozSearch = document.createElement("gc2-totozsearch");
+        totozSearch.setup();
+        this.appendChild(totozSearch);
 
-        let searchButton = document.createElement('button');
-        searchButton.innerText = "Search";
-        searchButton.onclick = () => {
-            //TODO
-        }
-        this.appendChild(searchButton);
-
-        let backButton = document.createElement('button');
+        let backButton = document.createElement("button");
         backButton.innerText = "Back";
         backButton.onclick = () => {
             this.showSelector();
@@ -62,9 +54,62 @@ class Gc2Menu extends HTMLElement {
 
     clear() {
         let child;
-        while(child = this.firstChild) {
+        while (child = this.firstChild) {
             this.removeChild(child);
         }
     }
 }
 customElements.define('gc2-menu', Gc2Menu);
+
+class Gc2TotozSearch extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    setup() {
+        let searchInput = document.createElement('input');
+        searchInput.type = "text";
+        searchInput.placeholder = "dont be so vanilla";
+        this.appendChild(searchInput);
+
+        let searchButton = document.createElement('button');
+        searchButton.innerText = "Search";
+        searchButton.onclick = () => {
+            fetch(`/api/totoz/search?terms=${encodeURIComponent(searchInput.value)}`, {
+                method: "GET",
+            }).then((response) =>{
+                return response.json();
+            }).then((data) =>{
+                this.setResults(data);
+            }).catch((error) => {
+                console.log(`Cannot search totoz. Error: `, error);
+            });
+        }
+        this.appendChild(searchButton);
+
+        this.resultsContainer = document.createElement("div");
+        this.appendChild(this.resultsContainer);
+    }
+
+    setResults(results) {
+        this.clearResults();
+        for(let totoz of results.totozes) {
+            let totozElement = document.createElement("figure");
+            totozElement.innerText = totoz.name;
+
+            let totozImg = document.createElement("img");
+            totozImg.src = totoz.image;
+            totozElement.appendChild(totozImg);
+
+            this.resultsContainer.appendChild(totozElement);
+        }
+    }
+
+    clearResults() {
+        let child;
+        while (child = this.resultsContainer.firstChild) {
+            this.resultsContainer.removeChild(child);
+        }
+    }
+}
+customElements.define("gc2-totozsearch", Gc2TotozSearch);
