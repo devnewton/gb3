@@ -1,3 +1,10 @@
+function gc2CloseMenu() {
+    let menu = document.getElementsByTagName("gc2-menu")[0];
+    menu.style.display = "none";
+    menu.clear();
+    document.querySelector("gc2-main").style.display = "flex";
+}
+
 class Gc2Menu extends HTMLElement {
     constructor() {
         super();
@@ -31,8 +38,7 @@ class Gc2Menu extends HTMLElement {
         let closeButton = document.createElement('button');
         closeButton.innerText = "Close";
         closeButton.onclick = () => {
-            this.style.display = "none";
-            document.querySelector("gc2-main").style.display = "flex";
+            gc2CloseMenu();
         }
         this.appendChild(closeButton);
     }
@@ -88,6 +94,17 @@ class Gc2TotozSearch extends HTMLElement {
         this.appendChild(searchButton);
 
         this.resultsContainer = document.createElement("div");
+        this.resultsContainer.onclick = (e) => {
+            let caption = e.target.parentElement.querySelector("figcaption");
+            if(caption) {
+                let message = document.getElementById("gc2-message");
+                let value = message.value;
+                message.value += `${message.value && ' '}[:${caption.innerText}] `;
+                gc2CloseMenu();
+                message.focus();
+            }
+        };
+        this.resultsContainer.classList.add("gc2-totoz-search-results")
         this.appendChild(this.resultsContainer);
     }
 
@@ -95,11 +112,14 @@ class Gc2TotozSearch extends HTMLElement {
         this.clearResults();
         for(let totoz of results.totozes) {
             let totozElement = document.createElement("figure");
-            totozElement.innerText = totoz.name;
 
             let totozImg = document.createElement("img");
             totozImg.src = totoz.image;
             totozElement.appendChild(totozImg);
+
+            let totozName = document.createElement("figcaption");
+            totozName.innerText = totoz.name;
+            totozElement.appendChild(totozName);
 
             this.resultsContainer.appendChild(totozElement);
         }
