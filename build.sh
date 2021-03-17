@@ -1,4 +1,3 @@
 #!/bin/sh
-go get github.com/blevesearch/bleve/...
-( cd gb0 ; go build )
-( cd gb2c ; go build )
+go build ./cmd/gb0
+go build ./cmd/gb2c
