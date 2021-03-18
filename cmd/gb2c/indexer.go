@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/blevesearch/bleve"
+	"github.com/blevesearch/bleve/v2"
 )
 
 //Indexer index and query tribune's posts
