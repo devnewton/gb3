@@ -15,3 +15,8 @@ norlogeStyle.value = localStorage.norlogeStyle || "longlong";
 norlogeStyle.onchange = (e) => {
     localStorage.norlogeStyle = e.target.value;
 };
+
+let backButton = document.getElementById("backButton");
+backButton.onclick = () => {
+    window.location.href = "/";
+}

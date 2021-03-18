@@ -29,21 +29,19 @@ class Gc2Menu extends HTMLElement {
         }
         this.appendChild(emojiButton);
 
-        let binButton = document.createElement('button');
-        binButton.innerText = "Bin";
-        this.appendChild(binButton);
+        let settingsButton = document.createElement('button');
+        settingsButton.innerText = "Settings";
+        settingsButton.onclick = () => {
+            window.location.href = "/settings.html";
+        }
+        this.appendChild(settingsButton);
 
-        let settingsLink = document.createElement('a');
-        settingsLink.innerText = "Settings";
-        settingsLink.href = "/settings.html";
-        this.appendChild(settingsLink);
-
-        let closeButton = document.createElement('button');
-        closeButton.innerText = "Close";
-        closeButton.onclick = () => {
+        let backButton = document.createElement('button');
+        backButton.innerText = "Back";
+        backButton.onclick = () => {
             gc2CloseMenu();
         }
-        this.appendChild(closeButton);
+        this.appendChild(backButton);
     }
 
     showTotoz() {
