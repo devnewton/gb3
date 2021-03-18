@@ -122,6 +122,19 @@ gc2-message cite:after {
 	flex-wrap: wrap;
 }
 
+.gc2-totoz-search-results figure:hover {
+	background: #d7d2d2;
+}
+
+.gc2-emoji-search-results {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.gc2-emoji-search-results figure:hover {
+	background: #d7d2d2;
+}
+
 gc2-totoz {
 	display: inline;
 	position: relative;

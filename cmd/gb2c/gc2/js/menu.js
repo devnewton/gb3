@@ -89,14 +89,20 @@ class Gc2TotozSearch extends HTMLElement {
     }
 
     setup() {
+        let form = document.createElement("form");
+        
         let searchInput = document.createElement('input');
         searchInput.type = "text";
         searchInput.placeholder = "dont be so vanilla";
-        this.appendChild(searchInput);
+        form.appendChild(searchInput);
 
         let searchButton = document.createElement('button');
         searchButton.innerText = "Search";
-        searchButton.onclick = () => {
+        searchButton.type = "submit";
+        form.appendChild(searchButton);
+
+        form.onsubmit = (e) => {
+            e.preventDefault();
             fetch(`/api/totoz/search?terms=${encodeURIComponent(searchInput.value)}`, {
                 method: "GET",
             }).then((response) =>{
@@ -106,8 +112,9 @@ class Gc2TotozSearch extends HTMLElement {
             }).catch((error) => {
                 console.log(`Cannot search totoz. Error: `, error);
             });
-        }
-        this.appendChild(searchButton);
+        };
+        this.appendChild(form);
+
 
         this.resultsContainer = document.createElement("div");
         this.resultsContainer.onclick = (e) => {
@@ -156,14 +163,19 @@ class Gc2EmojiSearch extends HTMLElement {
     }
 
     setup() {
+        let form = document.createElement("form");
+
         let searchInput = document.createElement('input');
         searchInput.type = "text";
         searchInput.placeholder = "poop";
-        this.appendChild(searchInput);
+        form.appendChild(searchInput);
 
         let searchButton = document.createElement('button');
         searchButton.innerText = "Search";
-        searchButton.onclick = () => {
+        form.appendChild(searchButton);
+
+        form.onsubmit = (e) => {
+            e.preventDefault();
             fetch(`/api/emoji/search?terms=${encodeURIComponent(searchInput.value)}`, {
                 method: "GET",
             }).then((response) =>{
@@ -173,8 +185,8 @@ class Gc2EmojiSearch extends HTMLElement {
             }).catch((error) => {
                 console.log(`Cannot search emoji. Error: `, error);
             });
-        }
-        this.appendChild(searchButton);
+        };
+        this.appendChild(form);
 
         this.resultsContainer = document.createElement("div");
         this.resultsContainer.onclick = (e) => {

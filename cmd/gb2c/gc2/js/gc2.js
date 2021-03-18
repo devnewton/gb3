@@ -78,10 +78,10 @@ class Gc2Main extends HTMLElement {
         this.messageInput.type = "text";
         this.messageInput.spellcheck = true;
         this.messageInput.onkeydown = (e) => {
-            if (event.altKey) {
-                if (this.handleAltShortcut(event.key)) {
-                    event.stopPropagation();
-                    event.preventDefault();
+            if (e.altKey) {
+                if (this.handleAltShortcut(e.key)) {
+                    e.stopPropagation();
+                    e.preventDefault();
                 }
             }
         }
