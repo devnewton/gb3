@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -30,18 +29,14 @@ type bleveIndexer struct {
 	index bleve.Index
 }
 
-var indexPath string
-
-func init() {
-	flag.StringVar(&indexPath, "index", "/tmp/gb3.index", "Index file path, allow full text search queries")
-}
-
 //NewIndexer create indexer
 func NewIndexer() Indexer {
+	indexPath := os.Getenv("GB2C_FULLTEXT_SEARCH_INDEX_PATH")
 	if len(indexPath) == 0 {
+		log.Println("Do not forget to define GB2C_FULLTEXT_SEARCH_INDEX_PATH environment variable if you need posts search feature")
 		return &noopIndexer{}
 	}
-	index, err := openOrCreateIndex()
+	index, err := openOrCreateIndex(indexPath)
 	if nil != err {
 		log.Println(err)
 		return &noopIndexer{}
@@ -49,7 +44,7 @@ func NewIndexer() Indexer {
 	return &bleveIndexer{index: index}
 }
 
-func openOrCreateIndex() (bleve.Index, error) {
+func openOrCreateIndex(indexPath string) (bleve.Index, error) {
 	_, err := os.Stat(indexPath)
 	if errors.Is(err, os.ErrNotExist) {
 		mapping := bleve.NewIndexMapping()

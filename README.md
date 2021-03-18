@@ -26,6 +26,26 @@ curl -X POST -d "message=plop" 'http://localhost:6667/post'
 
 gb2c is a webservice providing API for coincoins.
 
+### Configuration
+
+gb2c use the following environment variables.
+
+#### GB2C_LISTEN
+
+Change default http listen address and port. 
+
+#### GB2C_VERBOSE
+
+Set to true to enable full logging.
+
+#### GB2C_FULLTEXT_SEARCH_INDEX_PATH
+
+Fulltext search is only available if this variable is a valid path to a writable directory.
+
+#### GB2C_LINUXFR_CLIENT_ID and GB2C_LINUXFR_CLIENT_SECRET
+
+Oauth credentials for linuxfr API.
+
 ### Endpoints
 
 gb2c exposes two endpoint for polling and posting tribune messages.

@@ -2,25 +2,21 @@ package main
 
 import (
 	"encoding/base64"
-	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
-var clientID string
-var clientSecret string
-
-func init() {
-	flag.StringVar(&clientID, "linuxfr-client-id", "", "linuxfr.org's API client id")
-	flag.StringVar(&clientSecret, "linuxfr-client-secret", "", "linuxfr.org's API client secret")
-}
-
 //RegisterLinuxfrAPI setup http linuxfr API endpoints
 func RegisterLinuxfrAPI() {
-	if len(clientID) == 0 {
+	clientID := os.Getenv("GB2C_LINUXFR_CLIENT_ID")
+	clientSecret := os.Getenv("GB2C_LINUXFR_CLIENT_SECRET")
+	if len(clientID) == 0 || len(clientSecret) == 0 {
+		log.Println("Do not forget to GB2C_LINUXFR_CLIENT_ID and GB2C_LINUXFR_CLIENT_SECRET environment variable if you want to post to linuxfr tribune")
 		return
 	}
 	http.HandleFunc("/api/linuxfr/authorize", func(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +48,7 @@ func RegisterLinuxfrAPI() {
 
 		tokenParams := url.Values{}
 		tokenParams.Set("client_id", clientID)
+		tokenParams.Set("client_secret", clientSecret)
 		tokenParams.Set("code", r.URL.Query().Get("code"))
 		tokenParams.Set("grant_type", "authorization_code")
 		tokenParams.Set("redirect_uri", linuxfrRedirectURL.String())

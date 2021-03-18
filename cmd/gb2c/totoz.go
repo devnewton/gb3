@@ -3,13 +3,10 @@ package main
 import (
 	"encoding/json"
 	"encoding/xml"
-	"flag"
 	"fmt"
 	"net/http"
 	"net/url"
 )
-
-var totozServer string
 
 //Totozes list
 type Totozes struct {
@@ -22,10 +19,6 @@ type Totoz struct {
 	XMLName xml.Name `xml:"totoz" json:"-"`
 	Name    string   `xml:"name" json:"name"`
 	Image   string   `json:"image"`
-}
-
-func init() {
-	flag.StringVar(&totozServer, "totoz-server", "https://nsfw.totoz.eu/", "Totoz server")
 }
 
 //TotozSearch handler

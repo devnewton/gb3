@@ -7,18 +7,22 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 //go:embed gc2
 var gc2Content embed.FS
 
-var listenAddress string
 var verboseMode bool
 
 func init() {
-	flag.StringVar(&listenAddress, "listen", ":16666", "TCP address to listen on")
-	flag.BoolVar(&verboseMode, "verbose", false, "Verbose logging")
+	switch os.Getenv("GB2C_VERBOSE") {
+	case "1", "true", "TRUE":
+		verboseMode = true
+	default:
+		verboseMode = false
+	}
 }
 
 type gb3 struct {
@@ -210,6 +214,11 @@ func main() {
 		log.Fatal(err)
 	}
 	http.Handle("/", http.FileServer(http.FS(gc2fs)))
+
+	listenAddress := os.Getenv("GB2C_LISTEN")
+	if len(listenAddress) == 0 {
+		listenAddress = ":16666"
+	}
 	log.Printf("Listen to %s\n", listenAddress)
 	err = http.ListenAndServe(listenAddress, nil)
 	if nil != err {

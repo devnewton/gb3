@@ -189,7 +189,7 @@ bigorno
 
 totoz
   = first:"[:" totoz:$[^\]]+ third:"]"
-  { return `<gc2-totoz>${backend2html.encode(totoz)}<img src="https://totoz.eu/img/${encodeURI(totoz)}"></gc2-totoz>`; }
+  { return `<gc2-totoz>${backend2html.encode(totoz)}<img src="https://nsfw.totoz.eu/img/${encodeURI(totoz)}"></gc2-totoz>`; }
   
 whitespaces
  = [ \t\r\n]
