@@ -1,12 +1,17 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"flag"
+	"io/fs"
 	"log"
 	"net/http"
 	"time"
 )
+
+//go:embed gc2
+var gc2Content embed.FS
 
 var listenAddress string
 var verboseMode bool
@@ -199,9 +204,13 @@ func main() {
 		g.handleSearch(w, r)
 	})
 	http.HandleFunc("/api/totoz/search", TotozSearch)
-	http.Handle("/", http.FileServer(http.Dir("../gc2")))
+	gc2fs, err := fs.Sub(gc2Content, "gc2")
+	if nil != err {
+		log.Fatal(err)
+	}
+	http.Handle("/", http.FileServer(http.FS(gc2fs)))
 	log.Printf("Listen to %s\n", listenAddress)
-	err := http.ListenAndServe(listenAddress, nil)
+	err = http.ListenAndServe(listenAddress, nil)
 	if nil != err {
 		log.Fatal(err)
 	}

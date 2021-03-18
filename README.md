@@ -44,3 +44,7 @@ postSource.onmessage = function (event) {
 ```bash
 curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:6666/api/post'
 ```
+
+### gc2
+
+A simple coincoin frontend embedded in gb2c.
