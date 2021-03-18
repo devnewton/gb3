@@ -6,6 +6,22 @@ gb3 is a KISS cloud native tribune stack powered by [Go](https://golang.org/)
 
 gb0 is a guiless bouchot.
 
+### Configuration
+
+gb0 use the following environment variables.
+
+#### GB0_LISTEN
+
+Change default http listen address and port.
+
+#### GB0_STORE_PATH
+
+Post will be stored to disk only if this variable is a valid path to a writable file.
+
+#### GB0_MAX_NUMBER_OF_STORED_POSTS
+
+Max number of posts to keep.
+
 ### Endpoints
 
 gb0 exposes two endpoint to retrieve and post messages.

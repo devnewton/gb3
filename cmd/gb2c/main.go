@@ -3,7 +3,6 @@ package main
 import (
 	"embed"
 	"encoding/json"
-	"flag"
 	"io/fs"
 	"log"
 	"net/http"
@@ -193,7 +192,6 @@ func (g *gb3) pollLoop() {
 }
 
 func main() {
-	flag.Parse()
 	g := newGb3()
 	go g.forwardLoop()
 	go g.pollLoop()

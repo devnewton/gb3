@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"log"
 	"os"
 	"sort"
+	"strconv"
 	"time"
 )
 
@@ -29,8 +29,26 @@ func (p Posts) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 func (p Posts) Less(i, j int) bool { return p[i].ID < p[j].ID }
 
 func init() {
-	flag.StringVar(&storeFile, "store", "", "File where to store posts")
-	flag.IntVar(&postsLimit, "limit", 200, "Max number of posts to store")
+	storeFile = os.Getenv("GB0_STORE_PATH")
+	initPostsLimit()
+	initTimeLocation()
+}
+
+func initPostsLimit() {
+	postsLimit = 200
+	maxNumberOfStoredPostsVar := os.Getenv("GB0_MAX_NUMBER_OF_STORED_POSTS")
+	if len(maxNumberOfStoredPostsVar) == 0 {
+		return
+	}
+	maxNumberOfStoredPosts, err := strconv.Atoi(os.Getenv("GB0_MAX_NUMBER_OF_STORED_POSTS"))
+	if nil != err {
+		log.Println(err)
+		return
+	}
+	postsLimit = maxNumberOfStoredPosts
+}
+
+func initTimeLocation() {
 	tl, err := time.LoadLocation("Europe/Paris")
 	if nil != err {
 		log.Println(err)

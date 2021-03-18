@@ -65,3 +65,4 @@ typings/
 /gb0
 /gb2c
 cmd/gb2c/__debug_bin
+cmd/gb0/__debug_bin

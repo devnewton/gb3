@@ -1,26 +1,18 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"unicode/utf8"
 )
 
-var listenAddress string
-var verboseMode bool
-
 var writePostChan = make(chan Post)
 var readPostsChan = make(chan chan Posts)
 var postStore Store
-
-func init() {
-	flag.StringVar(&listenAddress, "listen", ":16667", "TCP address to listen on")
-	flag.BoolVar(&verboseMode, "verbose", false, "Verbose logging")
-}
 
 func stripControlsCharsFromString(str string) string {
 	return strings.Map(func(r rune) rune {
@@ -81,10 +73,13 @@ func writeLoop() {
 }
 
 func main() {
-	flag.Parse()
 	postStore = NewStore()
 	http.HandleFunc("/tsv", handleGetTsv)
 	http.HandleFunc("/post", handlePost)
+	listenAddress := os.Getenv("GB0_LISTEN")
+	if len(listenAddress) == 0 {
+		listenAddress = ":16667"
+	}
 	log.Printf("Listen to %s\n", listenAddress)
 	go writeLoop()
 	err := http.ListenAndServe(listenAddress, nil)
