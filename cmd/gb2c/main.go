@@ -204,6 +204,7 @@ func main() {
 		g.handleSearch(w, r)
 	})
 	http.HandleFunc("/api/totoz/search", TotozSearch)
+	http.HandleFunc("/api/emoji/search", EmojiSearch)
 	gc2fs, err := fs.Sub(gc2Content, "gc2")
 	if nil != err {
 		log.Fatal(err)
