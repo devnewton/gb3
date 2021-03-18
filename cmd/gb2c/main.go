@@ -111,9 +111,8 @@ func (g *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	g.join <- c
 	defer func() { g.leave <- c }()
 	g.sendStoredPostsTo(c)
-	closeEvt := w.(http.CloseNotifier).CloseNotify()
 	select {
-	case <-closeEvt:
+	case <-r.Context().Done():
 	case <-time.After(60 * time.Minute):
 	}
 }

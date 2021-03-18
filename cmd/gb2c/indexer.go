@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -40,19 +41,22 @@ func NewIndexer() Indexer {
 	if len(indexPath) == 0 {
 		return &noopIndexer{}
 	}
-	var err error
-	var index bleve.Index
-	if _, err := os.Stat(indexPath); err == nil {
-		index, err = bleve.Open(indexPath)
-	} else {
-		mapping := bleve.NewIndexMapping()
-		index, err = bleve.New(indexPath, mapping)
-	}
+	index, err := openOrCreateIndex()
 	if nil != err {
 		log.Println(err)
 		return &noopIndexer{}
 	}
 	return &bleveIndexer{index: index}
+}
+
+func openOrCreateIndex() (bleve.Index, error) {
+	_, err := os.Stat(indexPath)
+	if errors.Is(err, os.ErrNotExist) {
+		mapping := bleve.NewIndexMapping()
+		return bleve.New(indexPath, mapping)
+	} else {
+		return bleve.Open(indexPath)
+	}
 }
 
 func (i *bleveIndexer) Index(posts Posts) {
