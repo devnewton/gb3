@@ -73,7 +73,6 @@ class Gc2Archives extends HTMLElement {
         for (let post of results.posts) {
             this.insertPost(post);
         }
-        this.sortPosts();
     }
 
     insertPost(post) {
@@ -83,20 +82,6 @@ class Gc2Archives extends HTMLElement {
             postElement.setupWithTribune(post);
             this.resultsContainer.appendChild(postElement);
         }
-    }
-
-    sortPosts() {
-        let postElements = this.resultsContainer.getElementsByTagName('gc2-post');
-        Array.prototype.slice.call(postElements).sort((a, b) => {
-            if (a.postId < b.postId) {
-                return 1;
-            } else if (a.postId > b.postId) {
-                return -1;
-            }
-            return 0;
-        }).forEach((p) => {
-            this.resultsContainer.appendChild(p);
-        });
     }
 
     clearResults() {

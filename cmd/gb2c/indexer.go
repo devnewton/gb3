@@ -78,7 +78,7 @@ func (i *bleveIndexer) Index(posts Posts) {
 }
 
 func (i *bleveIndexer) Search(query string) (SearchResults, error) {
-	matchQuery := bleve.NewMatchQuery(query)
+	matchQuery := bleve.NewQueryStringQuery(query)
 	search := bleve.NewSearchRequest(matchQuery)
 	bleveResults, err := i.index.Search(search)
 	searchResults := SearchResults{Posts: make(Posts, 0)}
