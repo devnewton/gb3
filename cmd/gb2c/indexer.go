@@ -31,9 +31,7 @@ type bleveIndexer struct {
 
 //NewIndexer create indexer
 func NewIndexer() Indexer {
-	//indexPath := os.Getenv("GB2C_FULLTEXT_SEARCH_INDEX_PATH")
-	indexPath, _ := os.MkdirTemp(os.TempDir(), "gb3index")
-	indexPath = indexPath + "/prout"
+	indexPath := os.Getenv("GB2C_FULLTEXT_SEARCH_INDEX_PATH")
 	if len(indexPath) == 0 {
 		log.Println("Do not forget to define GB2C_FULLTEXT_SEARCH_INDEX_PATH environment variable if you need posts search feature")
 		return &noopIndexer{}
