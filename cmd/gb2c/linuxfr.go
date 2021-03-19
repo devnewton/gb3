@@ -11,6 +11,14 @@ import (
 	"strings"
 )
 
+func remoteHost(r *http.Request) string {
+	host := r.Header.Get("X-Forwarded-Host")
+	if len(host) == 0 {
+		host = r.Host
+	}
+	return host
+}
+
 //RegisterLinuxfrAPI setup http linuxfr API endpoints
 func RegisterLinuxfrAPI() {
 	clientID := os.Getenv("GB2C_LINUXFR_CLIENT_ID")
@@ -22,7 +30,7 @@ func RegisterLinuxfrAPI() {
 	http.HandleFunc("/api/linuxfr/authorize", func(w http.ResponseWriter, r *http.Request) {
 		linuxfrRedirectURL := url.URL{
 			Scheme: "https",
-			Host:   r.Host,
+			Host:   remoteHost(r),
 			Path:   "/api/linuxfr/connected",
 		}
 
@@ -40,9 +48,10 @@ func RegisterLinuxfrAPI() {
 		http.Redirect(w, r, linuxfrAuthorizeURL.String(), http.StatusSeeOther)
 	})
 	http.HandleFunc("/api/linuxfr/connected", func(w http.ResponseWriter, r *http.Request) {
+
 		linuxfrRedirectURL := url.URL{
 			Scheme: "https",
-			Host:   r.Host,
+			Host:   remoteHost(r),
 			Path:   "/api/linuxfr/connected",
 		}
 
@@ -73,7 +82,7 @@ func RegisterLinuxfrAPI() {
 		encodedToken := base64.StdEncoding.EncodeToString(body)
 		redirectURL := url.URL{
 			Scheme:   "https",
-			Host:     r.Host,
+			Host:     remoteHost(r),
 			Path:     "/linuxfr.html",
 			Fragment: encodedToken,
 		}
