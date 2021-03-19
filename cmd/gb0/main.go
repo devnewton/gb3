@@ -1,7 +1,9 @@
 package main
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -9,6 +11,9 @@ import (
 	"time"
 	"unicode/utf8"
 )
+
+//go:embed static
+var staticContent embed.FS
 
 var writePostChan = make(chan Post)
 var readPostsChan = make(chan chan Posts)
@@ -52,7 +57,7 @@ func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 	select {
 	case postsToSend := <-replyChan:
 		for _, p := range postsToSend {
-			fmt.Fprintf(w, "%d\t%s\t%s\t%s\t\n", p.ID, p.Time, p.Info, p.Message)
+			fmt.Fprintf(w, "%d\t%s\t%s\t\t%s\n", p.ID, p.Time, p.Info, p.Message)
 		}
 	case <-time.After(30 * time.Second):
 		log.Println("Read posts timeout")
@@ -76,13 +81,21 @@ func main() {
 	postStore = NewStore()
 	http.HandleFunc("/tsv", handleGetTsv)
 	http.HandleFunc("/post", handlePost)
+
+	staticfs, err := fs.Sub(staticContent, "static")
+	if nil != err {
+		log.Fatal(err)
+	}
+	http.Handle("/", http.FileServer(http.FS(staticfs)))
+
 	listenAddress := os.Getenv("GB0_LISTEN")
 	if len(listenAddress) == 0 {
 		listenAddress = ":16667"
 	}
 	log.Printf("Listen to %s\n", listenAddress)
 	go writeLoop()
-	err := http.ListenAndServe(listenAddress, nil)
+
+	err = http.ListenAndServe(listenAddress, nil)
 	if nil != err {
 		log.Fatal(err)
 	}
