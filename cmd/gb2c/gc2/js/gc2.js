@@ -36,7 +36,7 @@ class Gc2Main extends HTMLElement {
                 if (localStorage.nickname) {
                     headers.set('User-agent', localStorage.nickname);
                 }
-                if(this.tribuneSelect.value === "linuxfr") {
+                if(this.tribuneSelect.value === "dlfp") {
                     let accessToken = localStorage.getItem("linuxfr_access_token");
                     let expiresAt = parseInt(localStorage.getItem("linuxfr_expires_at"), 10) || 0;
                     if(!accessToken || expiresAt < Date.now()) {
