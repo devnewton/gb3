@@ -1,6 +1,6 @@
 let linuxfrInfo = document.getElementById('linuxfr-info');
 try {
-    let tokenStr = window.atob(window.location.hash);
+    let tokenStr = window.atob(window.location.hash.substr(1));
     let token = JSON.parse(tokenStr);
     localStorage.linuxfr_access_token = token.access_token;
     localStorage.linuxfr_refresh_token = token.refresh_token;
