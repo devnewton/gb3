@@ -27,7 +27,7 @@ class Gc2Main extends HTMLElement {
 
         this.controls.onsubmit = (e) => {
             if (this.messageInput.value && this.tribuneSelect.value) {
-                let data = new FormData();
+                let data = new URLSearchParams();//NEVER use FormData, it forces multipart and backend dont support multipart
                 data.set('message', this.messageInput.value);
                 data.set('tribune', this.tribuneSelect.value);
                 this.messageInput.value = "";
