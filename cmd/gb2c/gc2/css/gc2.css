@@ -70,7 +70,7 @@ gc2-message gc2-norloge {
 	cursor: pointer;
 }
 
-gc2-post>gc2-moule {
+gc2-moule {
 	padding-right: 5px;
 	padding-left: 5px;
 	color: #833;

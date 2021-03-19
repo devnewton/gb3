@@ -139,8 +139,8 @@ func (g *gb3) handlePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (g *gb3) handleSearch(w http.ResponseWriter, r *http.Request) {
-	query := r.FormValue("query")
-	results, err := g.indexer.Search(query)
+	terms := r.FormValue("terms")
+	results, err := g.indexer.Search(terms)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

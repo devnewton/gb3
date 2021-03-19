@@ -27,7 +27,7 @@ class Gc2Main extends HTMLElement {
 
         this.controls.onsubmit = (e) => {
             if (this.messageInput.value && this.tribuneSelect.value) {
-                let data = new URLSearchParams();
+                let data = new FormData();
                 data.set('message', this.messageInput.value);
                 data.set('tribune', this.tribuneSelect.value);
                 this.messageInput.value = "";
@@ -44,7 +44,7 @@ class Gc2Main extends HTMLElement {
                     this.messageInput.classList.toggle("gc2-loading", false);
                 }).catch((error) => {
                     this.messageInput.classList.toggle("gc2-loading", false);
-                    console.log(`Cannot post message '${formData.get('message')}'. Error: `, error);
+                    console.log(`Cannot post message '${data.get('message')}'. Error: `, error);
                 });
             }
             e.preventDefault()

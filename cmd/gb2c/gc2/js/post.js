@@ -129,6 +129,13 @@ class Gc2Post extends HTMLElement {
         super();
     }
 
+    setupWithTribune(post) {
+        let tribuneElement = document.createElement('gc2-post-tribune');
+        tribuneElement.innerText = post.tribune;
+        this.appendChild(tribuneElement);
+        this.setup(post);
+    }
+
     setup(post) {
         this.id = "".concat(post.id, '@', post.tribune);
         this.postId = post.id;
