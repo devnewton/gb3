@@ -2,9 +2,9 @@ let linuxfrInfo = document.getElementById('linuxfr-info');
 try {
     let tokenStr = window.atob(window.location.hash.substr(1));
     let token = JSON.parse(tokenStr);
-    localStorage.linuxfr_access_token = token.access_token;
-    localStorage.linuxfr_refresh_token = token.refresh_token;
-    localStorage.linuxfr_expires_in = token.expires_in;
+    localStorage.setItem("linuxfr_access_token", token.access_token);
+    localStorage.setItem("linuxfr_refresh_token", token.refresh_token);
+    localStorage.setItem("linuxfr_expires_at", Date.now() + token.expires_in * 1000);
     linuxfrInfo.innerText = "Authorization token successfullty received from linuxfr :-)";
   }
   catch(error) {
