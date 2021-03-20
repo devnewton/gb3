@@ -14,13 +14,9 @@ gb0 use the following environment variables.
 
 Change default http listen address and port.
 
-#### GB0_STORE_PATH
+#### GB0_STORE_DIRECTORY
 
-Post will be stored to disk only if this variable is a valid path to a writable file.
-
-#### GB0_MAX_NUMBER_OF_STORED_POSTS
-
-Max number of posts to keep.
+Post will be stored to disk only if this variable is a valid path to a writable directory.
 
 ### Endpoints
 

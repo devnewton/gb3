@@ -57,7 +57,7 @@ func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 	select {
 	case postsToSend := <-replyChan:
 		for _, p := range postsToSend {
-			fmt.Fprintf(w, "%d\t%s\t%s\t\t%s\n", p.ID, p.Time, p.Info, p.Message)
+			fmt.Fprintf(w, "%s\t%s\t%s\t\t%s\n", p.Time, p.Time, p.Info, p.Message)
 		}
 	case <-time.After(30 * time.Second):
 		log.Println("Read posts timeout")
