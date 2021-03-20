@@ -65,7 +65,7 @@ func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func writeLoop() {
+func readWriteLoop() {
 	for {
 		select {
 		case p := <-writePostChan:
@@ -93,7 +93,7 @@ func main() {
 		listenAddress = ":16667"
 	}
 	log.Printf("Listen to %s\n", listenAddress)
-	go writeLoop()
+	go readWriteLoop()
 
 	err = http.ListenAndServe(listenAddress, nil)
 	if nil != err {

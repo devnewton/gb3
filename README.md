@@ -25,13 +25,13 @@ gb0 exposes two endpoint to retrieve and post messages.
 #### /tsv
 
 ```bash
-curl 'http://localhost:6667/tsv'
+curl 'http://localhost:16667/tsv'
 ```
 
 #### /post
 
 ```bash
-curl -X POST -d "message=plop" 'http://localhost:6667/post'
+curl -X POST -d "message=plop" 'http://localhost:16667/post'
 ```
 
 ## gb2c
@@ -65,7 +65,7 @@ gb2c exposes two endpoint for polling and posting tribune messages.
 #### /api/poll
 
 ```javascript
-var postSource = new EventSource("http://localhost:6666/api/poll");
+var postSource = new EventSource("http://localhost:16666/api/poll");
 postSource.onmessage = function (event) {
   console.log(event.data);
 };
@@ -74,7 +74,7 @@ postSource.onmessage = function (event) {
 #### /api/post
 
 ```bash
-curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:6666/api/post'
+curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:16666/api/post'
 ```
 
 ### gc2

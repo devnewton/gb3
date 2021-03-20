@@ -39,16 +39,21 @@ func initTimeLocation() {
 	}
 }
 
-//NewStore create file or memory store
+//NewStore create posts store
 func NewStore() Store {
 	storeDirectory := os.Getenv("GB0_STORE_DIRECTORY")
-	if len(storeDirectory) > 0 {
-		log.Fatal("GB0_STORE_DIRECTORY is not defined")
+	if len(storeDirectory) == 0 {
+		log.Println("GB0_STORE_DIRECTORY is not defined, posts will be stored in temporary directory")
+		storeDirectory, _ = os.MkdirTemp("", "gb0")
 	}
-	fileStore := &FileStore{postsDirectory: path.Join(storeDirectory, "posts")}
-	err := os.MkdirAll(fileStore.postsDirectory, 0644)
+	fileStore := &FileStore{postsDirectory: path.Join(storeDirectory, "posts"), tmpDirectory: path.Join(storeDirectory, "tmp")}
+	err := os.MkdirAll(fileStore.postsDirectory, 0755)
 	if nil != err {
-		log.Fatalf("Cannot create file store, try to set GB0_STORE_DIRECTORY to a writable directory : %s\n", err)
+		log.Fatalf("Cannot create posts directory, try to set GB0_STORE_DIRECTORY to a writable directory : %s\n", err)
+	}
+	err = os.MkdirAll(fileStore.tmpDirectory, 0755)
+	if nil != err {
+		log.Fatalf("Cannot create tmp directory, try to set GB0_STORE_DIRECTORY to a writable directory : %s\n", err)
 	}
 	return fileStore
 }
@@ -62,22 +67,24 @@ type Store interface {
 //FileStore store posts in file
 type FileStore struct {
 	postsDirectory string
+	tmpDirectory   string
 }
 
 //ReadPosts Load from file
 func (f *FileStore) ReadPosts() Posts {
 	t := time.Now().In(timeLocation)
-	todayDir := t.Format("2006/01/02")
+	todayDir := f.postsDirectory + "/" + t.Format("2006/01/02")
 	todayPosts := readPostsFromDirectory(todayDir)
 	return todayPosts
 }
 
-func readPostsFromDirectory(directory string) (posts Posts) {
+func readPostsFromDirectory(directory string) Posts {
 	files, err := filepath.Glob(directory + "/*.json")
 	if nil != err {
 		log.Printf("Cannot read posts from %s", directory)
-		return posts
+		return make(Posts, 0)
 	}
+	posts := make(Posts, 0, len(files))
 	for _, file := range files {
 		post, err := readPostFromFile(file)
 		if nil == err {
@@ -117,15 +124,7 @@ func (f *FileStore) WritePost(p Post) {
 func (f *FileStore) tryToWritePost(p Post) error {
 	t := time.Now().In(timeLocation)
 	p.Time = t.Format("20060102150405")
-
-	postDir := f.postsDirectory + "/" + t.Format("2006/01/02")
-	err := os.MkdirAll(postDir, 0644)
-	if nil != err {
-		log.Printf("Cannot create directory %s : %s\n", postDir, err)
-		return err
-	}
-
-	tmpFile, err := os.CreateTemp(f.postsDirectory, p.Time+"*.tmp")
+	tmpFile, err := os.CreateTemp(f.tmpDirectory, p.Time+"*.json")
 	if nil != err {
 		return err
 	}
@@ -133,5 +132,12 @@ func (f *FileStore) tryToWritePost(p Post) error {
 	defer os.Remove(tmpFile.Name())
 	encoder := json.NewEncoder(tmpFile)
 	encoder.Encode(p)
-	return os.Link(tmpFile.Name(), p.Time+".json")
+
+	postDir := f.postsDirectory + "/" + t.Format("2006/01/02")
+	err = os.MkdirAll(postDir, 0755)
+	if nil != err {
+		log.Printf("Cannot create directory %s : %s\n", postDir, err)
+		return err
+	}
+	return os.Link(tmpFile.Name(), path.Join(postDir, p.Time+".json"))
 }
