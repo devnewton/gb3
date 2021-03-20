@@ -51,7 +51,7 @@ func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/tab-separated-values")
 	posts := postStore.ReadPosts()
 	for _, p := range posts {
-		fmt.Fprintf(w, "%s\t%s\t%s\t\t%s\n", p.Time, p.Time, p.Info, p.Message)
+		p.PrintTsv(w)
 	}
 }
 

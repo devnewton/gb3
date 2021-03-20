@@ -1,7 +1,9 @@
 package main
 
 import (
-	"encoding/json"
+	"bufio"
+	"fmt"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -13,9 +15,9 @@ var timeLocation *time.Location
 
 //Post a moule post
 type Post struct {
-	Time    string `json:"time"`
-	Info    string `json:"info"`
-	Message string `json:"message"`
+	Time    string
+	Info    string
+	Message string
 }
 
 //Posts list
@@ -24,6 +26,38 @@ type Posts []Post
 func (p Posts) Len() int           { return len(p) }
 func (p Posts) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 func (p Posts) Less(i, j int) bool { return p[i].Time < p[j].Time }
+
+func (p *Post) PrintTsv(w io.Writer) {
+	fmt.Fprintf(w, "%s\t%s\t%s\t\t%s\n", p.Time, p.Time, p.Info, p.Message)
+}
+
+func tsvSplit(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	for i := 0; i < len(data); i++ {
+		d := data[i]
+		if d == '\t' || d == '\n' {
+			return i + 1, data[:i], nil
+		}
+	}
+	if !atEOF {
+		return 0, nil, nil
+	}
+	return 0, data, bufio.ErrFinalToken
+}
+
+func scanTsv(r io.Reader) (*Post, error) {
+	scanner := bufio.NewScanner(r)
+	scanner.Split(tsvSplit)
+	scanner.Scan() //first field is useless id
+	scanner.Scan()
+	var p Post
+	p.Time = scanner.Text()
+	scanner.Scan()
+	p.Info = scanner.Text()
+	scanner.Scan() //next field is useless login
+	scanner.Scan()
+	p.Message = scanner.Text()
+	return &p, scanner.Err()
+}
 
 func init() {
 	initTimeLocation()
@@ -85,7 +119,7 @@ func (f *FileStore) ReadPosts() Posts {
 const maxPostInBackend = 1000
 
 func readPostsFromDirectory(posts Posts, directory string) Posts {
-	files, err := filepath.Glob(directory + "/*.json")
+	files, err := filepath.Glob(directory + "/*.tsv")
 	if nil != err {
 		log.Printf("Cannot read posts from %s", directory)
 		return make(Posts, 0)
@@ -95,7 +129,7 @@ func readPostsFromDirectory(posts Posts, directory string) Posts {
 		if nil == err {
 			posts = append(posts, *post)
 		} else {
-			log.Printf("Cannot read posts from %s", file)
+			log.Printf("Cannot read posts from %s : %s", file, err)
 		}
 		if len(posts) >= maxPostInBackend {
 			break
@@ -105,15 +139,14 @@ func readPostsFromDirectory(posts Posts, directory string) Posts {
 }
 
 func readPostFromFile(file string) (*Post, error) {
-	jsonFile, err := os.Open(file)
+	tsvFile, err := os.Open(file)
 	if nil != err {
 		return nil, err
 	}
-	defer jsonFile.Close()
-	decoder := json.NewDecoder(jsonFile)
-	var post Post
-	err = decoder.Decode(&post)
-	return &post, err
+	defer tsvFile.Close()
+	var post *Post
+	post, err = scanTsv(tsvFile)
+	return post, err
 }
 
 const maxWritePostTry = 42
@@ -134,14 +167,13 @@ func (f *FileStore) WritePost(p Post) {
 func (f *FileStore) tryToWritePost(p Post) error {
 	t := time.Now().In(timeLocation)
 	p.Time = t.Format("20060102150405")
-	tmpFile, err := os.CreateTemp(f.tmpDirectory, p.Time+"*.json")
+	tmpFile, err := os.CreateTemp(f.tmpDirectory, p.Time+"*.tsv")
 	if nil != err {
 		return err
 	}
 	defer tmpFile.Close()
 	defer os.Remove(tmpFile.Name())
-	encoder := json.NewEncoder(tmpFile)
-	encoder.Encode(p)
+	p.PrintTsv(tmpFile)
 
 	postDir := f.postsDirectory + "/" + t.Format("2006/01/02")
 	err = os.MkdirAll(postDir, 0755)
@@ -149,5 +181,5 @@ func (f *FileStore) tryToWritePost(p Post) error {
 		log.Printf("Cannot create directory %s : %s\n", postDir, err)
 		return err
 	}
-	return os.Link(tmpFile.Name(), path.Join(postDir, p.Time+".json"))
+	return os.Link(tmpFile.Name(), path.Join(postDir, p.Time+".tsv"))
 }
