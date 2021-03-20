@@ -72,25 +72,33 @@ type FileStore struct {
 
 //ReadPosts Load from file
 func (f *FileStore) ReadPosts() Posts {
-	t := time.Now().In(timeLocation)
-	todayDir := f.postsDirectory + "/" + t.Format("2006/01/02")
-	todayPosts := readPostsFromDirectory(todayDir)
-	return todayPosts
+	posts := make(Posts, 0, maxPostInBackend)
+	now := time.Now().In(timeLocation)
+	for day := 0; day <= 1; day++ {
+		dayTime := now.AddDate(0, 0, -day)
+		dayDir := f.postsDirectory + "/" + dayTime.Format("2006/01/02")
+		posts = readPostsFromDirectory(posts, dayDir)
+	}
+	return posts
 }
 
-func readPostsFromDirectory(directory string) Posts {
+const maxPostInBackend = 1000
+
+func readPostsFromDirectory(posts Posts, directory string) Posts {
 	files, err := filepath.Glob(directory + "/*.json")
 	if nil != err {
 		log.Printf("Cannot read posts from %s", directory)
 		return make(Posts, 0)
 	}
-	posts := make(Posts, 0, len(files))
 	for _, file := range files {
 		post, err := readPostFromFile(file)
 		if nil == err {
 			posts = append(posts, *post)
 		} else {
 			log.Printf("Cannot read posts from %s", file)
+		}
+		if len(posts) >= maxPostInBackend {
+			break
 		}
 	}
 	return posts
@@ -108,10 +116,12 @@ func readPostFromFile(file string) (*Post, error) {
 	return &post, err
 }
 
+const maxWritePostTry = 42
+
 //WritePost Save to file
 func (f *FileStore) WritePost(p Post) {
 	var err error
-	for i := 1; i <= 42; i++ {
+	for i := 1; i <= maxWritePostTry; i++ {
 		err = f.tryToWritePost(p)
 		if nil == err {
 			return

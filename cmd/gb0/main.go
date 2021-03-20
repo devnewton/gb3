@@ -8,15 +8,12 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 	"unicode/utf8"
 )
 
 //go:embed static
 var staticContent embed.FS
 
-var writePostChan = make(chan Post)
-var readPostsChan = make(chan chan Posts)
 var postStore Store
 
 func stripControlsCharsFromString(str string) string {
@@ -44,36 +41,17 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid utf8 in user agent", http.StatusBadRequest)
 		return
 	}
-	writePostChan <- Post{
+	postStore.WritePost(Post{
 		Message: stripControlsCharsFromString(fmt.Sprintf("%.65536s", message)),
 		Info:    stripControlsCharsFromString(fmt.Sprintf("%.32s", info)),
-	}
+	})
 }
 
 func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/tab-separated-values")
-	replyChan := make(chan Posts)
-	readPostsChan <- replyChan
-	select {
-	case postsToSend := <-replyChan:
-		for _, p := range postsToSend {
-			fmt.Fprintf(w, "%s\t%s\t%s\t\t%s\n", p.Time, p.Time, p.Info, p.Message)
-		}
-	case <-time.After(30 * time.Second):
-		log.Println("Read posts timeout")
-	}
-
-}
-
-func readWriteLoop() {
-	for {
-		select {
-		case p := <-writePostChan:
-			postStore.WritePost(p)
-		case r := <-readPostsChan:
-			r <- postStore.ReadPosts()
-		}
-
+	posts := postStore.ReadPosts()
+	for _, p := range posts {
+		fmt.Fprintf(w, "%s\t%s\t%s\t\t%s\n", p.Time, p.Time, p.Info, p.Message)
 	}
 }
 
@@ -93,8 +71,6 @@ func main() {
 		listenAddress = ":16667"
 	}
 	log.Printf("Listen to %s\n", listenAddress)
-	go readWriteLoop()
-
 	err = http.ListenAndServe(listenAddress, nil)
 	if nil != err {
 		log.Fatal(err)
