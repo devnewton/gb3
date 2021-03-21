@@ -42,7 +42,7 @@ func RegisterLinuxfrAPI() {
 		linuxfrAuthorizeURL := url.URL{
 			Scheme:   "https",
 			Host:     "linuxfr.org",
-			Path:     "/gb2c/oauth/authorize",
+			Path:     "/api/oauth/authorize",
 			RawQuery: linuxfrAuthorizeQuery.Encode(),
 		}
 		http.Redirect(w, r, linuxfrAuthorizeURL.String(), http.StatusSeeOther)
