@@ -60,7 +60,13 @@ Oauth credentials for linuxfr API.
 
 ### Endpoints
 
-gb2c exposes two endpoint for polling and posting tribune messages.
+gb2c exposes exports for listing tribunes then polling and posting messages.
+
+#### /gb2c/list
+
+```bash
+curl 'http://localhost:16666/gb2c/list'
+```
 
 #### /gb2c/poll
 
@@ -79,4 +85,4 @@ curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:16666/
 
 ### gc2
 
-A simple coincoin frontend embedded in gb2c.
+A simple coincoin frontend for gb2c.

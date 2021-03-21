@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 	"time"
 )
@@ -118,6 +119,20 @@ func (g *gb3) sendStoredPostsTo(c *Coincoin) {
 	}
 }
 
+func (g *gb3) handleList(w http.ResponseWriter, r *http.Request) {
+	tribunes := make([]string, 0, len(g.tribunes))
+	for t := range g.tribunes {
+		tribunes = append(tribunes, t)
+	}
+	sort.Strings(tribunes)
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
+	err := encoder.Encode(tribunes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func (g *gb3) handlePoll(w http.ResponseWriter, r *http.Request) {
 	flusher, ok := w.(http.Flusher)
 	if !ok {
@@ -208,6 +223,9 @@ func main() {
 	go g.forwardLoop()
 	go g.pollLoop()
 	RegisterLinuxfrAPI()
+	http.HandleFunc("/gb2c/list", func(w http.ResponseWriter, r *http.Request) {
+		g.handleList(w, r)
+	})
 	http.HandleFunc("/gb2c/poll", func(w http.ResponseWriter, r *http.Request) {
 		g.handlePoll(w, r)
 	})

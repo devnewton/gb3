@@ -5,19 +5,21 @@ class Gc2Main extends HTMLElement {
         this.tribunes = new Map();
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         this.setupOrder();
         this.setupControls();
-        this.setupBackend2html();
         this.setupGesture();
-        this.setupBouchotSuffixor();
+        await this.setupBackend2html();
+        await this.setupBouchotSuffixor();
+        await this.listTribunes();
+        this.startPoll();
     }
 
     setupOrder() {
         this.classList.toggle(`gb3-postorder-${localStorage.postOrder || "reverse-chronological"}`, true);
     }
 
-    setupControls() {
+    async setupControls() {
         this.controls = document.createElement("form");
         this.controls.classList.add("gc2-controls");
         this.appendChild(this.controls);
@@ -97,15 +99,10 @@ class Gc2Main extends HTMLElement {
         this.controls.appendChild(this.messageInput);
     }
 
-    setupBackend2html() {
-        fetch("/peg/backend2html.pegjs")
-            .then((response) => {
-                return response.text();
-            })
-            .then((text) => {
-                this.backend2html = peg.generate(text);
-                this.startPoll();
-            });
+    async setupBackend2html() {
+        let response = await fetch("/peg/backend2html.pegjs");
+        let text = await response.text();
+        this.backend2html = peg.generate(text);
     }
 
     startPoll() {
@@ -169,6 +166,12 @@ class Gc2Main extends HTMLElement {
 
     }
 
+    async listTribunes() {
+        let response = await fetch("/gb2c/list");
+        let tribunes = await response.json();
+        tribunes.forEach(t => this.getTribuneElement(t));
+    }
+
     handleAltShortcut(keychar) {
         switch (keychar) {
             case 'o':
@@ -225,14 +228,10 @@ class Gc2Main extends HTMLElement {
         this.messageInput.setSelectionRange(selectionEnd, selectionEnd);
     }
 
-    setupBouchotSuffixor() {
-        fetch("/peg/bouchotsuffixor.pegjs")
-            .then((response) => {
-                return response.text();
-            })
-            .then((text) => {
-                this.bouchotSuffixor = peg.generate(text);
-            });
+    async setupBouchotSuffixor() {
+        let response = await fetch("/peg/bouchotsuffixor.pegjs");
+        let text = await response.text();
+        this.bouchotSuffixor = peg.generate(text);
     }
 
     addBouchotSuffixInMessageInput(tribune) {
