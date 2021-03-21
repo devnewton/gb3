@@ -5,21 +5,17 @@ class Gc2Archives extends HTMLElement {
         this.tribunes = new Map();
     }
 
-    connectedCallback() {
-        this.setupBackend2html();
+    async connectedCallback() {
         this.setupControls();
         this.setupResultsContainer();
+        await this.setupBackend2html();
     }
 
 
-    setupBackend2html() {
-        fetch("/peg/backend2html.pegjs")
-            .then((response) => {
-                return response.text();
-            })
-            .then((text) => {
-                this.backend2html = peg.generate(text);
-            });
+    async setupBackend2html() {
+        let response = await fetch("/peg/backend2html.pegjs");
+        let text = await response.text();
+        this.backend2html = peg.generate(text);
     }
 
     setupControls() {
