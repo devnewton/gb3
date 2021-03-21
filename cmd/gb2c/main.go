@@ -208,6 +208,7 @@ func (g *gb3) pollTribune(t *Tribune) error {
 
 func (g *gb3) pollLoop() {
 	tick := time.Tick(30 * time.Second)
+	g.pollTribunes()
 	for {
 		select {
 		case t := <-g.poll:
