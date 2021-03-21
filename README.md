@@ -25,7 +25,7 @@ gb0 exposes two endpoint to retrieve and post messages.
 #### /tsv
 
 ```bash
-curl 'http://localhost:16667/tsv'
+curl 'http://localhost:16667/gb0/tsv'
 ```
 
 #### /gb0/post

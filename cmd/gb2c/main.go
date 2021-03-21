@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -35,7 +37,7 @@ type forwardMessage struct {
 }
 
 func newGb3() *gb3 {
-	return &gb3{
+	g := &gb3{
 		join:    make(chan *Coincoin),
 		leave:   make(chan *Coincoin),
 		forward: make(chan forwardMessage),
@@ -50,6 +52,21 @@ func newGb3() *gb3 {
 		indexer: NewIndexer(),
 		store:   NewStore(),
 	}
+	gb0Tribunes := os.Getenv("GB2C_GB0_TRIBUNES")
+	if len(gb0Tribunes) == 0 {
+		gb0Tribunes = "gb0local:http://localhost:16667"
+	}
+	for _, gb0Tribune := range strings.Split(gb0Tribunes, ",") {
+		gb0TribuneSplitted := strings.SplitN(gb0Tribune, ":", 2)
+		if len(gb0TribuneSplitted) != 2 {
+			fmt.Printf("Invalid gb0 tribune description in GB2C_GB0_TRIBUNES: %s\n", gb0Tribune)
+			continue
+		}
+		gb0TribuneName := gb0TribuneSplitted[0]
+		gb0TribuneURL := gb0TribuneSplitted[1]
+		g.tribunes[gb0TribuneName] = &Tribune{Name: gb0TribuneName, BackendURL: gb0TribuneURL + "/gb0/tsv", PostURL: gb0TribuneURL + "/gb0/post", PostField: "message"}
+	}
+	return g
 }
 
 func (g *gb3) forwardLoop() {
@@ -205,7 +222,7 @@ func main() {
 
 	gc2Path := os.Getenv("GB2C_GC2_FROM_PATH")
 	if len(gc2Path) == 0 {
-		gc2Path = "../../prout"
+		gc2Path = "../../gc2"
 	}
 	gc2PathInfo, err := os.Stat(gc2Path)
 	if nil == err && gc2PathInfo.IsDir() {
