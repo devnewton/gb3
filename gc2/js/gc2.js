@@ -40,12 +40,12 @@ class Gc2Main extends HTMLElement {
                     let accessToken = localStorage.getItem("linuxfr_access_token");
                     let expiresAt = parseInt(localStorage.getItem("linuxfr_expires_at"), 10) || 0;
                     if(!accessToken || expiresAt < Date.now()) {
-                        window.location.href = "/api/linuxfr/authorize";
+                        window.location.href = "/gb2c/linuxfr/authorize";
                     } else {
                         headers.set('Authorization', `Bearer ${accessToken}`);
                     }
                 }
-                fetch("/api/post", {
+                fetch("/gb2c/post", {
                     body: data,
                     method: "POST",
                     headers: headers
@@ -109,7 +109,7 @@ class Gc2Main extends HTMLElement {
     }
 
     startPoll() {
-        let postSource = new EventSource("/api/poll");
+        let postSource = new EventSource("/gb2c/poll");
         postSource.onmessage = (event) => {
             let post = JSON.parse(event.data);
             post.message = this.backend2html.parse(post.message);

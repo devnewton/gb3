@@ -28,10 +28,10 @@ gb0 exposes two endpoint to retrieve and post messages.
 curl 'http://localhost:16667/tsv'
 ```
 
-#### /post
+#### /gb0/post
 
 ```bash
-curl -X POST -d "message=plop" 'http://localhost:16667/post'
+curl -X POST -d "message=plop" 'http://localhost:16667/gb0/post'
 ```
 
 ## gb2c
@@ -62,19 +62,19 @@ Oauth credentials for linuxfr API.
 
 gb2c exposes two endpoint for polling and posting tribune messages.
 
-#### /api/poll
+#### /gb2c/poll
 
 ```javascript
-var postSource = new EventSource("http://localhost:16666/api/poll");
+var postSource = new EventSource("http://localhost:16666/gb2c/poll");
 postSource.onmessage = function (event) {
   console.log(event.data);
 };
 ```
 
-#### /api/post
+#### /gb2c/post
 
 ```bash
-curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:16666/api/post'
+curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:16666/gb2c/post'
 ```
 
 ### gc2

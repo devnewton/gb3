@@ -47,7 +47,7 @@ class Gc2Archives extends HTMLElement {
             e.preventDefault()
             if (termsInput.value) {
                 termsInput.classList.toggle("gc2-loading", true);
-                fetch(`/api/search?terms=${encodeURIComponent(termsInput.value)}`, {
+                fetch(`/gb2c/search?terms=${encodeURIComponent(termsInput.value)}`, {
                     method: "GET",
                 }).then((response) => {
                     termsInput.classList.toggle("gc2-loading", false);

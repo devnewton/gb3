@@ -44,7 +44,7 @@ func newGb3() *gb3 {
 			"sveetch":     {Name: "sveetch", BackendURL: "http://sveetch.net/tribune/remote/tsv/", PostURL: "http://sveetch.net/tribune/post/tsv/?last_id=1", PostField: "content"},
 			"moules":      {Name: "moules", BackendURL: "http://moules.org/board/backend/tsv", PostURL: "http://moules.org/board/add.php?backend=tsv", PostField: "message"},
 			"ototu":       {Name: "ototu", BackendURL: "https://ototu.euromussels.eu/goboard/backend/tsv", PostURL: "https://ototu.euromussels.eu/goboard/post", PostField: "message"},
-			"dlfp":        {Name: "dlfp", BackendURL: "https://linuxfr.org/board/index.tsv", PostURL: "https://linuxfr.org/api/v1/board", PostField: "message", AuthentificationType: OAuth2Authentification},
+			"dlfp":        {Name: "dlfp", BackendURL: "https://linuxfr.org/board/index.tsv", PostURL: "https://linuxfr.org/gb2c/v1/board", PostField: "message", AuthentificationType: OAuth2Authentification},
 		},
 		poll:    make(chan *Tribune),
 		indexer: NewIndexer(),
@@ -191,21 +191,21 @@ func main() {
 	go g.forwardLoop()
 	go g.pollLoop()
 	RegisterLinuxfrAPI()
-	http.HandleFunc("/api/poll", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/gb2c/poll", func(w http.ResponseWriter, r *http.Request) {
 		g.handlePoll(w, r)
 	})
-	http.HandleFunc("/api/post", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/gb2c/post", func(w http.ResponseWriter, r *http.Request) {
 		g.handlePost(w, r)
 	})
-	http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/gb2c/search", func(w http.ResponseWriter, r *http.Request) {
 		g.handleSearch(w, r)
 	})
-	http.HandleFunc("/api/totoz/search", TotozSearch)
-	http.HandleFunc("/api/emoji/search", EmojiSearch)
+	http.HandleFunc("/gb2c/totoz/search", TotozSearch)
+	http.HandleFunc("/gb2c/emoji/search", EmojiSearch)
 
 	gc2Path := os.Getenv("GB2C_GC2_FROM_PATH")
 	if len(gc2Path) == 0 {
-		gc2Path = "../../gc2"
+		gc2Path = "../../prout"
 	}
 	gc2PathInfo, err := os.Stat(gc2Path)
 	if nil == err && gc2PathInfo.IsDir() {

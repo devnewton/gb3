@@ -110,7 +110,7 @@ class Gc2TotozSearch extends HTMLElement {
 
         form.onsubmit = (e) => {
             e.preventDefault();
-            fetch(`/api/totoz/search?terms=${encodeURIComponent(searchInput.value)}`, {
+            fetch(`/gb2c/totoz/search?terms=${encodeURIComponent(searchInput.value)}`, {
                 method: "GET",
             }).then((response) =>{
                 return response.json();
@@ -183,7 +183,7 @@ class Gc2EmojiSearch extends HTMLElement {
 
         form.onsubmit = (e) => {
             e.preventDefault();
-            fetch(`/api/emoji/search?terms=${encodeURIComponent(searchInput.value)}`, {
+            fetch(`/gb2c/emoji/search?terms=${encodeURIComponent(searchInput.value)}`, {
                 method: "GET",
             }).then((response) =>{
                 return response.json();

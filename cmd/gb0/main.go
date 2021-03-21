@@ -57,8 +57,8 @@ func handleGetTsv(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	postStore = NewStore()
-	http.HandleFunc("/tsv", handleGetTsv)
-	http.HandleFunc("/post", handlePost)
+	http.HandleFunc("/gb0/tsv", handleGetTsv)
+	http.HandleFunc("/gb0/post", handlePost)
 
 	staticfs, err := fs.Sub(staticContent, "static")
 	if nil != err {
