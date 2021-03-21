@@ -61,7 +61,7 @@ func RegisterLinuxfrAPI() {
 		tokenParams.Set("code", r.URL.Query().Get("code"))
 		tokenParams.Set("grant_type", "authorization_code")
 		tokenParams.Set("redirect_uri", linuxfrRedirectURL.String())
-		tokenRequest, err := http.NewRequest("POST", "https://linuxfr.org/gb2c/oauth/token", strings.NewReader(tokenParams.Encode()))
+		tokenRequest, err := http.NewRequest("POST", "https://linuxfr.org/api/oauth/token", strings.NewReader(tokenParams.Encode()))
 		if nil != err {
 			http.Error(w, fmt.Sprintf("Cannot build linuxfr token request: %s", err), 500)
 			return
