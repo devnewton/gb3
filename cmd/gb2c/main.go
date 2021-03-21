@@ -1,17 +1,12 @@
 package main
 
 import (
-	"embed"
 	"encoding/json"
-	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"time"
 )
-
-//go:embed gc2
-var gc2Content embed.FS
 
 var verboseMode bool
 
@@ -207,11 +202,15 @@ func main() {
 	})
 	http.HandleFunc("/api/totoz/search", TotozSearch)
 	http.HandleFunc("/api/emoji/search", EmojiSearch)
-	gc2fs, err := fs.Sub(gc2Content, "gc2")
-	if nil != err {
-		log.Fatal(err)
+
+	gc2Path := os.Getenv("GB2C_GC2_FROM_PATH")
+	if len(gc2Path) == 0 {
+		gc2Path = "../../gc2"
 	}
-	http.Handle("/", http.FileServer(http.FS(gc2fs)))
+	gc2PathInfo, err := os.Stat(gc2Path)
+	if nil == err && gc2PathInfo.IsDir() {
+		http.Handle("/", http.FileServer(http.Dir(gc2Path)))
+	}
 
 	listenAddress := os.Getenv("GB2C_LISTEN")
 	if len(listenAddress) == 0 {
