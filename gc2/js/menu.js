@@ -16,35 +16,35 @@ class Gc2Menu extends HTMLElement {
         this.clear();
 
         let totozButton = document.createElement('button');
-        totozButton.innerText = "Totoz";
+        totozButton.innerText = "😱 Totoz";
         totozButton.onclick = () => {
             this.showTotoz();
         }
         this.appendChild(totozButton);
 
         let emojiButton = document.createElement('button');
-        emojiButton.innerText = "Emoji";
+        emojiButton.innerText = "💩 Emoji";
         emojiButton.onclick = () => {
             this.showEmoji();
         }
         this.appendChild(emojiButton);
 
         let settingsButton = document.createElement('button');
-        settingsButton.innerText = "Settings";
+        settingsButton.innerText = "⚙ Settings";
         settingsButton.onclick = () => {
             window.location.href = "/settings.html";
         }
         this.appendChild(settingsButton);
 
         let archivesButton = document.createElement('button');
-        archivesButton.innerText = "Archives";
+        archivesButton.innerText = "🔍 Archives";
         archivesButton.onclick = () => {
             window.location.href = "/archives.html";
         }
         this.appendChild(archivesButton);
 
         let backButton = document.createElement('button');
-        backButton.innerText = "Back";
+        backButton.innerText = "↩ Back";
         backButton.onclick = () => {
             gc2CloseMenu();
         }

@@ -15,7 +15,13 @@ gc2-menu {
 	max-width: 60rem;
 	margin: auto;
 	display: flex;
+	align-content: center;
 	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+gc2-menu button {
+	margin: 8px
 }
 
 .gb3-postorder-reverse-chronological {
