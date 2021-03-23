@@ -38,7 +38,7 @@ class Gc2PostNorloge extends HTMLElement {
     }
 
     formatNorloge() {
-        let style = localStorage.norlogeStyle || "longlong";
+        let style = localStorage.norlogeStyle || "auto";
         switch (style) {
             case "auto":
                 let now = new Date();

@@ -11,7 +11,7 @@ postOrder.onchange = (e) => {
 };
 
 let norlogeStyle = document.getElementById("norlogeStyle");
-norlogeStyle.value = localStorage.norlogeStyle || "longlong";
+norlogeStyle.value = localStorage.norlogeStyle || "auto";
 norlogeStyle.onchange = (e) => {
     localStorage.norlogeStyle = e.target.value;
 };
