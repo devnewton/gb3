@@ -32,7 +32,9 @@ gc2-menu {
 }
 
 gc2-tribune {
-	display: flex;
+	display: grid;
+	grid-template-columns: min-content 1fr 10fr;
+	grid-column-gap: 1ch;
 	color: #007700;
 }
 
@@ -44,6 +46,10 @@ gc2-tribune {
 	flex-direction: column-reverse;
 }
 
+gc2-post {
+    display: contents;
+}
+
 gc2-post:nth-of-type(even) {
 	background-color: #FFFFFF;
 }
@@ -53,15 +59,11 @@ gc2-post:nth-of-type(odd) {
 }
 
 gc2-post-norloge {
-	padding-right: 5px;
-	padding-left: 5px;
-	text-align: center;
+
 	color: black;
 	font-weight: bold;
 	white-space: nowrap;
-	display: inline-block;
-	vertical-align: text-top;
-	margin: auto;
+
 	cursor: pointer;
 }
 
@@ -71,24 +73,22 @@ gc2-message gc2-norloge {
 }
 
 gc2-moule {
-	padding-right: 5px;
-	padding-left: 5px;
+
 	color: #833;
-	display: inline-block;
-	word-break: break-all;
-	vertical-align: text-top;
-	margin: auto;
+	width: 8em;
+	white-space: nowrap;
+	overflow-wrap: break-word;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
 	cursor: pointer;
 }
 
 gc2-message {
-	padding-right: 5px;
-	padding-left: 5px;
+
 	color: black;
 	word-break: break-all;
-	display: inline-block;
-	vertical-align: text-top;
-	margin: auto;
+
 }
 
 gc2-message a {
