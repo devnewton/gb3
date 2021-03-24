@@ -1,3 +1,50 @@
+class Gc2PostIcon extends HTMLElement {
+    
+    /**
+     * @type boolean
+     */
+    isMine;
+
+    /**
+     * @type boolean
+     */
+    isBigorno;
+
+    /**
+     * @type boolean
+     */
+    isReply;
+
+    updateIcon(post, messageElement) {
+        let nickname = localStorage.nickname || "";
+
+        this.isMine = post.info === localStorage.nickname;
+        
+        this.isBigorno = false;
+        let bigornos = messageElement.getElementsByTagName('gc2-bigorno')
+        for (let b = 0; b < bigornos.length; b++) {
+            let bigorno = bigornos[b].innerText;
+            if(bigorno === nickname || bigorno === "moules") {
+                this.isBigorno = true;
+                break;
+            }
+        }
+
+        if(this.isMine) {
+            this.innerText = '⭐';
+        } else if(this.isReply) {
+            this.innerText = '↩';
+        } else if(this.isBigorno) {
+            this.innerText = '📢';
+        }
+    }
+
+    constructor() {
+        super();
+    }
+}
+customElements.define('gc2-post-icon', Gc2PostIcon);
+
 function highlightNorloges(bouchot, norlogeText) {
     let tribunes = document.getElementsByTagName("gc2-tribune");
     for (let t of tribunes) {
@@ -141,6 +188,9 @@ class Gc2Post extends HTMLElement {
         this.postId = post.id;
         this.tribune = post.tribune;
 
+        let iconElement = document.createElement('gc2-post-icon');
+        this.appendChild(iconElement);
+
         let timeElement = document.createElement('gc2-post-norloge');
         let t = post.time;
         let dateText = `${t.substr(0, 4)}-${t.substr(4, 2)}-${t.substr(6, 2)}`;
@@ -154,9 +204,11 @@ class Gc2Post extends HTMLElement {
         citeElement.title = post.info;
         this.appendChild(citeElement);
 
-        let pElement = document.createElement('gc2-message');
-        pElement.innerHTML = post.message;
-        this.appendChild(pElement);
+        let messageElement = document.createElement('gc2-message');
+        messageElement.innerHTML = post.message;
+        this.appendChild(messageElement);
+
+        iconElement.updateIcon(post, messageElement);
     }
 }
 customElements.define('gc2-post', Gc2Post);

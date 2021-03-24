@@ -42,7 +42,7 @@ gc2-menu button {
 
 gc2-tribune {
 	display: grid;
-	grid-template-columns: min-content 1fr 10fr;
+	grid-template-columns: min-content min-content 1fr 10fr;
 	grid-column-gap: 1ch;
 	color: #007700;
 }
