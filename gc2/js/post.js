@@ -30,6 +30,20 @@ class Gc2PostIcon extends HTMLElement {
             }
         }
 
+        this.isReply = false;
+        let norloges = messageElement.getElementsByTagName('gc2-norloge');
+        for (let n = 0; n<norloges.length; n++) {
+            let norlogeText = norloges[n].title;
+            let norloge = document.querySelector(`gc2-tribune[name="${post.tribune}"] gc2-post-norloge[title*=" ${norlogeText.substr(-8)}"]`);
+            if(norloge) {
+                let postIcon = norloge.parentElement.querySelector('gc2-post-icon');
+                if(postIcon && postIcon.isMine) {
+                    this.isReply = true;
+                    break;
+                }
+            }
+        }
+
         if(this.isMine) {
             this.innerText = '⭐';
         } else if(this.isReply) {
