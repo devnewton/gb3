@@ -112,10 +112,22 @@ class Gc2Main extends HTMLElement {
     startPoll() {
         let postSource = new EventSource("/gb2c/poll");
         postSource.onmessage = (event) => {
+            let wasAtbottom = this.isScrollAtBottom();
             let post = JSON.parse(event.data);
             post.message = this.backend2html.parse(post.message);
             this.getTribuneElement(post.tribune).insertPost(post);
+            if(wasAtbottom && localStorage.postOrder === "chronological") {
+                this.scrollToBottom();
+            }
         };
+    }
+
+    isScrollAtBottom() {
+        return (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight;
+    }
+
+    scrollToBottom() {
+        window.scrollTo(0,document.body.scrollHeight);
     }
 
     getTribuneElement(tribune) {
