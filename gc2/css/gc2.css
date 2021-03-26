@@ -76,6 +76,10 @@ gc2-post-norloge {
 	cursor: pointer;
 }
 
+.gc2-norloge-is-reply {
+	color: red;
+}
+
 gc2-message gc2-norloge {
 	color: #5F7FBF;
 	cursor: pointer;
