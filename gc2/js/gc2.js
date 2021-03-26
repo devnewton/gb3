@@ -6,23 +6,27 @@ class Gc2Main extends HTMLElement {
     }
 
     async connectedCallback() {
-        this.setupOrder();
         this.setupControls();
+        this.setupOrder();
         this.setupGesture();
         await this.setupBackend2html();
         await this.setupBouchotSuffixor();
         await this.listTribunes();
+        if(this.postOrder === "reverse-chronological") {
+            this.prepend(this.controls);
+        } else {
+            this.appendChild(this.controls);
+        }
         this.startPoll();
     }
 
     setupOrder() {
-        this.classList.toggle(`gb3-postorder-${localStorage.postOrder || "reverse-chronological"}`, true);
+        this.postOrder = localStorage.postOrder || "chronological";
     }
 
     async setupControls() {
         this.controls = document.createElement("form");
-        this.controls.classList.add("gc2-controls");
-        this.appendChild(this.controls);
+        this.controls.classList.add("gc2-controls");    
         this.setupTribuneSelect();
         this.setupMessageInput();
         this.setupMenuButton();

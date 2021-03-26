@@ -5,7 +5,7 @@ nickname.oninput = (e) => {
 };
 
 let postOrder = document.getElementById("postOrder");
-postOrder.value = localStorage.postOrder || "reverse-chronological";
+postOrder.value = localStorage.postOrder || "chronological";
 postOrder.onchange = (e) => {
     localStorage.postOrder = e.target.value;
 };

@@ -2,6 +2,7 @@ class Gc2Tribune extends HTMLElement {
 
     constructor() {
         super();
+        this.chronologicalOrder = localStorage.postOrder === "chronological";
     }
 
     insertPost(post) {
@@ -17,13 +18,17 @@ class Gc2Tribune extends HTMLElement {
         let postElements = this.getElementsByTagName('gc2-post');
         Array.prototype.slice.call(postElements).sort((a, b) => {
             if (a.postId < b.postId) {
-                return 1;
-            } else if (a.postId > b.postId) {
                 return -1;
+            } else if (a.postId > b.postId) {
+                return 1;
             }
             return 0;
         }).forEach((p) => {
-            this.appendChild(p);
+            if(this.chronologicalOrder) {
+                this.appendChild(p);
+            } else {
+                this.prepend(p);
+            }
         });
     }
 }
