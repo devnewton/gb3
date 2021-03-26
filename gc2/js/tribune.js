@@ -2,7 +2,8 @@ class Gc2Tribune extends HTMLElement {
 
     constructor() {
         super();
-        this.chronologicalOrder = localStorage.postOrder === "chronological";
+        let posterOrder = localStorage.postOrder || "chronological";
+        this.chronologicalOrder = posterOrder === "chronological";
     }
 
     insertPost(post) {

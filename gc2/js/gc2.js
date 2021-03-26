@@ -116,7 +116,7 @@ class Gc2Main extends HTMLElement {
             let post = JSON.parse(event.data);
             post.message = this.backend2html.parse(post.message);
             this.getTribuneElement(post.tribune).insertPost(post);
-            if(wasAtbottom && localStorage.postOrder === "chronological") {
+            if(wasAtbottom && this.postOrder === "chronological") {
                 this.scrollToBottom();
             }
         };
