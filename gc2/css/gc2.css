@@ -85,8 +85,7 @@ gc2-moule {
 gc2-message {
 
 	color: black;
-	word-break: break-all;
-
+	overflow-wrap: anywhere;
 }
 
 gc2-message a {
