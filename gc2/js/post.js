@@ -1,5 +1,5 @@
 class Gc2PostIcon extends HTMLElement {
-    
+
     /**
      * @type boolean
      */
@@ -19,12 +19,12 @@ class Gc2PostIcon extends HTMLElement {
         let nickname = localStorage.nickname || "";
 
         this.isMine = post.info === localStorage.nickname;
-        
+
         this.isBigorno = false;
         let bigornos = messageElement.getElementsByTagName('gc2-bigorno')
         for (let b = 0; b < bigornos.length; b++) {
             let bigorno = bigornos[b].innerText;
-            if(bigorno === nickname || bigorno === "moules") {
+            if (bigorno === nickname || bigorno === "moules") {
                 this.isBigorno = true;
                 break;
             }
@@ -32,12 +32,12 @@ class Gc2PostIcon extends HTMLElement {
 
         this.isReply = false;
         let norlogesInMessage = messageElement.getElementsByTagName('gc2-norloge');
-        for (let n = 0; n<norlogesInMessage.length; n++) {
+        for (let n = 0; n < norlogesInMessage.length; n++) {
             let norlogeInMessage = norlogesInMessage[n];
             let postNorloge = document.querySelector(`gc2-tribune[name="${post.tribune}"] gc2-post-norloge[title*=" ${norlogeInMessage.title.substr(-8)}"]`);
-            if(postNorloge) {
+            if (postNorloge) {
                 let postIcon = postNorloge.parentElement.querySelector('gc2-post-icon');
-                if(postIcon && postIcon.isMine) {
+                if (postIcon && postIcon.isMine) {
                     this.isReply = true;
                     norlogeInMessage.classList.toggle("gc2-norloge-is-reply", true);
                     break;
@@ -45,11 +45,11 @@ class Gc2PostIcon extends HTMLElement {
             }
         }
 
-        if(this.isMine) {
+        if (this.isMine) {
             this.innerText = '⭐';
-        } else if(this.isReply) {
+        } else if (this.isReply) {
             this.innerText = '↩';
-        } else if(this.isBigorno) {
+        } else if (this.isBigorno) {
             this.innerText = '📢';
         }
     }
@@ -63,11 +63,17 @@ customElements.define('gc2-post-icon', Gc2PostIcon);
 function highlightNorloges(bouchot, norlogeText) {
     let tribunes = document.getElementsByTagName("gc2-tribune");
     for (let t of tribunes) {
-        let tribuneName = t.getAttribute("name");
-        let norloges = t.querySelectorAll(`gc2-norloge[title$="${norlogeText.substr(-8)}"],gc2-post-norloge[title*=" ${norlogeText.substr(-8)}"]`);
+        let isSameBouchot = bouchot === t.getAttribute("name");
+        let norloges = t.querySelectorAll(`gc2-norloge[title$="${norlogeText.substr(-8)}"]`);
         for (let n of norloges) {
-            if (tribuneName === bouchot || n.getAttribute("bouchot") === bouchot) {
+            if (isSameBouchot || n.getAttribute("bouchot") === bouchot) {
                 n.classList.toggle("gc2-highlighted", true);
+            }
+        }
+        if (isSameBouchot) {
+            let postNorloges = t.querySelectorAll(`gc2-post-norloge[title*=" ${norlogeText.substr(-8)}"]`);
+            for (let n of postNorloges) {
+                n.parentElement.classList.toggle("gc2-highlighted", true);
             }
         }
     }
@@ -76,7 +82,7 @@ function highlightNorloges(bouchot, norlogeText) {
 function unhighlightNorloges() {
     let norloges = document.querySelectorAll(".gc2-highlighted");
     for (let n of norloges) {
-        n.classList.toggle("gc2-highlighted", false);
+       n.classList.toggle("gc2-highlighted", false);
     }
 }
 
