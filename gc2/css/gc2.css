@@ -34,14 +34,12 @@ gc2-menu button {
 }
 
 gc2-tribune {
-	display: grid;
-	grid-template-columns: min-content min-content 1fr 10fr;
-	grid-column-gap: 1ch;
+	display: table;
 	color: #007700;
 }
 
 gc2-post {
-    display: contents;
+    display: table-row;
 }
 
 gc2-post:nth-of-type(even) {
@@ -52,8 +50,14 @@ gc2-post:nth-of-type(odd) {
 	background-color: #FBFBFB;
 }
 
+gc2-post-icon {
+	display: table-cell;
+}
+
 gc2-post-norloge {
 
+	display: table-cell;
+	padding-right: 0.5em;
 	color: black;
 	font-weight: bold;
 	white-space: nowrap;
@@ -71,19 +75,19 @@ gc2-message gc2-norloge {
 }
 
 gc2-moule {
-
+	display: table-cell;
+	padding-right: 0.5em;
 	color: #833;
-	width: 8em;
+	max-width: 8em;
 	white-space: nowrap;
 	overflow-wrap: break-word;
 	overflow: hidden;
 	text-overflow: ellipsis;
-
 	cursor: pointer;
 }
 
 gc2-message {
-
+	display: table-cell;
 	color: black;
 	overflow-wrap: anywhere;
 }
