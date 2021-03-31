@@ -159,7 +159,7 @@ class Gc2Main extends HTMLElement {
 
     setupGesture() {
         delete Hammer.defaults.cssProps.userSelect;
-        let hammertime = new Hammer(document.getElementsByTagName("gc2-main")[0], {
+        let hammertime = new Hammer(document.querySelector("gc2-main"), {
             inputClass: Hammer.TouchInput
         });
         hammertime.on('swipeleft', (e) => {
@@ -169,6 +169,7 @@ class Gc2Main extends HTMLElement {
                 this.tribuneSelect.selectedIndex = this.tribuneSelect.selectedIndex - 1;
             }
             this.setActiveTribune(this.tribuneSelect.value);
+            this.scrollToBottom();
         }
         );
         hammertime.on('swiperight', (e) => {
@@ -178,6 +179,7 @@ class Gc2Main extends HTMLElement {
                 this.tribuneSelect.selectedIndex = this.tribuneSelect.selectedIndex + 1;
             }
             this.setActiveTribune(this.tribuneSelect.value);
+            this.scrollToBottom();
         });
 
     }
