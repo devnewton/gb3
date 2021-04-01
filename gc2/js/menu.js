@@ -2,13 +2,13 @@ function gc2CloseMenu() {
     let menu = document.getElementsByTagName("gc2-menu")[0];
     menu.style.display = "none";
     menu.clear();
-    document.querySelector("gc2-main").style.display = "flex";
+    document.querySelector("gc2-main").style.display = "";
 }
 
 class Gc2Menu extends HTMLElement {
     constructor() {
         super();
-        this.style.display = "none";
+        this.style.display = "";
         this.showSelector();
     }
 

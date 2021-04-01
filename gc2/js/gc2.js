@@ -6,22 +6,19 @@ class Gc2Main extends HTMLElement {
     }
 
     async connectedCallback() {
+        this.setupTribunesContainer();
         this.setupControls();
-        this.setupOrder();
         this.setupGesture();
         await this.setupBackend2html();
         await this.setupBouchotSuffixor();
         await this.listTribunes();
-        if(this.postOrder === "reverse-chronological") {
-            this.prepend(this.controls);
-        } else {
-            this.appendChild(this.controls);
-        }
+        this.appendChild(this.controls);
         this.startPoll();
     }
 
-    setupOrder() {
-        this.postOrder = localStorage.postOrder || "chronological";
+    setupTribunesContainer() {
+        this.tribunesContainer = document.createElement("gc2-tribunes");
+        this.appendChild(this.tribunesContainer);
     }
 
     async setupControls() {
@@ -73,7 +70,7 @@ class Gc2Main extends HTMLElement {
         menuButton.onclick = () => {
             this.style.display = "none";
             let menu = document.querySelector('gc2-menu');
-            menu.style.display = "flex";
+            menu.style.display = "";
             menu.showSelector();
         }
         this.controls.appendChild(menuButton);
@@ -116,18 +113,18 @@ class Gc2Main extends HTMLElement {
             let post = JSON.parse(event.data);
             post.message = this.backend2html.parse(post.message);
             this.getTribuneElement(post.tribune).insertPost(post);
-            if(wasAtbottom && this.postOrder === "chronological") {
+            if(wasAtbottom) {
                 this.scrollToBottom();
             }
         };
     }
 
     isScrollAtBottom() {
-        return (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight;
+        return (this.tribunesContainer.scrollTop + this.tribunesContainer.clientHeight ) >= this.tribunesContainer.scrollHeight;
     }
 
     scrollToBottom() {
-        window.scrollTo(0,document.body.scrollHeight);
+        this.tribunesContainer.scrollTop = this.tribunesContainer.scrollHeight;
     }
 
     getTribuneElement(tribune) {
@@ -140,7 +137,7 @@ class Gc2Main extends HTMLElement {
             tribuneElement = document.createElement('gc2-tribune');
             tribuneElement.setAttribute("name", tribune);
             tribuneElement.style.display = "none";
-            this.appendChild(tribuneElement);
+            this.tribunesContainer.appendChild(tribuneElement);
 
             this.tribunes.set(tribune, tribuneElement);
             this.setActiveTribune(this.tribunes.size === 1 ? tribune : this.tribuneSelect.value);
