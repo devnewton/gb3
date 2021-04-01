@@ -80,6 +80,7 @@ class Gc2Main extends HTMLElement {
         this.tribuneSelect = document.createElement("select");
         this.tribuneSelect.onchange = () => {
             this.setActiveTribune(this.tribuneSelect.value);
+            this.scrollToBottom();
         }
         this.controls.appendChild(this.tribuneSelect);
     }
