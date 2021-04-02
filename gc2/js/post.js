@@ -156,7 +156,10 @@ class Gc2Norloge extends HTMLElement {
         this.onclick = (e) => {
             let n = this.findQuotedNorloge();
             if (n) {
-                n.scrollIntoView();
+                let tribunes = document.querySelector("gc2-tribunes");
+                if(tribunes) {
+                    tribunes.scrollTop = n.offsetTop - e.clientY + tribunes.offsetTop + 20;
+                }
             }
         }
     }
