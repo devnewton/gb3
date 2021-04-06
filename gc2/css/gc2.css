@@ -174,7 +174,9 @@ gc2-totoz img {
 gc2-totoz:hover img {
 	display: inline;
 	position: absolute;
-	top: 100%;
+	top: 0;
+	left: -50%;
+	transform: translate(-0%, -100%);
 }
 
 gc2-spoiler {
