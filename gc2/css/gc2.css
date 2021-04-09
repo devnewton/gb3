@@ -55,6 +55,7 @@ gc2-tribunes {
 gc2-tribune {
 	display: table;
 	color: #007700;
+	width: 100%;
 }
 
 gc2-post {
@@ -71,16 +72,16 @@ gc2-post:nth-of-type(odd) {
 
 gc2-post-icon {
 	display: table-cell;
+	width: 1em;
 }
 
 gc2-post-norloge {
-
 	display: table-cell;
+	width: 1em;
 	padding-right: 0.5em;
 	color: black;
 	font-weight: bold;
 	white-space: nowrap;
-
 	cursor: pointer;
 }
 
@@ -95,9 +96,10 @@ gc2-message gc2-norloge {
 
 gc2-moule {
 	display: table-cell;
+	width: 1em;
+	max-width: 8em;
 	padding-right: 0.5em;
 	color: #833;
-	max-width: 8em;
 	white-space: nowrap;
 	overflow-wrap: break-word;
 	overflow: hidden;
