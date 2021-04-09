@@ -5,6 +5,7 @@ try {
     localStorage.setItem("linuxfr_access_token", token.access_token);
     localStorage.setItem("linuxfr_refresh_token", token.refresh_token);
     localStorage.setItem("linuxfr_expires_at", Date.now() + token.expires_in * 1000);
+    localStorage.setItem("linuxfr_login", token.login);
     linuxfrInfo.innerText = "Authorization token successfullty received from linuxfr :-)";
   }
   catch(error) {

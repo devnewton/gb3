@@ -2,14 +2,21 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 )
+
+type LinuxfrAccessData struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int64  `json:"expires_in"`
+	Login        string `json:"login"`
+}
 
 func remoteHost(r *http.Request) string {
 	host := r.Header.Get("X-Forwarded-Host")
@@ -48,13 +55,12 @@ func RegisterLinuxfrAPI() {
 		http.Redirect(w, r, linuxfrAuthorizeURL.String(), http.StatusSeeOther)
 	})
 	http.HandleFunc("/gb2c/linuxfr/connected", func(w http.ResponseWriter, r *http.Request) {
-
+		//Request token
 		linuxfrRedirectURL := url.URL{
 			Scheme: "https",
 			Host:   remoteHost(r),
 			Path:   "/gb2c/linuxfr/connected",
 		}
-
 		tokenParams := url.Values{}
 		tokenParams.Set("client_id", clientID)
 		tokenParams.Set("client_secret", clientSecret)
@@ -73,10 +79,35 @@ func RegisterLinuxfrAPI() {
 			http.Error(w, fmt.Sprintf("Cannot retrieve linuxfr token: %s", err), 500)
 			return
 		}
+
+		//parse token
+		var linuxfrAccessData LinuxfrAccessData
 		defer tokenResponse.Body.Close()
-		body, err := ioutil.ReadAll(tokenResponse.Body)
+		tokenDecoder := json.NewDecoder(tokenResponse.Body)
+		err = tokenDecoder.Decode(&linuxfrAccessData)
 		if nil != err {
-			http.Error(w, fmt.Sprintf("Cannot read linuxfr token body: %s", err), 500)
+			http.Error(w, fmt.Sprintf("Cannot decode linuxfr token: %s", err), 500)
+			return
+		}
+
+		//retrieve login
+		meResponse, err := http.Get(fmt.Sprintf("https://linuxfr.org/api/v1/me?bearer_token=%s", url.QueryEscape(linuxfrAccessData.AccessToken)))
+		if nil != err {
+			http.Error(w, fmt.Sprintf("linuxfr me request failed: %s", err), 500)
+			return
+		}
+		defer meResponse.Body.Close()
+		meDecoder := json.NewDecoder(meResponse.Body)
+		err = meDecoder.Decode(&linuxfrAccessData)
+		if nil != err {
+			http.Error(w, fmt.Sprintf("Cannot decode linuxfr me response: %s", err), 500)
+			return
+		}
+
+		//encode json access data (token and login) to base64 and send redirect
+		body, err := json.Marshal(linuxfrAccessData)
+		if nil != err {
+			http.Error(w, fmt.Sprintf("Cannot encode linuxfr access data: %s", err), 500)
 			return
 		}
 		encodedToken := base64.StdEncoding.EncodeToString(body)

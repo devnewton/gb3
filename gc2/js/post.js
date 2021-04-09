@@ -17,14 +17,15 @@ class Gc2PostIcon extends HTMLElement {
 
     updateIcon(post, messageElement) {
         let nickname = localStorage.nickname || "";
+        let login = localStorage.linuxfr_login || "";
 
-        this.isMine = post.info === localStorage.nickname;
+        this.isMine = post.info === nickname || (post.tribune === "dlfp" && post.login === login);
 
         this.isBigorno = false;
         let bigornos = messageElement.getElementsByTagName('gc2-bigorno')
         for (let b = 0; b < bigornos.length; b++) {
             let bigorno = bigornos[b].innerText;
-            if (bigorno === nickname || bigorno === "moules") {
+            if (bigorno === nickname || bigorno === login || bigorno === "moules") {
                 this.isBigorno = true;
                 break;
             }
