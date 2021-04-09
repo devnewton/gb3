@@ -12,6 +12,7 @@ class Gc2Main extends HTMLElement {
         await this.setupBackend2html();
         await this.setupBouchotSuffixor();
         await this.listTribunes();
+        this.loadLinuxUnposted();
         this.appendChild(this.controls);
         this.startPoll();
     }
@@ -43,6 +44,7 @@ class Gc2Main extends HTMLElement {
                     let accessToken = localStorage.getItem("linuxfr_access_token");
                     let expiresAt = parseInt(localStorage.getItem("linuxfr_expires_at"), 10) || 0;
                     if(!accessToken || expiresAt < Date.now()) {
+                        localStorage.setItem("linuxfr_unposted_message", data.get('message'));
                         window.location.href = "/gb2c/linuxfr/authorize";
                     } else {
                         headers.set('Authorization', `Bearer ${accessToken}`);
@@ -105,6 +107,15 @@ class Gc2Main extends HTMLElement {
         let response = await fetch("/peg/backend2html.pegjs");
         let text = await response.text();
         this.backend2html = peg.generate(text);
+    }
+
+    loadLinuxUnposted() {
+        let unposted = localStorage.getItem("linuxfr_unposted_message");
+        if(unposted) {
+            this.messageInput.value = unposted;
+            localStorage.removeItem("linuxfr_unposted_message");
+            this.tribuneSelect.value = "dlfp";
+        }
     }
 
     startPoll() {
