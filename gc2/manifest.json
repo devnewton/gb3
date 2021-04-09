@@ -1,0 +1,15 @@
+{
+    "background_color": "purple",
+    "short_name": "gb3",
+    "name": "gb3",
+    "description": "Tribune and mouling agent",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        }
+    ],
+    "display": "standalone",
+    "start_url": "/"
+}
