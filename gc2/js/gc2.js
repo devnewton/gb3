@@ -24,7 +24,7 @@ class Gc2Main extends HTMLElement {
 
     async setupControls() {
         this.controls = document.createElement("form");
-        this.controls.classList.add("gc2-controls");    
+        this.controls.classList.add("gc2-controls");
         this.setupTribuneSelect();
         this.setupMessageInput();
         this.setupMenuButton();
@@ -40,10 +40,10 @@ class Gc2Main extends HTMLElement {
                 if (localStorage.nickname) {
                     headers.set('User-agent', localStorage.nickname);
                 }
-                if(this.tribuneSelect.value === "dlfp") {
+                if (this.tribuneSelect.value === "dlfp") {
                     let accessToken = localStorage.getItem("linuxfr_access_token");
                     let expiresAt = parseInt(localStorage.getItem("linuxfr_expires_at"), 10) || 0;
-                    if(!accessToken || expiresAt < Date.now()) {
+                    if (!accessToken || expiresAt < Date.now()) {
                         localStorage.setItem("linuxfr_unposted_message", data.get('message'));
                         window.location.href = "/gb2c/linuxfr/authorize";
                     } else {
@@ -111,7 +111,7 @@ class Gc2Main extends HTMLElement {
 
     loadLinuxUnposted() {
         let unposted = localStorage.getItem("linuxfr_unposted_message");
-        if(unposted) {
+        if (unposted) {
             this.messageInput.value = unposted;
             localStorage.removeItem("linuxfr_unposted_message");
             this.tribuneSelect.value = "dlfp";
@@ -125,14 +125,15 @@ class Gc2Main extends HTMLElement {
             let post = JSON.parse(event.data);
             post.message = this.backend2html.parse(post.message);
             this.getTribuneElement(post.tribune).insertPost(post);
-            if(wasAtbottom) {
+            this.updateNotifications();
+            if (wasAtbottom) {
                 this.scrollToBottom();
             }
         };
     }
 
     isScrollAtBottom() {
-        return (this.tribunesContainer.scrollTop + this.tribunesContainer.clientHeight ) >= this.tribunesContainer.scrollHeight;
+        return (this.tribunesContainer.scrollTop + this.tribunesContainer.clientHeight) >= this.tribunesContainer.scrollHeight;
     }
 
     scrollToBottom() {
@@ -161,8 +162,8 @@ class Gc2Main extends HTMLElement {
         this.addBouchotSuffixInMessageInput(this.activeTribune);
         this.activeTribune = selectedTribune;
         this.messageInput.placeholder = selectedTribune;
-        this.tribunes.forEach((tribuneElement, tribune) => {
-            tribuneElement.style.display = tribune === selectedTribune ? "" : "none";
+        this.tribunes.forEach((tribuneElement, tribuneName) => {
+            tribuneElement.style.display = tribuneName === selectedTribune ? "" : "none";
         });
     }
 
@@ -267,5 +268,36 @@ class Gc2Main extends HTMLElement {
         }
     }
 
+    updateNotifications() {
+        let bigorno = false;
+        let reply = false;
+        this.tribunes.forEach((tribuneElement, tribuneName) => {
+            let option = this.tribuneSelect.querySelector(`option[value="${tribuneName}"`);
+            if (option) {
+                if (tribuneElement.hasBigorno) {
+                    bigorno = true;
+                    if (option.innerText.indexOf("📢") < 0) {
+                        option.innerText += "📢";
+                    }
+                } else {
+                    option.innerText.replace("↩", "");
+                }
+                if (tribuneElement.hasReply) {
+                    reply = true;
+                    if (option.innerText.indexOf("↩") < 0) {
+                        option.innerText += "↩";
+                    }
+                } else {
+                    option.innerText.replace("↩", "");
+                }
+            }
+        });
+        if (bigorno && document.title.indexOf("📢") < 0) {
+            document.title = `📢${document.title}`;
+        }
+        if (reply && document.title.indexOf("↩") < 0) {
+            document.title = `↩${document.title}`;
+        }
+    }
 }
 customElements.define('gc2-main', Gc2Main);

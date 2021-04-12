@@ -83,7 +83,7 @@ function highlightNorloges(bouchot, norlogeText) {
 function unhighlightNorloges() {
     let norloges = document.querySelectorAll(".gc2-highlighted");
     for (let n of norloges) {
-       n.classList.toggle("gc2-highlighted", false);
+        n.classList.toggle("gc2-highlighted", false);
     }
 }
 
@@ -158,7 +158,7 @@ class Gc2Norloge extends HTMLElement {
             let n = this.findQuotedNorloge();
             if (n) {
                 let tribunes = document.querySelector("gc2-tribunes");
-                if(tribunes) {
+                if (tribunes) {
                     tribunes.scrollTop = n.offsetTop - e.clientY + tribunes.offsetTop + 20;
                 }
             }
@@ -213,8 +213,8 @@ class Gc2Post extends HTMLElement {
         this.postId = post.id;
         this.tribune = post.tribune;
 
-        let iconElement = document.createElement('gc2-post-icon');
-        this.appendChild(iconElement);
+        this.iconElement = document.createElement('gc2-post-icon');
+        this.appendChild(this.iconElement);
 
         let timeElement = document.createElement('gc2-post-norloge');
         let t = post.time;
@@ -233,7 +233,28 @@ class Gc2Post extends HTMLElement {
         messageElement.innerHTML = post.message;
         this.appendChild(messageElement);
 
-        iconElement.updateIcon(post, messageElement);
+        this.iconElement.updateIcon(post, messageElement);
+    }
+
+    /**
+     * @type boolean
+     */
+    get isMine() {
+        return this.iconElement.isMine;
+    }
+
+    /**
+     * @type boolean
+     */
+    get isBigorno() {
+        return this.iconElement.isBigorno;
+    }
+
+    /**
+     * @type boolean
+     */
+    get isReply() {
+        return this.iconElement.isReply;
     }
 }
 customElements.define('gc2-post', Gc2Post);

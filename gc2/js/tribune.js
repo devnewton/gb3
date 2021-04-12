@@ -2,6 +2,8 @@ class Gc2Tribune extends HTMLElement {
 
     constructor() {
         super();
+        this.hasBigorno = false;
+        this.hasReply = false;
     }
 
     insertPost(post) {
@@ -25,6 +27,17 @@ class Gc2Tribune extends HTMLElement {
         }).forEach((p) => {
             this.appendChild(p);
         });
+
+        this.hasBigorno = false;
+        this.hasReply = false;
+        for (let i = postElements.length - 1; i > 0; --i) {
+            let post = postElements[i];
+            if (post.isMine) {
+                break;
+            }
+            this.hasReply |= post.isReply;
+            this.hasBigorno |= post.isBigorno;
+        }
     }
 }
 customElements.define('gc2-tribune', Gc2Tribune);
