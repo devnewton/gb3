@@ -247,3 +247,12 @@ gc2-bigorno::after {
 		display: block;
 	}
 }
+
+/* javascript change size for large device width */
+.gc2-controls select[size] {
+	position: absolute;
+	bottom: 0px;
+	display: flex;
+	flex-direction: column;
+	transform: translate(-100%, 0%);
+}

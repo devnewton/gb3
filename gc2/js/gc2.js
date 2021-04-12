@@ -14,6 +14,7 @@ class Gc2Main extends HTMLElement {
         await this.listTribunes();
         this.loadLinuxUnposted();
         this.appendChild(this.controls);
+        this.setupMediaQueries();
         this.startPoll();
     }
 
@@ -310,6 +311,20 @@ class Gc2Main extends HTMLElement {
             }
         } else {
             document.title = document.title.replace("↩", "");
+        }
+    }
+
+    setupMediaQueries() {
+        let bigScreenMediaQuery = window.matchMedia('(min-device-width: 1184px)');
+        bigScreenMediaQuery.addEventListener('change', (e) => this.setupAccordingToScreenSize(e.matches));
+        this.setupAccordingToScreenSize(bigScreenMediaQuery.matches);
+    }
+
+    setupAccordingToScreenSize(isBig) {
+        if(isBig) {
+            this.tribuneSelect.size = this.tribunes.size;
+        } else {
+            this.tribuneSelect.removeAttribute("size");
         }
     }
 }
