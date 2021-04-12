@@ -1,9 +1,19 @@
 class Gc2Tribune extends HTMLElement {
 
+    /**
+     * @type boolean
+     */
+    hasBigorno = false;
+
+    /**
+     * @type boolean
+     */
+    hasReply = false;
+
+    lastReadPostId = -1;
+
     constructor() {
         super();
-        this.hasBigorno = false;
-        this.hasReply = false;
     }
 
     insertPost(post) {
@@ -32,11 +42,20 @@ class Gc2Tribune extends HTMLElement {
         this.hasReply = false;
         for (let i = postElements.length - 1; i > 0; --i) {
             let post = postElements[i];
-            if (post.isMine) {
+            if(post.id < this.lastReadPostId || post.isMine) {
                 break;
             }
             this.hasReply |= post.isReply;
             this.hasBigorno |= post.isBigorno;
+        }
+    }
+
+    markAsRead() {
+        this.hasBigorno = false;
+        this.hasReply = false;
+        let lastPost = this.querySelector('gc2-post:last-of-type');
+        if(lastPost) {
+            this.lastReadPostId = lastPost.id;
         }
     }
 }

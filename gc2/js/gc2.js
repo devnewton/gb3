@@ -160,11 +160,16 @@ class Gc2Main extends HTMLElement {
 
     setActiveTribune(selectedTribune) {
         this.addBouchotSuffixInMessageInput(this.activeTribune);
+        let previousTribuneElement = this.tribunes.get(this.activeTribune);
+        if (previousTribuneElement) {
+            previousTribuneElement.markAsRead();
+        }
         this.activeTribune = selectedTribune;
         this.messageInput.placeholder = selectedTribune;
         this.tribunes.forEach((tribuneElement, tribuneName) => {
             tribuneElement.style.display = tribuneName === selectedTribune ? "" : "none";
         });
+        this.updateNotifications();
     }
 
     setupGesture() {
@@ -280,7 +285,7 @@ class Gc2Main extends HTMLElement {
                         option.innerText += "📢";
                     }
                 } else {
-                    option.innerText.replace("↩", "");
+                    option.innerText = option.innerText.replace("📢", "");
                 }
                 if (tribuneElement.hasReply) {
                     reply = true;
@@ -288,15 +293,23 @@ class Gc2Main extends HTMLElement {
                         option.innerText += "↩";
                     }
                 } else {
-                    option.innerText.replace("↩", "");
+                    option.innerText = option.innerText.replace("↩", "");
                 }
             }
         });
-        if (bigorno && document.title.indexOf("📢") < 0) {
-            document.title = `📢${document.title}`;
+        if (bigorno) {
+            if (document.title.indexOf("📢") < 0) {
+                document.title = `📢${document.title}`;
+            }
+        } else {
+            document.title = document.title.replace("📢", "");
         }
-        if (reply && document.title.indexOf("↩") < 0) {
-            document.title = `↩${document.title}`;
+        if (reply) {
+            if(document.title.indexOf("↩") < 0) {
+                document.title = `↩${document.title}`;
+            }
+        } else {
+            document.title = document.title.replace("↩", "");
         }
     }
 }
