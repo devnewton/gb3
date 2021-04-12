@@ -25,13 +25,15 @@ gc2-menu {
 	max-width: 60rem;
 	margin: auto;
 	display: flex;
-	align-content: center;
+	align-items: center;
 	flex-direction: column;
-	flex-wrap: wrap;
+	overflow: auto;
+	height: 100%;
 }
 
 gc2-menu button {
-	margin: 8px
+	width: max-content;
+	margin: 8px;
 }
 
 .gc2-controls {
