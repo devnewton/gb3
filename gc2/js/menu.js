@@ -8,7 +8,7 @@ function gc2CloseMenu() {
 class Gc2Menu extends HTMLElement {
     constructor() {
         super();
-        this.style.display = "";
+        this.style.display = "none";
         this.showSelector();
     }
 

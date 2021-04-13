@@ -8,14 +8,21 @@ class Gc2Main extends HTMLElement {
     async connectedCallback() {
         this.setupTribunesContainer();
         this.setupControls();
+        this.setupTribuneNavigator();
         this.setupGesture();
         await this.setupBackend2html();
         await this.setupBouchotSuffixor();
         await this.listTribunes();
         this.loadLinuxUnposted();
         this.appendChild(this.controls);
-        this.setupMediaQueries();
         this.startPoll();
+    }
+
+    setupTribuneNavigator() {
+        this.tribuneNavigator = document.querySelector("gc2-tribune-navigator");
+        this.tribuneNavigator.onnavigate = (tribuneName) => {
+            this.tribuneSelect.value = tribuneName;
+        }
     }
 
     setupTribunesContainer() {
@@ -141,20 +148,24 @@ class Gc2Main extends HTMLElement {
         this.tribunesContainer.scrollTop = this.tribunesContainer.scrollHeight;
     }
 
-    getTribuneElement(tribune) {
-        let tribuneElement = this.tribunes.get(tribune);
+    getTribuneElement(tribuneName) {
+        let tribuneElement = this.tribunes.get(tribuneName);
         if (!tribuneElement) {
             var option = document.createElement("option");
-            option.text = option.value = tribune;
+            option.text = option.value = tribuneName;
             this.tribuneSelect.add(option);
 
+            if(this.tribuneNavigator) {
+                this.tribuneNavigator.addTribune(tribuneName);
+            }
+
             tribuneElement = document.createElement('gc2-tribune');
-            tribuneElement.setAttribute("name", tribune);
+            tribuneElement.setAttribute("name", tribuneName);
             tribuneElement.style.display = "none";
             this.tribunesContainer.appendChild(tribuneElement);
 
-            this.tribunes.set(tribune, tribuneElement);
-            this.setActiveTribune(this.tribunes.size === 1 ? tribune : this.tribuneSelect.value);
+            this.tribunes.set(tribuneName, tribuneElement);
+            this.setActiveTribune(this.tribunes.size === 1 ? tribuneName : this.tribuneSelect.value);
         }
         return tribuneElement;
     }
@@ -314,18 +325,5 @@ class Gc2Main extends HTMLElement {
         }
     }
 
-    setupMediaQueries() {
-        let bigScreenMediaQuery = window.matchMedia('(min-device-width: 1184px)');
-        bigScreenMediaQuery.addEventListener('change', (e) => this.setupAccordingToScreenSize(e.matches));
-        this.setupAccordingToScreenSize(bigScreenMediaQuery.matches);
-    }
-
-    setupAccordingToScreenSize(isBig) {
-        if(isBig) {
-            this.tribuneSelect.size = this.tribunes.size;
-        } else {
-            this.tribuneSelect.removeAttribute("size");
-        }
-    }
 }
 customElements.define('gc2-main', Gc2Main);

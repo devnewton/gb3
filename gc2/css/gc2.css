@@ -1,4 +1,7 @@
 body {
+	display: flex;
+	align-items: flex-end;
+
 	background-color: #eeeeee;
 	font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif;
 	font-weight: 400;
@@ -11,8 +14,20 @@ body {
 	right: 0px;
 }
 
+gc2-tribune-navigator {
+	display: none;
+}
+
+gc2-tribune-navigator li {
+	cursor: pointer
+}
+
+.gc2-tribune-navigator-active {
+	font-weight: bolder;
+}
+
 gc2-main {
-	max-width: 60rem;
+	flex: 1 1 auto;
 	margin: auto;
 	display: flex;
 	flex-direction: column;
@@ -248,11 +263,13 @@ gc2-bigorno::after {
 	}
 }
 
-/* javascript change size for large device width */
-.gc2-controls select[size] {
-	position: absolute;
-	bottom: 0px;
-	display: flex;
-	flex-direction: column;
-	transform: translate(-100%, 0%);
+@media only screen and (min-device-width: 1184px) {
+	gc2-tribune-navigator {
+		display: initial;
+	}
+
+	.gc2-controls select {
+		display: none;
+	}
 }
+
