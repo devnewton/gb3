@@ -138,6 +138,11 @@ class Gc2Main extends HTMLElement {
                 this.scrollToBottom();
             }
         };
+        postSource.onerror = (err) => {
+            console.log(`Lost connection, retry in 10 seconds`);
+            postSource.close();
+            setTimeout(() => this.startPoll(), 10000);
+        };
     }
 
     isScrollAtBottom() {
