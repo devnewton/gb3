@@ -1,3 +1,18 @@
+class Gc2TribuneNavigatorButton extends HTMLElement{
+
+    /**
+     * @type string
+     */
+    tribuneName;
+
+    constructor() {
+        super();
+    }
+
+}
+
+customElements.define('gc2-tribune-navigator-button', Gc2TribuneNavigatorButton);
+
 /**
  * @callback Gc2TribuneNavigator~navigateCallback
  * @param {string} tribuneName
@@ -14,18 +29,21 @@
     onnavigate;
 
     addTribune(tribuneName) {
-        let tribuneButton = document.createElement("li");
+        let tribuneButton = document.createElement("gc2-tribune-navigator-button");
+        tribuneButton.tribuneName = tribuneName;
         tribuneButton.innerText = tribuneName;
         tribuneButton.onclick = () => {
             if(this.onnavigate) {
-                this.querySelectorAll("li").forEach((element) => {
-                    element.classList.toggle("gc2-tribune-navigator-active", false);
-                });
-                tribuneButton.classList.toggle("gc2-tribune-navigator-active", true);
                 this.onnavigate(tribuneName);
             }
         }
         this.appendChild(tribuneButton);
+    }
+
+    setActiveTribune(tribuneName) {
+        this.querySelectorAll("gc2-tribune-navigator-button").forEach((element) => {
+            element.toggleAttribute("active", element.tribuneName === tribuneName);
+        });
     }
 }
 

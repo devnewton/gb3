@@ -22,6 +22,8 @@ class Gc2Main extends HTMLElement {
         this.tribuneNavigator = document.querySelector("gc2-tribune-navigator");
         this.tribuneNavigator.onnavigate = (tribuneName) => {
             this.tribuneSelect.value = tribuneName;
+            this.setActiveTribune(tribuneName);
+            this.scrollToBottom();
         }
     }
 
@@ -175,16 +177,19 @@ class Gc2Main extends HTMLElement {
         return tribuneElement;
     }
 
-    setActiveTribune(selectedTribune) {
+    setActiveTribune(selectedTribuneName) {
         this.addBouchotSuffixInMessageInput(this.activeTribune);
         let previousTribuneElement = this.tribunes.get(this.activeTribune);
         if (previousTribuneElement) {
             previousTribuneElement.markAsRead();
         }
-        this.activeTribune = selectedTribune;
-        this.messageInput.placeholder = selectedTribune;
+        this.activeTribune = selectedTribuneName;
+        this.messageInput.placeholder = selectedTribuneName;
+        if(this.tribuneNavigator) {
+            this.tribuneNavigator.setActiveTribune(selectedTribuneName);
+        }
         this.tribunes.forEach((tribuneElement, tribuneName) => {
-            tribuneElement.style.display = tribuneName === selectedTribune ? "" : "none";
+            tribuneElement.style.display = tribuneName === selectedTribuneName ? "" : "none";
         });
         this.updateNotifications();
     }

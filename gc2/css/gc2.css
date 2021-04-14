@@ -16,13 +16,18 @@ body {
 
 gc2-tribune-navigator {
 	display: none;
+	margin-right: 0.5em;
 }
 
-gc2-tribune-navigator li {
+gc2-tribune-navigator-button {
 	cursor: pointer
 }
 
-.gc2-tribune-navigator-active {
+gc2-tribune-navigator-button:hover {
+	background: #d7d2d2
+}
+
+gc2-tribune-navigator-button[active] {
 	font-weight: bolder;
 }
 
@@ -265,7 +270,8 @@ gc2-bigorno::after {
 
 @media only screen and (min-device-width: 1184px) {
 	gc2-tribune-navigator {
-		display: initial;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.gc2-controls select {
