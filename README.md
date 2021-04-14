@@ -50,10 +50,6 @@ Change default http listen address and port.
 
 Set to true to enable full logging.
 
-#### GB2C_FULLTEXT_SEARCH_INDEX_PATH
-
-Fulltext search is only available if this variable is a valid path to a writable directory.
-
 #### GB2C_LINUXFR_CLIENT_ID and GB2C_LINUXFR_CLIENT_SECRET
 
 Oauth credentials for linuxfr API.
