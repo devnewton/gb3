@@ -12,6 +12,7 @@ body {
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
+	margin: 1px;
 }
 
 gc2-tribune-navigator {
@@ -29,6 +30,14 @@ gc2-tribune-navigator-button:hover {
 
 gc2-tribune-navigator-button[active] {
 	font-weight: bolder;
+}
+
+gc2-tribune-navigator-button[bigorno]::after {
+	content: "📢"
+}
+
+gc2-tribune-navigator-button[reply]::after {
+	content: "↩"
 }
 
 gc2-main {
@@ -223,7 +232,7 @@ gc2-bigorno {
 }
 
 gc2-bigorno::after {
-	content: "📣"
+	content: "📢"
 }
 
 .gc2-loading {

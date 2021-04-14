@@ -317,6 +317,9 @@ class Gc2Main extends HTMLElement {
                 } else {
                     option.innerText = option.innerText.replace("↩", "");
                 }
+                if(this.tribuneNavigator) {
+                    this.tribuneNavigator.setTribuneNotifications(tribuneName, tribuneElement.hasBigorno, tribuneElement.hasReply);
+                }
             }
         });
         if (bigorno) {

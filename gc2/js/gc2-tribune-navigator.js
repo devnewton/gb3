@@ -45,6 +45,21 @@ customElements.define('gc2-tribune-navigator-button', Gc2TribuneNavigatorButton)
             element.toggleAttribute("active", element.tribuneName === tribuneName);
         });
     }
+
+    /**
+     * 
+     * @param {string} tribuneName 
+     * @param {boolean} hasBigorno 
+     * @param {boolean} hasReply 
+     */
+    setTribuneNotifications(tribuneName, hasBigorno, hasReply) {
+        this.querySelectorAll("gc2-tribune-navigator-button").forEach((element) => {
+            if(element.tribuneName === tribuneName) {
+                element.toggleAttribute("bigorno", hasBigorno);
+                element.toggleAttribute("reply", hasReply);
+            }
+        });
+    }
 }
 
 customElements.define('gc2-tribune-navigator', Gc2TribuneNavigator);
