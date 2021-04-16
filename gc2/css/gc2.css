@@ -15,9 +15,25 @@ body {
 	margin: 1px;
 }
 
-gc2-tribune-navigator {
+.gc2-sidebar {
 	display: none;
 	margin-right: 0.5em;
+}
+
+gc2-alarm {
+	font-family: monospace;
+	font-size: 1.5em;
+  color: #0000aa;
+  text-align: center;
+}
+
+gc2-alarm[preums] {
+  color: #ff0000;
+}
+
+gc2-tribune-navigator {
+	display: flex;
+	flex-direction: column;
 }
 
 gc2-tribune-navigator-button {
@@ -278,7 +294,8 @@ gc2-bigorno::after {
 }
 
 @media only screen and (min-device-width: 1184px) {
-	gc2-tribune-navigator {
+
+	.gc2-sidebar {
 		display: flex;
 		flex-direction: column;
 	}
