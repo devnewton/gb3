@@ -7,11 +7,10 @@ class Gc2Alarm extends HTMLElement{
     connectedCallback() {
 
         setInterval(() => {
-            const now = new Date();
-            let dateLocal = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000);
+            let dateLocal = new Date();
             let hours = dateLocal.getHours();
             let minutes = dateLocal.getMinutes();
-            if(minutes === 59) {
+            if(minutes !== 59) {
                 this.toggleAttribute("preums", false);
                 this.innerText = `${hours < 10 ? '0':''}${hours}:${minutes < 10 ? '0':''}${minutes}`;
             } else {
