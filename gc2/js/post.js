@@ -101,27 +101,29 @@ class Gc2PostNorloge extends HTMLElement {
 
         this.onclick = (e) => {
             let message = document.getElementById("gc2-message");
-            message.value += `${message.value && ' '}${this.formatNorloge()} `;
+            let style;
+            if(e.ctrlKey && e.shiftKey) {
+                style = "id";
+            } else if(e.ctrlKey) {
+                style = "iso";
+            } else if(e.shiftKey) {
+                style = "short";
+            }
+            message.value += `${message.value && ' '}${this.formatNorloge(style)} `;
             message.focus();
         }
     }
 
-    formatNorloge() {
-        let style = localStorage.norlogeStyle || "auto";
-        switch (style) {
-            case "auto":
-                let now = new Date();
-                let dateLocal = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000);
-                let dateLocalStr = dateLocal.toISOString().slice(0, 10);
-                if (this.title.substr(0, 10) === dateLocalStr) {
-                    style = "normal";
-                } else {
-                    style = "longlong"
-                }
-                break;
-            case "rand":
-                let styles = ["longlong", "iso", "long", "normal", "short", "id"];
-                style = styles[Math.round(Math.random() * styles.length)];
+    formatNorloge(style) {
+        if (!style) {
+            let now = new Date();
+            let dateLocal = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000);
+            let dateLocalStr = dateLocal.toISOString().slice(0, 10);
+            if (this.title.substr(0, 10) === dateLocalStr) {
+                style = "normal";
+            } else {
+                style = "longlong";
+            }
         }
         switch (style) {
             case "iso":
