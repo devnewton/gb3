@@ -29,6 +29,13 @@ class Gc2Menu extends HTMLElement {
         }
         this.appendChild(emojiButton);
 
+        let attachButton = document.createElement('button');
+        attachButton.innerText = "📎 Attach";
+        attachButton.onclick = () => {
+            this.showAttach();
+        }
+        this.appendChild(attachButton);
+
         let settingsButton = document.createElement('button');
         settingsButton.innerText = "⚙ Settings";
         settingsButton.onclick = () => {
@@ -66,12 +73,12 @@ class Gc2Menu extends HTMLElement {
         this.appendChild(backButton);
     }
 
-    showEmoji() {
+    showAttach() {
         this.clear();
 
-        let emojiSearch = document.createElement("gc2-emojisearch");
-        emojiSearch.setup();
-        this.appendChild(emojiSearch);
+        let attach = document.createElement("gc2-attach");
+        attach.setup();
+        this.appendChild(attach);
 
         let backButton = document.createElement("button");
         backButton.innerText = "Back";
@@ -235,3 +242,74 @@ class Gc2EmojiSearch extends HTMLElement {
     }
 }
 customElements.define("gc2-emojisearch", Gc2EmojiSearch);
+
+class Gc2Attach extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    allowedMimeTypes = ["image/gif", "image/png", "image/jpeg", "image/webp" ];
+
+    setup() {
+        let form = document.createElement("form");
+        form.enctype = "multipart/form-data";
+        form.method ="post";
+
+        let fileInput = document.createElement('input');
+        fileInput.name = "attachment";
+        fileInput.type = "file";
+        fileInput.accept = this.allowedMimeTypes.join(", ");
+        form.appendChild(fileInput);
+
+        let attachButton = document.createElement('button');
+        attachButton.innerText = "Attach";
+        form.appendChild(attachButton);
+
+        let progress = document.createElement("img");
+        progress.classList.add("gc2-attach-progress")
+
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            progress.src = "/img/loading.svg";
+            fetch(`/gb2c/attachment/`, {
+                method: "POST",
+                body: new FormData(form)
+            }).then((response) =>{
+                progress.src = "";
+                let location = response.headers.get("Location");
+                if(location) {
+                    let message = document.getElementById("gc2-message");
+                    message.value += `${message.value && ' '}${location} `;
+                    gc2CloseMenu();
+                    message.focus();
+                }
+            }).catch((error) => {
+                progress.src = "";
+                console.log(`Cannot attach file. Error: `, error);
+            });
+        };
+        this.appendChild(form);
+
+        this.appendChild(progress);
+
+        let imagePreview = document.createElement("img");
+        this.appendChild(imagePreview);
+
+        fileInput.onchange = () => {
+            imagePreview.src = fileInput.files.length > 0 ? URL.createObjectURL(fileInput.files[0]) : "";
+        }
+        
+        document.addEventListener('paste', (event) => {
+            if( !( form.offsetWidth || form.offsetHeight || form.getClientRects().length ) ) {
+                return; 
+             }
+             let files = (event.clipboardData || event.originalEvent.clipboardData).files;
+             if(files && files.length === 1 && this.allowedMimeTypes.indexOf(files[0].type) >= 0) {
+                fileInput.files = files;
+                imagePreview.src = window.URL.createObjectURL(files[0]);
+             }
+             event.preventDefault();
+        });
+    }
+}
+customElements.define("gc2-attach", Gc2Attach);

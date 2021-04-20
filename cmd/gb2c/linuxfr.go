@@ -18,14 +18,6 @@ type LinuxfrAccessData struct {
 	Login        string `json:"login"`
 }
 
-func remoteHost(r *http.Request) string {
-	host := r.Header.Get("X-Forwarded-Host")
-	if len(host) == 0 {
-		host = r.Host
-	}
-	return host
-}
-
 //RegisterLinuxfrAPI setup http linuxfr API endpoints
 func RegisterLinuxfrAPI() {
 	clientID := os.Getenv("GB2C_LINUXFR_CLIENT_ID")

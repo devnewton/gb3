@@ -257,6 +257,18 @@ gc2-bigorno::after {
 	background-position: right;
 }
 
+gc2-attach {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+}
+
+gc2-attach img {
+	max-width: 100%;
+}
+
 @media only screen and (max-device-width: 768px) {
 	.gc2-controls select {
 		display: none;

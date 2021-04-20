@@ -224,6 +224,7 @@ func main() {
 	go g.forwardLoop()
 	go g.pollLoop()
 	RegisterLinuxfrAPI()
+	RegisterAttachmentAPI()
 	http.HandleFunc("/gb2c/list", func(w http.ResponseWriter, r *http.Request) {
 		g.handleList(w, r)
 	})
