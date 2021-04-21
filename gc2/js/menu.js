@@ -104,7 +104,7 @@ class Gc2TotozSearch extends HTMLElement {
 
     setup() {
         let form = document.createElement("form");
-        
+
         let searchInput = document.createElement('input');
         searchInput.type = "text";
         searchInput.placeholder = "dont be so vanilla";
@@ -119,9 +119,9 @@ class Gc2TotozSearch extends HTMLElement {
             e.preventDefault();
             fetch(`/gb2c/totoz/search?terms=${encodeURIComponent(searchInput.value)}`, {
                 method: "GET",
-            }).then((response) =>{
+            }).then((response) => {
                 return response.json();
-            }).then((data) =>{
+            }).then((data) => {
                 this.setResults(data);
             }).catch((error) => {
                 console.log(`Cannot search totoz. Error: `, error);
@@ -133,7 +133,7 @@ class Gc2TotozSearch extends HTMLElement {
         this.resultsContainer = document.createElement("div");
         this.resultsContainer.onclick = (e) => {
             let caption = e.target.parentElement.querySelector("figcaption");
-            if(caption) {
+            if (caption) {
                 let message = document.getElementById("gc2-message");
                 let value = message.value;
                 message.value += `${message.value && ' '}[:${caption.innerText}] `;
@@ -147,7 +147,7 @@ class Gc2TotozSearch extends HTMLElement {
 
     setResults(results) {
         this.clearResults();
-        for(let totoz of results.totozes) {
+        for (let totoz of results.totozes) {
             let totozElement = document.createElement("figure");
 
             let totozImg = document.createElement("img");
@@ -192,9 +192,9 @@ class Gc2EmojiSearch extends HTMLElement {
             e.preventDefault();
             fetch(`/gb2c/emoji/search?terms=${encodeURIComponent(searchInput.value)}`, {
                 method: "GET",
-            }).then((response) =>{
+            }).then((response) => {
                 return response.json();
-            }).then((data) =>{
+            }).then((data) => {
                 this.setResults(data);
             }).catch((error) => {
                 console.log(`Cannot search emoji. Error: `, error);
@@ -205,7 +205,7 @@ class Gc2EmojiSearch extends HTMLElement {
         this.resultsContainer = document.createElement("div");
         this.resultsContainer.onclick = (e) => {
             let characters = e.target.parentElement.querySelector(".gc2-emoji-characters");
-            if(characters) {
+            if (characters) {
                 let message = document.getElementById("gc2-message");
                 message.value += `${message.value && ' '}${characters.innerText} `;
                 gc2CloseMenu();
@@ -218,7 +218,7 @@ class Gc2EmojiSearch extends HTMLElement {
 
     setResults(results) {
         this.clearResults();
-        for(let emoji of results) {
+        for (let emoji of results) {
             let emojiElement = document.createElement("figure");
 
             let emojiCharacters = document.createElement("p");
@@ -248,17 +248,14 @@ class Gc2Attach extends HTMLElement {
         super();
     }
 
-    allowedMimeTypes = ["image/gif", "image/png", "image/jpeg", "image/webp" ];
-
     setup() {
         let form = document.createElement("form");
         form.enctype = "multipart/form-data";
-        form.method ="post";
+        form.method = "post";
 
         let fileInput = document.createElement('input');
         fileInput.name = "attachment";
         fileInput.type = "file";
-        fileInput.accept = this.allowedMimeTypes.join(", ");
         form.appendChild(fileInput);
 
         let attachButton = document.createElement('button');
@@ -274,10 +271,10 @@ class Gc2Attach extends HTMLElement {
             fetch(`/gb2c/attachment/`, {
                 method: "POST",
                 body: new FormData(form)
-            }).then((response) =>{
+            }).then((response) => {
                 progress.src = "";
                 let location = response.headers.get("Location");
-                if(location) {
+                if (location) {
                     let message = document.getElementById("gc2-message");
                     message.value += `${message.value && ' '}${location} `;
                     gc2CloseMenu();
@@ -294,21 +291,52 @@ class Gc2Attach extends HTMLElement {
 
         let imagePreview = document.createElement("img");
         this.appendChild(imagePreview);
+        let audioPreview = document.createElement("audio");
+        audioPreview.controls = true;
+        this.appendChild(audioPreview);
+        let videoPreview = document.createElement("video");
+        videoPreview.controls = true;
+        this.appendChild(videoPreview);
 
-        fileInput.onchange = () => {
-            imagePreview.src = fileInput.files.length > 0 ? URL.createObjectURL(fileInput.files[0]) : "";
-        }
-        
+        let updatePreview = () => {
+            imagePreview.style.display = "none";
+            audioPreview.style.display = "none";
+            audioPreview.pause();
+            audioPreview.removeAttribute("src");
+            audioPreview.load();
+            videoPreview.style.display = "none";
+            videoPreview.pause();
+            videoPreview.removeAttribute("src");
+            videoPreview.load();
+            if (fileInput.files && fileInput.files.length === 1) {
+                let file = fileInput.files[0];
+                let type = file.type;
+                if (type.startsWith("image")) {
+                    imagePreview.src = window.URL.createObjectURL(file);
+                    imagePreview.style.display = "";
+                } else if (type.startsWith("audio")) {
+                    audioPreview.src = window.URL.createObjectURL(file);
+                    audioPreview.style.display = "";
+                } else if (type.startsWith("video")) {
+                    videoPreview.src = window.URL.createObjectURL(file);
+                    videoPreview.style.display = "";
+                }
+            }
+        };
+
+        updatePreview();
+        fileInput.onchange = () => updatePreview();
+
         document.addEventListener('paste', (event) => {
-            if( !( form.offsetWidth || form.offsetHeight || form.getClientRects().length ) ) {
-                return; 
-             }
-             let files = (event.clipboardData || event.originalEvent.clipboardData).files;
-             if(files && files.length === 1 && this.allowedMimeTypes.indexOf(files[0].type) >= 0) {
+            if (!(form.offsetWidth || form.offsetHeight || form.getClientRects().length)) {
+                return;
+            }
+            let files = (event.clipboardData || event.originalEvent.clipboardData).files;
+            if (files && files.length === 1) {
                 fileInput.files = files;
-                imagePreview.src = window.URL.createObjectURL(files[0]);
-             }
-             event.preventDefault();
+                updatePreview();
+            }
+            event.preventDefault();
         });
     }
 }

@@ -33,12 +33,10 @@ func generateAttachmentIdBase() string {
 	return strconv.FormatInt(time.Now().Unix(), 10)
 }
 
+var attachmentIdRegex = regexp.MustCompile(`\d+(\.[a-zA-Z0-9]{1,4})?`)
+
 func isAttachmentId(attachmentId string) bool {
-	matched, err := regexp.MatchString(`\d+\.[a-zA-Z0-9]{1,4}`, attachmentId)
-	if nil != err {
-		log.Println("Attachment id regex is invalid: ", err)
-	}
-	return matched
+	return attachmentIdRegex.MatchString(attachmentId)
 }
 
 func (a *AttachmentHandler) deleteOldAttachments() {
@@ -88,12 +86,13 @@ func (a *AttachmentHandler) postAttachment(w http.ResponseWriter, r *http.Reques
 		attachmentId += ".jpeg"
 	case "image/webp":
 		attachmentId += ".webp"
-	default:
-		http.Error(w, fmt.Sprint("Invalid attachment mime type: ", mimeType), http.StatusBadRequest)
-		return
+	case "audio/mpeg":
+		attachmentId += ".mp3"
+	case "application/ogg":
+		attachmentId += ".ogg"
+	case "video/webm":
+		attachmentId += ".webm"
 	}
-
-	attachmentId += ""
 
 	attachmentDestFile, err := os.Create(a.attachmentDirectory + "/" + attachmentId)
 	if nil != err {
@@ -123,6 +122,10 @@ func (a *AttachmentHandler) getAttachment(w http.ResponseWriter, r *http.Request
 		return
 	}
 	attachmentFilename := a.attachmentDirectory + "/" + attachmentId
+	if len(filepath.Ext(attachmentId)) == 0 {
+		w.Header().Set("Content-Type", "application/octet-stream")
+		w.Header().Set("Content-Disposition", "attachment; filename="+attachmentId)
+	}
 	http.ServeFile(w, r, attachmentFilename)
 }
 

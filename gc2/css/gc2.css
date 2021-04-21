@@ -269,6 +269,14 @@ gc2-attach img {
 	max-width: 100%;
 }
 
+gc2-attach video {
+	max-width: 100%;
+}
+
+gc2-attach audio {
+	max-width: 100%;
+}
+
 @media only screen and (max-device-width: 768px) {
 	.gc2-controls select {
 		display: none;
