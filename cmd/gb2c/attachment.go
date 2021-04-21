@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -26,17 +29,41 @@ func (a *AttachmentHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func generateAttachmentId() string {
+func generateAttachmentIdBase() string {
 	return strconv.FormatInt(time.Now().Unix(), 10)
 }
 
-func cleanAttachmentId(str string) string {
-	i, _ := strconv.ParseInt(str, 10, 64)
-	return strconv.FormatInt(i, 10)
+func isAttachmentId(attachmentId string) bool {
+	matched, err := regexp.MatchString(`\d+\.[a-zA-Z0-9]{1,4}`, attachmentId)
+	if nil != err {
+		log.Println("Attachment id regex is invalid: ", err)
+	}
+	return matched
+}
+
+func (a *AttachmentHandler) deleteOldAttachments() {
+	cleanupTime := time.Now().Add(-48 * time.Hour)
+	err := filepath.WalkDir(a.attachmentDirectory, func(path string, d fs.DirEntry, err error) error {
+		if !d.IsDir() {
+			info, err := d.Info()
+			if nil != err {
+				return err
+			}
+			if info.ModTime().Before(cleanupTime) {
+				os.Remove(path)
+			}
+		}
+		return nil
+	})
+	if nil != err {
+		log.Println("Error during attachment cleanup: ", err)
+	}
+
 }
 
 func (a *AttachmentHandler) postAttachment(w http.ResponseWriter, r *http.Request) {
-	attachmentId := generateAttachmentId()
+	a.deleteOldAttachments()
+	attachmentId := generateAttachmentIdBase()
 	attachmentFormFile, _, err := r.FormFile("attachment")
 	if nil != err {
 		http.Error(w, fmt.Sprintf("No attachment file in request: %s", err), http.StatusBadRequest)
@@ -53,11 +80,20 @@ func (a *AttachmentHandler) postAttachment(w http.ResponseWriter, r *http.Reques
 
 	mimeType := http.DetectContentType(header)
 	switch mimeType {
-	case "image/gif", "image/png", "image/jpeg", "image/webp":
+	case "image/gif":
+		attachmentId += ".gif"
+	case "image/png":
+		attachmentId += ".png"
+	case "image/jpeg":
+		attachmentId += ".jpeg"
+	case "image/webp":
+		attachmentId += ".webp"
 	default:
 		http.Error(w, fmt.Sprint("Invalid attachment mime type: ", mimeType), http.StatusBadRequest)
 		return
 	}
+
+	attachmentId += ""
 
 	attachmentDestFile, err := os.Create(a.attachmentDirectory + "/" + attachmentId)
 	if nil != err {
@@ -81,7 +117,11 @@ func (a *AttachmentHandler) postAttachment(w http.ResponseWriter, r *http.Reques
 }
 
 func (a *AttachmentHandler) getAttachment(w http.ResponseWriter, r *http.Request) {
-	attachmentId := cleanAttachmentId(strings.TrimPrefix(r.URL.Path, "/gb2c/attachment/"))
+	attachmentId := strings.TrimPrefix(r.URL.Path, "/gb2c/attachment/")
+	if !isAttachmentId(attachmentId) {
+		http.Error(w, "Attachment id is not valid", http.StatusBadRequest)
+		return
+	}
 	attachmentFilename := a.attachmentDirectory + "/" + attachmentId
 	http.ServeFile(w, r, attachmentFilename)
 }
