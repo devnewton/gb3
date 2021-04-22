@@ -193,6 +193,7 @@ class Gc2Main extends HTMLElement {
             previousTribuneElement.markAsRead();
         }
         this.activeTribune = selectedTribuneName;
+        this.tribuneSelect.value = selectedTribuneName;
         this.messageInput.placeholder = selectedTribuneName;
         if(this.tribuneNavigator) {
             this.tribuneNavigator.setActiveTribune(selectedTribuneName);
