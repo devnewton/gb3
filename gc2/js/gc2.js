@@ -13,7 +13,7 @@ class Gc2Main extends HTMLElement {
         await this.setupBackend2html();
         await this.setupBouchotSuffixor();
         await this.listTribunes();
-        this.loadLinuxUnposted();
+        this.selectTribune();
         this.appendChild(this.controls);
         this.startPoll();
     }
@@ -119,13 +119,18 @@ class Gc2Main extends HTMLElement {
         this.backend2html = peg.generate(text);
     }
 
-    loadLinuxUnposted() {
+    selectTribune() {
         let unposted = localStorage.getItem("linuxfr_unposted_message");
         if (unposted) {
             this.messageInput.value = unposted;
             localStorage.removeItem("linuxfr_unposted_message");
-            this.tribuneSelect.value = "dlfp";
-        }
+            this.setActiveTribune("dlfp", false);
+        } else {
+            let tribuneName = window.location.hash.substr(1);
+            if(this.isTribune(tribuneName)) {
+                this.setActiveTribune(tribuneName, false);
+            }
+        }        
     }
 
     startPoll() {
@@ -155,6 +160,10 @@ class Gc2Main extends HTMLElement {
         this.tribunesContainer.scrollTop = this.tribunesContainer.scrollHeight;
     }
 
+    isTribune(tribuneName) {
+        return this.tribunes.get(tribuneName);
+    }
+
     getTribuneElement(tribuneName) {
         let tribuneElement = this.tribunes.get(tribuneName);
         if (!tribuneElement) {
@@ -177,10 +186,10 @@ class Gc2Main extends HTMLElement {
         return tribuneElement;
     }
 
-    setActiveTribune(selectedTribuneName) {
+    setActiveTribune(selectedTribuneName, markPreviousAsRead = true) {
         this.addBouchotSuffixInMessageInput(this.activeTribune);
         let previousTribuneElement = this.tribunes.get(this.activeTribune);
-        if (previousTribuneElement) {
+        if (previousTribuneElement && markPreviousAsRead) {
             previousTribuneElement.markAsRead();
         }
         this.activeTribune = selectedTribuneName;
