@@ -18,21 +18,21 @@ class Gc2Menu extends HTMLElement {
         let totozButton = document.createElement('button');
         totozButton.innerText = "😱 Totoz";
         totozButton.onclick = () => {
-            this.showTotoz();
+            this.showComponent("gc2-totozsearch");
         }
         this.appendChild(totozButton);
 
         let emojiButton = document.createElement('button');
         emojiButton.innerText = "💩 Emoji";
         emojiButton.onclick = () => {
-            this.showEmoji();
+            this.showComponent("gc2-emojisearch");
         }
         this.appendChild(emojiButton);
 
         let attachButton = document.createElement('button');
         attachButton.innerText = "📎 Attach";
         attachButton.onclick = () => {
-            this.showAttach();
+            this.showComponent("gc2-attach");
         }
         this.appendChild(attachButton);
 
@@ -58,27 +58,12 @@ class Gc2Menu extends HTMLElement {
         this.appendChild(backButton);
     }
 
-    showTotoz() {
+    showComponent(componentName) {
         this.clear();
 
-        let totozSearch = document.createElement("gc2-totozsearch");
-        totozSearch.setup();
-        this.appendChild(totozSearch);
-
-        let backButton = document.createElement("button");
-        backButton.innerText = "Back";
-        backButton.onclick = () => {
-            this.showSelector();
-        }
-        this.appendChild(backButton);
-    }
-
-    showAttach() {
-        this.clear();
-
-        let attach = document.createElement("gc2-attach");
-        attach.setup();
-        this.appendChild(attach);
+        let component = document.createElement(componentName);
+        component.setup();
+        this.appendChild(component);
 
         let backButton = document.createElement("button");
         backButton.innerText = "Back";
