@@ -1,0 +1,25 @@
+version: "3"
+ 
+services:
+ gb0:
+  build:
+   context: .
+   dockerfile: gb0.Dockerfile
+  ports:
+   - "16667:16667"
+ gb2c:
+  build:
+   context: .
+   dockerfile: gb2c.Dockerfile
+  environment:
+   - "GB2C_GB0_TRIBUNES=taiste:http://gb0:16667"
+  ports:
+   - "16666:16666"
+ reverse-proxy:
+  image: nginx
+  volumes:
+   - ./nginx.conf:/etc/nginx/conf.d/default.conf
+   - ./gc2:/srv/gc2
+  ports:
+   - "8080:80"
+
