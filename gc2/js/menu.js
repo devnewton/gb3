@@ -64,6 +64,7 @@ class Gc2Menu extends HTMLElement {
         let component = document.createElement(componentName);
         component.setup();
         this.appendChild(component);
+        component.focus();
 
         let backButton = document.createElement("button");
         backButton.innerText = "Back";
@@ -87,13 +88,18 @@ class Gc2TotozSearch extends HTMLElement {
         super();
     }
 
+    /**
+     * @type HTMLInputElement
+     */
+    searchInput;
+
     setup() {
         let form = document.createElement("form");
 
-        let searchInput = document.createElement('input');
-        searchInput.type = "text";
-        searchInput.placeholder = "dont be so vanilla";
-        form.appendChild(searchInput);
+        this.searchInput = document.createElement('input');
+        this.searchInput.type = "text";
+        this.searchInput.placeholder = "dont be so vanilla";
+        form.appendChild(this.searchInput);
 
         let searchButton = document.createElement('button');
         searchButton.innerText = "Search";
@@ -102,7 +108,7 @@ class Gc2TotozSearch extends HTMLElement {
 
         form.onsubmit = (e) => {
             e.preventDefault();
-            fetch(`/gb2c/totoz/search?terms=${encodeURIComponent(searchInput.value)}`, {
+            fetch(`/gb2c/totoz/search?terms=${encodeURIComponent(this.searchInput.value)}`, {
                 method: "GET",
             }).then((response) => {
                 return response.json();
@@ -128,6 +134,10 @@ class Gc2TotozSearch extends HTMLElement {
         };
         this.resultsContainer.classList.add("gc2-totoz-search-results")
         this.appendChild(this.resultsContainer);
+    }
+
+    focus() {
+        this.searchInput.focus();
     }
 
     setResults(results) {
@@ -161,13 +171,18 @@ class Gc2EmojiSearch extends HTMLElement {
         super();
     }
 
+    /**
+     * @type HTMLInputElement
+     */
+    searchInput;
+
     setup() {
         let form = document.createElement("form");
 
-        let searchInput = document.createElement('input');
-        searchInput.type = "text";
-        searchInput.placeholder = "poop";
-        form.appendChild(searchInput);
+        this.searchInput = document.createElement('input');
+        this.searchInput.type = "text";
+        this.searchInput.placeholder = "poop";
+        form.appendChild(this.searchInput);
 
         let searchButton = document.createElement('button');
         searchButton.innerText = "Search";
@@ -175,7 +190,7 @@ class Gc2EmojiSearch extends HTMLElement {
 
         form.onsubmit = (e) => {
             e.preventDefault();
-            fetch(`/gb2c/emoji/search?terms=${encodeURIComponent(searchInput.value)}`, {
+            fetch(`/gb2c/emoji/search?terms=${encodeURIComponent(this.searchInput.value)}`, {
                 method: "GET",
             }).then((response) => {
                 return response.json();
@@ -199,6 +214,10 @@ class Gc2EmojiSearch extends HTMLElement {
         };
         this.resultsContainer.classList.add("gc2-emoji-search-results")
         this.appendChild(this.resultsContainer);
+    }
+
+    focus() {
+        this.searchInput.focus();
     }
 
     setResults(results) {
@@ -323,6 +342,9 @@ class Gc2Attach extends HTMLElement {
             }
             event.preventDefault();
         });
+    }
+
+    focus() {
     }
 }
 customElements.define("gc2-attach", Gc2Attach);
