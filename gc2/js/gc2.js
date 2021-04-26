@@ -187,7 +187,7 @@ class Gc2Main extends HTMLElement {
     }
 
     setActiveTribune(selectedTribuneName, markPreviousAsRead = true) {
-        this.addBouchotSuffixInMessageInput(this.activeTribune);
+        this.addBouchotSuffixInMessageInput(this.activeTribune, selectedTribuneName);
         let previousTribuneElement = this.tribunes.get(this.activeTribune);
         if (previousTribuneElement && markPreviousAsRead) {
             previousTribuneElement.markAsRead();
@@ -299,10 +299,8 @@ class Gc2Main extends HTMLElement {
         this.bouchotSuffixor = peg.generate(text);
     }
 
-    addBouchotSuffixInMessageInput(tribune) {
-        if (tribune && this.bouchotSuffixor) {
-            this.messageInput.value = this.bouchotSuffixor.parse(this.messageInput.value, { bouchot: tribune });
-        }
+    addBouchotSuffixInMessageInput(previousTribuneName, nextTribuneName) {
+        this.messageInput.value = this.bouchotSuffixor.parse(this.messageInput.value, { oldBouchot: previousTribuneName, newBouchot: nextTribuneName});
     }
 
     updateNotifications() {

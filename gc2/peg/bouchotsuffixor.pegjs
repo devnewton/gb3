@@ -1,10 +1,11 @@
 {
-  let bouchotSuffix = options.bouchot ? `@${options.bouchot}` : "@prout";
+  let oldBouchotSuffix = options.oldBouchot ? `@${options.oldBouchot}` : "";
+  let newBouchotSuffix = options.newBouchot ? `@${options.newBouchot}` : "";
   function suffixBouchot(b) {
     if(!b) {
-    	return bouchotSuffix;
+    	return oldBouchotSuffix;
     }
-    if(b === bouchotSuffix) {
+    if(b === newBouchotSuffix) {
     	return "";
     }
     return b;
