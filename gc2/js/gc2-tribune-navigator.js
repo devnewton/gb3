@@ -31,12 +31,16 @@ customElements.define('gc2-tribune-navigator-button', Gc2TribuneNavigatorButton)
     addTribune(tribuneName) {
         let tribuneButton = document.createElement("gc2-tribune-navigator-button");
         tribuneButton.tribuneName = tribuneName;
-        tribuneButton.innerText = tribuneName;
+        
+        let tribuneSpan = document.createElement("span");
+        tribuneSpan.innerText = tribuneName;
+        tribuneButton.appendChild(tribuneSpan);
+
         tribuneButton.onclick = () => {
             if(this.onnavigate) {
                 this.onnavigate(tribuneName);
             }
-        }
+        }      
         this.appendChild(tribuneButton);
     }
 

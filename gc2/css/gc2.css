@@ -45,14 +45,18 @@ gc2-tribune-navigator-button:hover {
 }
 
 gc2-tribune-navigator-button[active] {
-	font-weight: bolder;
+	font-weight: bolder
 }
 
-gc2-tribune-navigator-button[bigorno]::after {
+gc2-tribune-navigator-button span {
+	display: flex
+}
+
+gc2-tribune-navigator-button[bigorno] span::after {
 	content: "📢"
 }
 
-gc2-tribune-navigator-button[reply]::after {
+gc2-tribune-navigator-button[reply] span::after {
 	content: "↩"
 }
 
