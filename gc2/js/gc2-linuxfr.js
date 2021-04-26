@@ -7,6 +7,7 @@ try {
     localStorage.setItem("linuxfr_expires_at", Date.now() + token.expires_in * 1000);
     localStorage.setItem("linuxfr_login", token.login);
     linuxfrInfo.innerText = "Authorization token successfullty received from linuxfr :-)";
+    window.location.href = "/";
   }
   catch(error) {
     console.error(error);
