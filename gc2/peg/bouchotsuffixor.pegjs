@@ -1,3 +1,16 @@
+{
+  let bouchotSuffix = options.bouchot ? `@${options.bouchot}` : "@prout";
+  function suffixBouchot(b) {
+    if(!b) {
+    	return bouchotSuffix;
+    }
+    if(b === bouchotSuffix) {
+    	return "";
+    }
+    return b;
+  }
+}
+
 post
  = items:postItem*
   {
@@ -7,31 +20,25 @@ post
 postItem
  = url
  / totoz
- / unbouchotedNorloge
+ / norloge
  / .
 
 url
  = $((("http" "s"?) / "ftp") "://" ([^< \t\r\n\"])+)
 
-unbouchotedNorloge
- = n:norloge &(whitespaces / !.)
- {
-   return `${n}@${options.bouchot}`
- }
-
 norloge
  = fullNorloge / longNorloge / normalNorloge / shortNorloge
 
 fullNorloge
- = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay sep:[T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay sep:[T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
  {
- return `${y}-${m}-${d}${sep}${h}:${mi}:${s}`;
+ return `${y}-${m}-${d}${sep}${h}:${mi}:${s}${suffixBouchot(b)}`;
  }
 
  longNorloge
- = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
  {
- return `${m}/${d}#${h}:${mi}:${s}`;
+ return `${m}/${d}#${h}:${mi}:${s}${suffixBouchot(b)}`;
  }
  
 norlogeYear
@@ -47,15 +54,15 @@ norlogeDay
  { return first + last; }
 
 normalNorloge
- = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds
+ = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
  {
-   return `${h}:${mi}:${s}`;
+   return `${h}:${mi}:${s}${suffixBouchot(b)}`;
  }
  
 shortNorloge
- = h:norlogeHours ":" mi:norlogeMinutes
+ = h:norlogeHours ":" mi:norlogeMinutes b:bouchot?
  {
-   return `${h}:${mi}`;
+   return `${h}:${mi}${suffixBouchot(b)}`;
 
  }
 
@@ -71,6 +78,8 @@ norlogeSeconds
  = first: [0-5] last: [0-9]
  { return first + last; }
 
+bouchot
+ = $("@" [a-z]+)
 
 totoz
   = $("[:" $[^\]]+ "]")
