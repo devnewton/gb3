@@ -1,11 +1,13 @@
-class Gc2Alarm extends HTMLElement{
+export class Gc2Alarm extends HTMLElement{
 
     constructor() {
         super();
     }
 
     connectedCallback() {
+    }
 
+    start() {
         setInterval(() => {
             let dateLocal = new Date();
             let hours = dateLocal.getHours();
@@ -19,7 +21,6 @@ class Gc2Alarm extends HTMLElement{
                 this.innerText = `${hours < 10 ? '0':''}${hours}:${minutes < 10 ? '0':''}${minutes}:${seconds < 10 ? '0':''}${seconds}`;
             }
         }, 1000);
-
     }
 }
 

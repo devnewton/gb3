@@ -1,4 +1,6 @@
-class Gc2Tribune extends HTMLElement {
+import {Gc2Post} from "./gc2-post.js"
+
+export class Gc2Tribune extends HTMLElement {
 
     /**
      * @type boolean

@@ -197,7 +197,7 @@ class Gc2Message extends HTMLElement {
 }
 customElements.define('gc2-message', Gc2Message);
 
-class Gc2Post extends HTMLElement {
+export class Gc2Post extends HTMLElement {
 
 
     /**

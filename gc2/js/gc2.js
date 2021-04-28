@@ -1,3 +1,8 @@
+import {Gc2TribuneNavigator} from "./gc2-tribune-navigator.js"
+import {Gc2Tribune} from "./gc2-tribune.js"
+import {Gc2Menu} from "./gc2-menu.js"
+import {Gc2Alarm} from "./gc2-alarm.js"
+
 class Gc2Main extends HTMLElement {
 
     /**
@@ -59,7 +64,16 @@ class Gc2Main extends HTMLElement {
         await this.listTribunes();
         this.selectTribune();
         this.appendChild(this.controls);
+        this.setupAlarm();
         this.startPoll();
+    }
+
+    setupAlarm() {
+        /**
+         * @type Gc2Alarm
+         */
+        let alarm = document.querySelector("gc2-alarm");
+        alarm.start();
     }
 
     setupTribuneNavigator() {
@@ -125,6 +139,9 @@ class Gc2Main extends HTMLElement {
         menuButton.innerText = "⋯";
         menuButton.onclick = () => {
             this.style.display = "none";
+            /**
+             * @type Gc2Menu
+             */
             let menu = document.querySelector('gc2-menu');
             menu.style.display = "";
             menu.showSelector();

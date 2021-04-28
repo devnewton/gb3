@@ -18,7 +18,7 @@ customElements.define('gc2-tribune-navigator-button', Gc2TribuneNavigatorButton)
  * @param {string} tribuneName
  */
 
- class Gc2TribuneNavigator extends HTMLElement {
+ export class Gc2TribuneNavigator extends HTMLElement {
     constructor() {
         super();
     }

@@ -5,7 +5,7 @@ function gc2CloseMenu() {
     document.querySelector("gc2-main").style.display = "";
 }
 
-class Gc2Menu extends HTMLElement {
+export class Gc2Menu extends HTMLElement {
     constructor() {
         super();
         this.style.display = "none";
