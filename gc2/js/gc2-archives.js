@@ -1,8 +1,17 @@
 class Gc2Archives extends HTMLElement {
 
+    /**
+     * @type CallableFunction
+     */
+    backend2html;
+
+    /**
+     * @type HTMLElement
+     */
+    resultsContainer;
+
     constructor() {
         super();
-        this.tribunes = new Map();
     }
 
     async connectedCallback() {

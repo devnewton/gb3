@@ -93,6 +93,11 @@ class Gc2TotozSearch extends HTMLElement {
      */
     searchInput;
 
+    /**
+     * @type HTMLDivElement
+     */
+    resultsContainer;
+
     setup() {
         let form = document.createElement("form");
 

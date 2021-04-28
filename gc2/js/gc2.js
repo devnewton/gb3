@@ -1,8 +1,52 @@
 class Gc2Main extends HTMLElement {
 
+    /**
+     * @type Map<String, Gc2Tribune>
+     */
+    tribunes = new Map();
+
+    /**
+     * @type Gc2TribuneNavigator
+     */
+    tribuneNavigator;
+
+    /**
+     * @type Gc2Tribunes
+     */
+    tribunesContainer;
+
+    /**
+     * @type HTMLFormElement
+     */
+    controls;
+
+    /**
+     * @type HTMLSelectElement
+     */
+    tribuneSelect;
+
+    /**
+     * @type HTMLInputElement
+     */
+    messageInput;
+
+    /**
+     * @type CallableFunction
+     */
+    backend2html;
+
+    /**
+     * @type CallableFunction
+     */
+    bouchotSuffixor;
+
+    /**
+     * @type string
+     */
+    activeTribune;
+
     constructor() {
         super();
-        this.tribunes = new Map();
     }
 
     async connectedCallback() {

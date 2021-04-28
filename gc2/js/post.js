@@ -199,6 +199,22 @@ customElements.define('gc2-message', Gc2Message);
 
 class Gc2Post extends HTMLElement {
 
+
+    /**
+     * @type string
+     */
+    postId;
+
+    /**
+     * @type string
+     */
+    tribune;
+
+    /**
+     * @type Gc2PostIcon
+     */
+    postIcon;
+
     constructor() {
         super();
     }
