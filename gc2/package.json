@@ -1,0 +1,13 @@
+{
+  "name": "gc2",
+  "version": "1.0.0",
+  "description": "gb3 coincoin",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "jshint": "jshint ."
+  },
+  "devDependencies": {
+    "jshint": "^2.12.0"
+  }
+}
