@@ -19,42 +19,42 @@ export class Gc2Menu extends HTMLElement {
         totozButton.innerText = "😱 Totoz";
         totozButton.onclick = () => {
             this.showComponent("gc2-totozsearch");
-        }
+        };
         this.appendChild(totozButton);
 
         let emojiButton = document.createElement('button');
         emojiButton.innerText = "💩 Emoji";
         emojiButton.onclick = () => {
             this.showComponent("gc2-emojisearch");
-        }
+        };
         this.appendChild(emojiButton);
 
         let attachButton = document.createElement('button');
         attachButton.innerText = "📎 Attach";
         attachButton.onclick = () => {
             this.showComponent("gc2-attach");
-        }
+        };
         this.appendChild(attachButton);
 
         let settingsButton = document.createElement('button');
         settingsButton.innerText = "⚙ Settings";
         settingsButton.onclick = () => {
             window.location.href = "/settings.html";
-        }
+        };
         this.appendChild(settingsButton);
 
         let archivesButton = document.createElement('button');
         archivesButton.innerText = "🔍 Archives";
         archivesButton.onclick = () => {
             window.location.href = "/archives.html";
-        }
+        };
         this.appendChild(archivesButton);
 
         let backButton = document.createElement('button');
         backButton.innerText = "↩ Back";
         backButton.onclick = () => {
             gc2CloseMenu();
-        }
+        };
         this.appendChild(backButton);
     }
 
@@ -70,24 +70,20 @@ export class Gc2Menu extends HTMLElement {
         backButton.innerText = "Back";
         backButton.onclick = () => {
             this.showSelector();
-        }
+        };
         this.appendChild(backButton);
     }
 
     clear() {
-        let child;
-        while (child = this.firstChild) {
-            this.removeChild(child);
+        while (this.firstChild) {
+            this.removeChild(this.firstChild);
         }
     }
 }
 customElements.define('gc2-menu', Gc2Menu);
 
 class Gc2TotozSearch extends HTMLElement {
-    constructor() {
-        super();
-    }
-
+    
     /**
      * @type HTMLInputElement
      */
@@ -97,6 +93,10 @@ class Gc2TotozSearch extends HTMLElement {
      * @type HTMLDivElement
      */
     resultsContainer;
+
+    constructor() {
+        super();
+    }
 
     setup() {
         let form = document.createElement("form");
@@ -137,7 +137,7 @@ class Gc2TotozSearch extends HTMLElement {
                 message.focus();
             }
         };
-        this.resultsContainer.classList.add("gc2-totoz-search-results")
+        this.resultsContainer.classList.add("gc2-totoz-search-results");
         this.appendChild(this.resultsContainer);
     }
 
@@ -163,9 +163,8 @@ class Gc2TotozSearch extends HTMLElement {
     }
 
     clearResults() {
-        let child;
-        while (child = this.resultsContainer.firstChild) {
-            this.resultsContainer.removeChild(child);
+        while (this.resultsContainer.firstChild) {
+            this.resultsContainer.removeChild(this.resultsContainer.firstChild);
         }
     }
 }
@@ -217,7 +216,7 @@ class Gc2EmojiSearch extends HTMLElement {
                 message.focus();
             }
         };
-        this.resultsContainer.classList.add("gc2-emoji-search-results")
+        this.resultsContainer.classList.add("gc2-emoji-search-results");
         this.appendChild(this.resultsContainer);
     }
 
@@ -232,7 +231,7 @@ class Gc2EmojiSearch extends HTMLElement {
 
             let emojiCharacters = document.createElement("p");
             emojiCharacters.innerText = emoji.characters;
-            emojiCharacters.classList.add("gc2-emoji-characters")
+            emojiCharacters.classList.add("gc2-emoji-characters");
             emojiElement.appendChild(emojiCharacters);
 
             let emojiName = document.createElement("figcaption");
@@ -244,9 +243,8 @@ class Gc2EmojiSearch extends HTMLElement {
     }
 
     clearResults() {
-        let child;
-        while (child = this.resultsContainer.firstChild) {
-            this.resultsContainer.removeChild(child);
+        while (this.resultsContainer.firstChild) {
+            this.resultsContainer.removeChild(this.resultsContainer.firstChild);
         }
     }
 }
@@ -272,7 +270,7 @@ class Gc2Attach extends HTMLElement {
         form.appendChild(attachButton);
 
         let progress = document.createElement("img");
-        progress.classList.add("gc2-attach-progress")
+        progress.classList.add("gc2-attach-progress");
 
         form.onsubmit = (e) => {
             e.preventDefault();

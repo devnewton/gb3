@@ -1,7 +1,7 @@
-import {Gc2TribuneNavigator} from "./gc2-tribune-navigator.js"
-import {Gc2Tribune} from "./gc2-tribune.js"
-import {Gc2Menu} from "./gc2-menu.js"
-import {Gc2Alarm} from "./gc2-alarm.js"
+import {Gc2TribuneNavigator} from "./gc2-tribune-navigator.js";
+import {Gc2Tribune} from "./gc2-tribune.js";
+import {Gc2Menu} from "./gc2-menu.js";
+import {Gc2Alarm} from "./gc2-alarm.js";
 
 class Gc2Main extends HTMLElement {
 
@@ -82,7 +82,7 @@ class Gc2Main extends HTMLElement {
             this.tribuneSelect.value = tribuneName;
             this.setActiveTribune(tribuneName);
             this.scrollToBottom();
-        }
+        };
     }
 
     setupTribunesContainer() {
@@ -129,7 +129,7 @@ class Gc2Main extends HTMLElement {
                     console.log(`Cannot post message '${data.get('message')}'. Error: `, error);
                 });
             }
-            e.preventDefault()
+            e.preventDefault();
         };
     }
 
@@ -145,7 +145,7 @@ class Gc2Main extends HTMLElement {
             let menu = document.querySelector('gc2-menu');
             menu.style.display = "";
             menu.showSelector();
-        }
+        };
         this.controls.appendChild(menuButton);
     }
 
@@ -154,7 +154,7 @@ class Gc2Main extends HTMLElement {
         this.tribuneSelect.onchange = () => {
             this.setActiveTribune(this.tribuneSelect.value);
             this.scrollToBottom();
-        }
+        };
         this.controls.appendChild(this.tribuneSelect);
     }
 
@@ -170,7 +170,7 @@ class Gc2Main extends HTMLElement {
                     e.preventDefault();
                 }
             }
-        }
+        };
         this.controls.appendChild(this.messageInput);
     }
 
