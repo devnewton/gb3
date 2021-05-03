@@ -32,7 +32,7 @@ postItem
  / .
 
  xmlEntities
-  = $("&" ("lt" / "gt" ) ";")
+  = $("&" ("lt" / "gt" / "amp" ) ";")
 
 xmlSpecialChar
  = (lt / gt / amp / quot / apos)
