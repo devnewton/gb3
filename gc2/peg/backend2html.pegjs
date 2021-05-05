@@ -60,8 +60,18 @@ apos
 url
  = "<a href=\""? urlStr:$((("http" "s"?) / "ftp") "://" ([^< \t\r\n\"])+) ("\">" [^<]+ "</a>")?
  { 
-   let url = new URL(urlStr)
-   return `<a href="${encodeURI(url)}" target="_blank" rel="noreferrer">${url.hostname}</a>`;}
+   let a = document.createElement("a");
+   try {
+     let url = new URL(urlStr);
+     a.innerText = url.hostname;
+   } catch(e) {
+       a.innerText = "url";
+   }
+   a.href = urlStr;
+   a.target= "_blank";
+   a.rel = "noreferrer";
+   return a.outerHTML;
+ }
 
 openTag
  = "<" tag:validFormatTag ">"
