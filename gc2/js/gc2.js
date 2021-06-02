@@ -183,9 +183,9 @@ class Gc2Main extends HTMLElement {
     selectTribune() {
         let unposted = localStorage.getItem("linuxfr_unposted_message");
         if (unposted) {
+            this.setActiveTribune("dlfp", false);
             this.messageInput.value = unposted;
             localStorage.removeItem("linuxfr_unposted_message");
-            this.setActiveTribune("dlfp", false);
         } else {
             let tribuneName = window.location.hash.substr(1);
             if(this.isTribune(tribuneName)) {
