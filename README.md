@@ -54,6 +54,14 @@ Set to true to enable full logging.
 
 Oauth credentials for linuxfr API.
 
+#### GB2C_GB0_TRIBUNES
+
+List of gb0 tribunes url. Default value is:
+
+```bash
+GB2C_GB0_TRIBUNES=devnewton:https://gb3.devnewton.fr,gabuzomeu:https://gb3.plop.cc
+```
+
 ### Endpoints
 
 gb2c exposes exports for listing tribunes then polling and posting messages.
