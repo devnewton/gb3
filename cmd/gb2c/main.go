@@ -55,7 +55,7 @@ func newGb3() *gb3 {
 	}
 	gb0Tribunes := os.Getenv("GB2C_GB0_TRIBUNES")
 	if len(gb0Tribunes) == 0 {
-		gb0Tribunes = "gb0local:http://localhost:16667"
+		gb0Tribunes = "devnewton:https://gb3.devnewton.fr,gabuzomeu:https://gb3.plop.cc"
 	}
 	for _, gb0Tribune := range strings.Split(gb0Tribunes, ",") {
 		gb0TribuneSplitted := strings.SplitN(gb0Tribune, ":", 2)
