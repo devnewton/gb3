@@ -248,6 +248,9 @@ class Gc2Main extends HTMLElement {
     }
 
     setActiveTribune(selectedTribuneName, markPreviousAsRead = true) {
+        if(selectedTribuneName === this.activeTribune) {
+            return;
+        }
         this.addBouchotSuffixInMessageInput(this.activeTribune, selectedTribuneName);
         let previousTribuneElement = this.tribunes.get(this.activeTribune);
         if (previousTribuneElement && markPreviousAsRead) {

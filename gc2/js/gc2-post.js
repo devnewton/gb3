@@ -173,6 +173,10 @@ class Gc2Norloge extends HTMLElement {
 
     findQuotedNorloge() {
         let bouchot = this.findBouchot();
+        let gc2Main = document.querySelector('gc2-main');
+        if(gc2Main) {
+            gc2Main.setActiveTribune(bouchot);
+        }
         return document.querySelector(`gc2-tribune[name="${bouchot}"] gc2-post-norloge[title*=" ${this.title.substr(-8)}"]`);
     }
 }
