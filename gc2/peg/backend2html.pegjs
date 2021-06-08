@@ -8,6 +8,8 @@ backend2html.encode = function encode(e) {
     });
 };
 
+backend2html.domParser = new DOMParser();
+
 }
 
 post
@@ -58,8 +60,12 @@ apos
  { return "&apos;"; }
  
 url
- = "<a href=\""? urlStr:$((("http" "s"?) / "ftp") "://" ([^< \t\r\n\"])+) ("\">" [^<]+ "</a>")?
+ = tag:"<a href=\""? urlStr:$((("http" "s"?) / "ftp") "://" ([^< \t\r\n\"])+) ("\">" [^<]+ "</a>")?
  { 
+   if(tag) {
+      let doc = backend2html.domParser.parseFromString(urlStr, "text/html");
+      urlStr = doc.documentElement.textContent;
+   }
    let a = document.createElement("a");
    try {
      let url = new URL(urlStr);
