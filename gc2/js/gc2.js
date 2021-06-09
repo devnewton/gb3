@@ -95,6 +95,7 @@ class Gc2Main extends HTMLElement {
         this.controls.classList.add("gc2-controls");
         this.setupTribuneSelect();
         this.setupMessageInput();
+        this.setupShortcutButtons();
         this.setupMenuButton();
 
         this.controls.onsubmit = (e) => {
@@ -133,9 +134,57 @@ class Gc2Main extends HTMLElement {
         };
     }
 
+    setupShortcutButtons() {
+        let totozButton = document.createElement("button");
+        totozButton.type = "button";
+        totozButton.classList.add("gc2-shortcuts-button");
+        totozButton.innerText = "😱";
+        totozButton.onclick = () => {
+            this.style.display = "none";
+            /**
+             * @type Gc2Menu
+             */
+            let menu = document.querySelector('gc2-menu');
+            menu.style.display = "";
+            menu.showOnlyTotozSearch();
+        };
+        this.controls.appendChild(totozButton);
+
+        let emojiButton = document.createElement("button");
+        emojiButton.type = "button";
+        emojiButton.classList.add("gc2-shortcuts-button");
+        emojiButton.innerText = "💩";
+        emojiButton.onclick = () => {
+            this.style.display = "none";
+            /**
+             * @type Gc2Menu
+             */
+            let menu = document.querySelector('gc2-menu');
+            menu.style.display = "";
+            menu.showOnlyEmojiSearch();
+        };
+        this.controls.appendChild(emojiButton);
+
+        let attachButton = document.createElement("button");
+        attachButton.type = "button";
+        attachButton.classList.add("gc2-shortcuts-button");
+        attachButton.innerText = "📎";
+        attachButton.onclick = () => {
+            this.style.display = "none";
+            /**
+             * @type Gc2Menu
+             */
+            let menu = document.querySelector('gc2-menu');
+            menu.style.display = "";
+            menu.showOnlyAttach();
+        };
+        this.controls.appendChild(attachButton);
+    }
+
     setupMenuButton() {
         let menuButton = document.createElement("button");
         menuButton.type = "button";
+        menuButton.id = "menu-button";
         menuButton.innerText = "⋯";
         menuButton.onclick = () => {
             this.style.display = "none";

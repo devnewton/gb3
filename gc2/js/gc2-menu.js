@@ -74,6 +74,34 @@ export class Gc2Menu extends HTMLElement {
         this.appendChild(backButton);
     }
 
+    showOnlyTotozSearch() {
+        this.showOnlyComponent("gc2-totozsearch");
+    }
+
+    showOnlyEmojiSearch() {
+        this.showOnlyComponent("gc2-emojisearch");
+    }
+
+    showOnlyAttach() {
+        this.showOnlyComponent("gc2-attach");
+    }
+
+    showOnlyComponent(componentName) {
+        this.clear();
+
+        let component = document.createElement(componentName);
+        component.setup();
+        this.appendChild(component);
+        component.focus();
+
+        let backButton = document.createElement("button");
+        backButton.innerText = "Back";
+        backButton.onclick = () => {
+            gc2CloseMenu();
+        };
+        this.appendChild(backButton);
+    }
+
     clear() {
         while (this.firstChild) {
             this.removeChild(this.firstChild);

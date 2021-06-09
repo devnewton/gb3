@@ -282,6 +282,10 @@ gc2-attach audio {
 }
 
 @media only screen and (max-device-width: 768px) {
+	.gc2-shortcuts-button {
+		display: none;
+	}
+
 	.gc2-controls select {
 		display: none;
 	}
