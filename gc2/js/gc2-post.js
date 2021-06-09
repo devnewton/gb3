@@ -61,19 +61,30 @@ class Gc2PostIcon extends HTMLElement {
 }
 customElements.define('gc2-post-icon', Gc2PostIcon);
 
-function highlightNorloges(bouchot, norlogeText) {
+function highlightNorloges(bouchot, norlogeText, showPopup = true) {
     let tribunes = document.getElementsByTagName("gc2-tribune");
+    let popup = showPopup && document.querySelector('#gb3-post-popup-content');
+    if(popup) {
+        popup.innerHTML = "";
+    }
     for (let t of tribunes) {
         let isSameBouchot = bouchot === t.getAttribute("name");
         let norloges = t.querySelectorAll(`gc2-norloge[title$="${norlogeText.substr(-8)}"]`);
         for (let n of norloges) {
             if (isSameBouchot || n.getAttribute("bouchot") === bouchot) {
                 n.classList.toggle("gc2-highlighted", true);
+                n.parentElement.classList.toggle("gc2-highlighted", true);
             }
         }
-        if (isSameBouchot) {
-            let postNorloges = t.querySelectorAll(`gc2-post-norloge[title*=" ${norlogeText.substr(-8)}"]`);
-            for (let n of postNorloges) {
+        let postNorloges = t.querySelectorAll(`gc2-post-norloge[title*=" ${norlogeText.substr(-8)}"]`);
+        for (let n of postNorloges) {
+            if(popup) {
+                let postBoundingRect= n.parentElement.getBoundingClientRect();
+                if(postBoundingRect.top < 0) {
+                    popup.innerHTML += `<p>${n.parentElement.innerHTML}</p>`;
+                }
+            }
+            if(isSameBouchot) {
                 n.parentElement.classList.toggle("gc2-highlighted", true);
             }
         }
@@ -81,6 +92,10 @@ function highlightNorloges(bouchot, norlogeText) {
 }
 
 function unhighlightNorloges() {
+    let popup = document.querySelector('#gb3-post-popup-content');
+    if(popup) {
+        popup.innerHTML = "";
+    }
     let norloges = document.querySelectorAll(".gc2-highlighted");
     for (let n of norloges) {
         n.classList.toggle("gc2-highlighted", false);

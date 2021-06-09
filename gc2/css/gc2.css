@@ -281,6 +281,23 @@ gc2-attach audio {
 	max-width: 100%;
 }
 
+#gb3-post-popup {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex: 1 1 auto;
+    pointer-events: none;
+}
+
+#gb3-post-popup-content {
+    background-color: #f3f3f3;
+    border-radius: 4px;
+}
+
 @media only screen and (max-device-width: 768px) {
 	.gc2-shortcuts-button {
 		display: none;
