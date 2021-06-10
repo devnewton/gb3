@@ -263,7 +263,7 @@ class Gc2Main extends HTMLElement {
     }
 
     isScrollAtBottom() {
-        return (this.tribunesContainer.scrollTop + this.tribunesContainer.clientHeight) >= this.tribunesContainer.scrollHeight;
+        return (this.tribunesContainer.scrollTop + this.tribunesContainer.clientHeight + 8 /* magic number for bottom approximation */) >= this.tribunesContainer.scrollHeight;
     }
 
     scrollToBottom() {
