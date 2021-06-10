@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -61,6 +62,8 @@ func scanTsv(r io.Reader) (*Post, error) {
 
 func init() {
 	initTimeLocation()
+	initMaxPostsInHistory()
+	initMaxDaysInHistory()
 }
 
 func initTimeLocation() {
@@ -70,6 +73,34 @@ func initTimeLocation() {
 		timeLocation = time.UTC
 	} else {
 		timeLocation = tl
+	}
+}
+
+var maxPostsInHistory = 1000
+
+func initMaxPostsInHistory() {
+	value, isPresent := os.LookupEnv("GB0_MAX_POSTS_IN_HISTORY")
+	if isPresent {
+		intValue, err := strconv.Atoi(value)
+		if nil != err {
+			log.Println("Invalid value for GB0_MAX_POSTS_IN_HISTORY")
+		} else {
+			maxPostsInHistory = intValue
+		}
+	}
+}
+
+var maxDaysInHistory = 7
+
+func initMaxDaysInHistory() {
+	value, isPresent := os.LookupEnv("GB0_MAX_DAYS_IN_HISTORY")
+	if isPresent {
+		intValue, err := strconv.Atoi(value)
+		if nil != err {
+			log.Println("Invalid value for GB0_MAX_DAYS_IN_HISTORY")
+		} else {
+			maxDaysInHistory = intValue
+		}
 	}
 }
 
@@ -106,17 +137,15 @@ type FileStore struct {
 
 //ReadPosts Load from file
 func (f *FileStore) ReadPosts() Posts {
-	posts := make(Posts, 0, maxPostInBackend)
+	posts := make(Posts, 0, maxPostsInHistory)
 	now := time.Now().In(timeLocation)
-	for day := 0; day <= 1; day++ {
+	for day := 0; day <= maxDaysInHistory; day++ {
 		dayTime := now.AddDate(0, 0, -day)
 		dayDir := f.postsDirectory + "/" + dayTime.Format("2006/01/02")
 		posts = readPostsFromDirectory(posts, dayDir)
 	}
 	return posts
 }
-
-const maxPostInBackend = 1000
 
 func readPostsFromDirectory(posts Posts, directory string) Posts {
 	files, err := filepath.Glob(directory + "/*.tsv")
@@ -131,7 +160,7 @@ func readPostsFromDirectory(posts Posts, directory string) Posts {
 		} else {
 			log.Printf("Cannot read posts from %s : %s", file, err)
 		}
-		if len(posts) >= maxPostInBackend {
+		if len(posts) >= maxPostsInHistory {
 			break
 		}
 	}

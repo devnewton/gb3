@@ -18,6 +18,14 @@ Change default http listen address and port.
 
 Post will be stored to disk only if this variable is a valid path to a writable directory.
 
+#### GB0_MAX_POSTS_IN_HISTORY
+
+Maximum number of posts returned in TSV backend.
+
+#### GB0_MAX_DAYS_IN_HISTORY
+
+Maximum number of days in the past to consider for building TSV backend.
+
 ### Endpoints
 
 gb0 exposes two endpoint to retrieve and post messages.
@@ -61,6 +69,10 @@ List of gb0 tribunes url. Default value is:
 ```bash
 GB2C_GB0_TRIBUNES=devnewton:https://gb3.devnewton.fr,gabuzomeu:https://gb3.plop.cc
 ```
+
+#### GB2C_MAX_POSTS_IN_HISTORY
+
+Maximum number of posts returned by poll requests.
 
 ### Endpoints
 
