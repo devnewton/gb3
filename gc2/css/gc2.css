@@ -93,6 +93,10 @@ gc2-menu button {
 	flex-grow: 1
 }
 
+.gc2-controls * {
+	font-size: initial
+}
+
 gc2-tribunes {
 	margin: 0;
 	padding: 0;
