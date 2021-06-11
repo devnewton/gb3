@@ -22,7 +22,7 @@ class Gc2PostIcon extends HTMLElement {
         this.isMine = post.info === nickname || (post.tribune === "dlfp" && post.login === login);
 
         this.isBigorno = false;
-        let bigornos = messageElement.getElementsByTagName('gc2-bigorno')
+        let bigornos = messageElement.getElementsByTagName('gc2-bigorno');
         for (let b = 0; b < bigornos.length; b++) {
             let bigorno = bigornos[b].innerText;
             if (bigorno === nickname || bigorno === login || bigorno === "moules") {
@@ -108,11 +108,11 @@ class Gc2PostNorloge extends HTMLElement {
 
         this.onmouseenter = (e) => {
             highlightNorloges(this.closest('gc2-tribune').getAttribute('name'), this.title);
-        }
+        };
 
         this.onmouseleave = (e) => {
             unhighlightNorloges();
-        }
+        };
 
         this.onclick = (e) => {
             let message = document.getElementById("gc2-message");
@@ -126,7 +126,7 @@ class Gc2PostNorloge extends HTMLElement {
             }
             message.value += `${message.value && ' '}${this.formatNorloge(style)} `;
             message.focus();
-        }
+        };
     }
 
     formatNorloge(style) {
@@ -165,11 +165,11 @@ class Gc2Norloge extends HTMLElement {
 
         this.onmouseenter = (e) => {
             highlightNorloges(this.findBouchot(), this.title);
-        }
+        };
 
         this.onmouseleave = (e) => {
             unhighlightNorloges();
-        }
+        };
 
         this.onclick = (e) => {
             let n = this.findQuotedNorloge();
@@ -179,7 +179,7 @@ class Gc2Norloge extends HTMLElement {
                     tribunes.scrollTop = n.offsetTop - e.clientY + tribunes.offsetTop + 20;
                 }
             }
-        }
+        };
     }
 
     findBouchot() {
@@ -204,7 +204,7 @@ class Gc2Moule extends HTMLElement {
             let message = document.getElementById("gc2-message");
             message.value += `${message.value && ' '}${this.innerText}< `;
             message.focus();
-        }
+        };
     }
 }
 customElements.define('gc2-moule', Gc2Moule);

@@ -1,4 +1,4 @@
-import {Gc2Post} from "./gc2-post.js"
+import {Gc2Post} from "./gc2-post.js";
 
 export class Gc2Tribune extends HTMLElement {
 
