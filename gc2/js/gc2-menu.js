@@ -43,13 +43,6 @@ export class Gc2Menu extends HTMLElement {
         };
         this.appendChild(settingsButton);
 
-        let archivesButton = document.createElement('button');
-        archivesButton.innerText = "🔍 Archives";
-        archivesButton.onclick = () => {
-            window.location.href = "/archives.html";
-        };
-        this.appendChild(archivesButton);
-
         let backButton = document.createElement('button');
         backButton.innerText = "↩ Back";
         backButton.onclick = () => {
