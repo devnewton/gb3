@@ -30,7 +30,7 @@ Maximum number of days in the past to consider for building TSV backend.
 
 gb0 exposes two endpoint to retrieve and post messages.
 
-#### /tsv
+#### /gb0/tsv
 
 ```bash
 curl 'http://localhost:16667/gb0/tsv'
