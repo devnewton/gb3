@@ -40,7 +40,7 @@ func (m memStore) Save(tribune string, posts Posts) error {
 		newPosts = append(newPosts, oldPosts.(Posts)...)
 	}
 	newPosts = append(newPosts, posts...)
-	sort.Sort(posts)
+	sort.Sort(newPosts)
 	if len(newPosts) > MaxPostsInHistory {
 		newPosts = newPosts[len(newPosts)-MaxPostsInHistory:]
 	}
