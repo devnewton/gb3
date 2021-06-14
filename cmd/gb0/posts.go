@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -144,6 +145,7 @@ func (f *FileStore) ReadPosts() Posts {
 		dayDir := f.postsDirectory + "/" + dayTime.Format("2006/01/02")
 		posts = readPostsFromDirectory(posts, dayDir)
 	}
+	sort.Sort(posts)
 	return posts
 }
 
@@ -153,6 +155,7 @@ func readPostsFromDirectory(posts Posts, directory string) Posts {
 		log.Printf("Cannot read posts from %s", directory)
 		return make(Posts, 0)
 	}
+	sort.Sort(sort.Reverse(sort.StringSlice(files)))
 	for _, file := range files {
 		post, err := readPostFromFile(file)
 		if nil == err {
