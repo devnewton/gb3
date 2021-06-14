@@ -33,13 +33,33 @@ type memStore struct {
 	postsMap *sync.Map
 }
 
+func constainsById(posts Posts, id int64) bool {
+	for _, p := range posts {
+		if p.ID == id {
+			return true
+		}
+	}
+	return false
+}
+
+func appendUniquePosts(posts Posts, elements ...Post) Posts {
+	for _, e := range elements {
+		if !constainsById(posts, e.ID) {
+			posts = append(posts, e)
+		}
+	}
+	return posts
+}
+
 func (m memStore) Save(tribune string, posts Posts) error {
 	newPosts := make(Posts, 0, MaxPostsInHistory)
 	oldPosts, ok := m.postsMap.Load(tribune)
 	if ok {
 		newPosts = append(newPosts, oldPosts.(Posts)...)
+		newPosts = appendUniquePosts(newPosts, posts...)
+	} else {
+		newPosts = append(newPosts, posts...)
 	}
-	newPosts = append(newPosts, posts...)
 	sort.Sort(newPosts)
 	if len(newPosts) > MaxPostsInHistory {
 		newPosts = newPosts[len(newPosts)-MaxPostsInHistory:]
