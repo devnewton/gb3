@@ -77,7 +77,7 @@ func initTimeLocation() {
 	}
 }
 
-var maxPostsInHistory = 1000
+var maxPostsInHistory = 200
 
 func initMaxPostsInHistory() {
 	value, isPresent := os.LookupEnv("GB0_MAX_POSTS_IN_HISTORY")

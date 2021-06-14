@@ -15,7 +15,7 @@ type Store interface {
 }
 
 //MaxPostsInHistory is the number of latests posts to store
-var MaxPostsInHistory = 1000
+var MaxPostsInHistory = 200
 
 func init() {
 	value, isPresent := os.LookupEnv("GB2C_MAX_POSTS_IN_HISTORY")
