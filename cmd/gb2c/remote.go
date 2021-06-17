@@ -1,6 +1,19 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
+
+var gb2cHttpClient *http.Client
+
+func init() {
+	transport := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+	}
+	gb2cHttpClient = &http.Client{
+		Transport: transport,
+	}
+}
 
 func remoteHost(r *http.Request) string {
 	host := r.Header.Get("X-Forwarded-Host")

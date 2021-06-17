@@ -53,7 +53,7 @@ func (tribune *Tribune) Post(inRequest *http.Request) {
 	if tribune.AuthentificationType == OAuth2Authentification {
 		outRequest.Header.Set("Authorization", inRequest.Header.Get("Authorization"))
 	}
-	_, err = http.DefaultClient.Do(outRequest)
+	_, err = gb2cHttpClient.Do(outRequest)
 	if nil != err {
 		log.Println(err)
 	}
@@ -61,7 +61,7 @@ func (tribune *Tribune) Post(inRequest *http.Request) {
 
 //Poll Retrieve backend
 func (tribune *Tribune) Poll() (posts Posts, err error) {
-	resp, err := http.Get(tribune.BackendURL)
+	resp, err := gb2cHttpClient.Get(tribune.BackendURL)
 	if err != nil {
 		return nil, err
 	}

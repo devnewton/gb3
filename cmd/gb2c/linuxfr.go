@@ -66,7 +66,7 @@ func RegisterLinuxfrAPI() {
 		}
 		tokenRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		tokenRequest.Header.Set("User-Agent", "gb3")
-		tokenResponse, err := http.DefaultClient.Do(tokenRequest)
+		tokenResponse, err := gb2cHttpClient.Do(tokenRequest)
 		if nil != err {
 			http.Error(w, fmt.Sprintf("Cannot retrieve linuxfr token: %s", err), 500)
 			return
@@ -83,7 +83,7 @@ func RegisterLinuxfrAPI() {
 		}
 
 		//retrieve login
-		meResponse, err := http.Get(fmt.Sprintf("https://linuxfr.org/api/v1/me?bearer_token=%s", url.QueryEscape(linuxfrAccessData.AccessToken)))
+		meResponse, err := gb2cHttpClient.Get(fmt.Sprintf("https://linuxfr.org/api/v1/me?bearer_token=%s", url.QueryEscape(linuxfrAccessData.AccessToken)))
 		if nil != err {
 			http.Error(w, fmt.Sprintf("linuxfr me request failed: %s", err), 500)
 			return
