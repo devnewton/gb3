@@ -76,6 +76,14 @@ List of gb0 tribunes url. Default value is:
 GB2C_GB0_TRIBUNES=devnewton:https://gb3.devnewton.fr,gabuzomeu:https://gb3.plop.cc
 ```
 
+#### GB2C_MIAOLI_TRIBUNES
+
+List of miaoli tribunes url. Default value is:
+
+```bash
+GB2C_MIAOLI_TRIBUNES=reveildutroll:https://miaoli.im/tribune/LeR%C3%A9veilDuTroll
+```
+
 #### GB2C_MAX_POSTS_IN_HISTORY
 
 Maximum number of posts returned by poll requests.

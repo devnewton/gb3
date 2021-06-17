@@ -37,6 +37,40 @@ type forwardMessage struct {
 	*Coincoin
 }
 
+func (g *gb3) addGb0Tribunes() {
+	gb0Tribunes := os.Getenv("GB2C_GB0_TRIBUNES")
+	if len(gb0Tribunes) == 0 {
+		gb0Tribunes = "devnewton:https://gb3.devnewton.fr,gabuzomeu:https://gb3.plop.cc"
+	}
+	for _, gb0Tribune := range strings.Split(gb0Tribunes, ",") {
+		gb0TribuneSplitted := strings.SplitN(gb0Tribune, ":", 2)
+		if len(gb0TribuneSplitted) != 2 {
+			fmt.Printf("Invalid gb0 tribune description in GB2C_GB0_TRIBUNES: %s\n", gb0Tribune)
+			continue
+		}
+		gb0TribuneName := gb0TribuneSplitted[0]
+		gb0TribuneURL := gb0TribuneSplitted[1]
+		g.tribunes[gb0TribuneName] = &Tribune{Name: gb0TribuneName, BackendURL: gb0TribuneURL + "/gb0/tsv", PostURL: gb0TribuneURL + "/gb0/post", PostField: "message"}
+	}
+}
+
+func (g *gb3) addMiaoliTribunes() {
+	miaoliTribunes := os.Getenv("GB2C_MIAOLI_TRIBUNES")
+	if len(miaoliTribunes) == 0 {
+		miaoliTribunes = "reveildutroll:https://miaoli.im/tribune/LeR%C3%A9veilDuTroll"
+	}
+	for _, miaoliTribune := range strings.Split(miaoliTribunes, ",") {
+		miaoliTribuneSplitted := strings.SplitN(miaoliTribune, ":", 2)
+		if len(miaoliTribuneSplitted) != 2 {
+			fmt.Printf("Invalid miaoli tribune description in GB2C_MIAOLI_TRIBUNES: %s\n", miaoliTribune)
+			continue
+		}
+		miaoliTribuneName := miaoliTribuneSplitted[0]
+		miaoliTribuneURL := miaoliTribuneSplitted[1]
+		g.tribunes[miaoliTribuneName] = &Tribune{Name: miaoliTribuneName, BackendURL: miaoliTribuneURL + "/tsv", PostURL: miaoliTribuneURL + "/post", PostField: "message"}
+	}
+}
+
 func newGb3() *gb3 {
 	g := &gb3{
 		join:    make(chan *Coincoin),
@@ -53,20 +87,8 @@ func newGb3() *gb3 {
 		indexer: NewIndexer(),
 		store:   NewStore(),
 	}
-	gb0Tribunes := os.Getenv("GB2C_GB0_TRIBUNES")
-	if len(gb0Tribunes) == 0 {
-		gb0Tribunes = "devnewton:https://gb3.devnewton.fr,gabuzomeu:https://gb3.plop.cc"
-	}
-	for _, gb0Tribune := range strings.Split(gb0Tribunes, ",") {
-		gb0TribuneSplitted := strings.SplitN(gb0Tribune, ":", 2)
-		if len(gb0TribuneSplitted) != 2 {
-			fmt.Printf("Invalid gb0 tribune description in GB2C_GB0_TRIBUNES: %s\n", gb0Tribune)
-			continue
-		}
-		gb0TribuneName := gb0TribuneSplitted[0]
-		gb0TribuneURL := gb0TribuneSplitted[1]
-		g.tribunes[gb0TribuneName] = &Tribune{Name: gb0TribuneName, BackendURL: gb0TribuneURL + "/gb0/tsv", PostURL: gb0TribuneURL + "/gb0/post", PostField: "message"}
-	}
+	g.addGb0Tribunes()
+	g.addMiaoliTribunes()
 	return g
 }
 
