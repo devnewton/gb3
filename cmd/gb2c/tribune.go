@@ -24,6 +24,7 @@ type Tribune struct {
 	BackendURL           string
 	PostURL              string
 	PostField            string
+	InfoField            string
 	AuthentificationType int
 }
 
@@ -37,13 +38,18 @@ func (tribune *Tribune) Post(inRequest *http.Request) {
 	data := url.Values{
 		tribune.PostField: []string{inRequest.PostFormValue("message")},
 	}
+	if len(tribune.InfoField) > 0 {
+		data[tribune.InfoField] = []string{inRequest.PostFormValue("info")}
+	}
 	outRequest, err := http.NewRequest("POST", tribune.PostURL, strings.NewReader(data.Encode()))
 	if nil != err {
 		log.Println(err)
 		return
 	}
 	outRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	outRequest.Header.Set("User-Agent", inRequest.Header.Get("User-Agent"))
+	if len(tribune.InfoField) == 0 {
+		outRequest.Header.Set("User-Agent", inRequest.PostFormValue("info"))
+	}
 	if tribune.AuthentificationType == OAuth2Authentification {
 		outRequest.Header.Set("Authorization", inRequest.Header.Get("Authorization"))
 	}

@@ -36,7 +36,10 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid utf8 in message", http.StatusBadRequest)
 		return
 	}
-	info := r.UserAgent()
+	info := r.FormValue("info")
+	if len(info) == 0 {
+		info = r.UserAgent()
+	}
 	if !utf8.ValidString(info) {
 		http.Error(w, "Invalid utf8 in user agent", http.StatusBadRequest)
 		return

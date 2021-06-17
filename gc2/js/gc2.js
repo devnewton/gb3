@@ -55,6 +55,7 @@ class Gc2Main extends HTMLElement {
     }
 
     async connectedCallback() {
+        this.setupNickname();
         this.setupTribunesContainer();
         this.setupControls();
         this.setupTribuneNavigator();
@@ -90,6 +91,20 @@ class Gc2Main extends HTMLElement {
         this.appendChild(this.tribunesContainer);
     }
 
+    setupNickname() {
+        if(!localStorage.nickname) {
+            let consonants = "bcdfghjklmnpqrstvwxz";
+            let vowels = "aeiouy";
+            let syllabes = 2 + Math.floor(Math.random() * 2);
+            let generatedNickname = "";
+            for(let i=0; i<syllabes; ++i) {
+                generatedNickname += consonants.charAt(Math.floor(Math.random() * consonants.length));
+                generatedNickname += vowels.charAt(Math.floor(Math.random() * vowels.length));
+            }
+            localStorage.nickname = generatedNickname;
+        }
+    }
+
     async setupControls() {
         this.controls = document.createElement("form");
         this.controls.classList.add("gc2-controls");
@@ -103,12 +118,10 @@ class Gc2Main extends HTMLElement {
                 let data = new URLSearchParams();//NEVER use FormData, it forces multipart and backend dont support multipart
                 data.set('message', this.messageInput.value);
                 data.set('tribune', this.tribuneSelect.value);
+                data.set('info', localStorage.nickname);
                 this.messageInput.value = "";
                 this.messageInput.classList.toggle("gc2-loading", true);
                 let headers = new Headers();
-                if (localStorage.nickname) {
-                    headers.set('User-agent', localStorage.nickname);
-                }
                 if (this.tribuneSelect.value === "dlfp") {
                     let accessToken = localStorage.getItem("linuxfr_access_token");
                     let expiresAt = parseInt(localStorage.getItem("linuxfr_expires_at"), 10) || 0;

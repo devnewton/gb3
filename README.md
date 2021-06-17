@@ -39,7 +39,13 @@ curl 'http://localhost:16667/gb0/tsv'
 #### /gb0/post
 
 ```bash
-curl -X POST -d "message=plop" 'http://localhost:16667/gb0/post'
+curl -X POST -A "dave" -d "message=plop" 'http://localhost:16667/gb0/post'
+```
+
+or
+
+```bash
+curl -X POST -d "info=dave" -d "message=plop" 'http://localhost:16667/gb0/post'
 ```
 
 ## gb2c
@@ -96,7 +102,7 @@ postSource.onmessage = function (event) {
 #### /gb2c/post
 
 ```bash
-curl -X POST -d "message=plop" -d "tribune=euromussels" 'http://localhost:16666/gb2c/post'
+curl -X POST -d "info=dave" -d "message=plop" -d "tribune=euromussels" 'http://localhost:16666/gb2c/post'
 ```
 
 ### gc2
