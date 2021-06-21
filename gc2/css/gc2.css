@@ -233,6 +233,7 @@ gc2-totoz:hover img {
 	position: absolute;
 	top: 0;
 	left: -50%;
+	margin-left: 100%;
 	transform: translate(-0%, -100%);
 }
 
